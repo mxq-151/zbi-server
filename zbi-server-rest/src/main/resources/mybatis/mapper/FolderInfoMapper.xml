@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.zbi.server.mapper.mysql.FolderInfoMapper">
+	<resultMap id="folderInfoResultMap"
+		type="org.zbi.server.entity.mysql.FolderInfo">
+		<result column="folder_id" property="folderID" />
+		<result column="folder_name" property="folderName" />
+		<result column="folder_desc" property="folderDesc" />
+	</resultMap>
+
+	<insert id="createFolder">
+		insert into
+		zbi_db.folder_info(folder_name,folder_desc)
+		values(#{folderName},#{folderDesc})
+	</insert>
+
+	<select id="getFolder" resultMap="folderInfoResultMap">
+		select * from
+		zbi_db.board_info
+		where
+		folder_id=#{folderID}
+	</select>
+
+
+	<select id="checkFolderByName" resultType="boolean">
+		select count(1) from
+		zbi_db.folder_info where folder_name=#{folderName}
+	</select>
+
+	<update id="updateFolder">
+		update zbi_db.folder_info set
+		folder_name=#{folderName},folder_desc=#{folderDesc} where
+		folder_id=#{folderID}
+	</update>
+
+	<delete id="deleteFolderByID">
+		delete from zbi_db.folder_info where
+		folder_id=#{folderID}
+	</delete>
+
+</mapper>

@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.zbi.server.mapper.mysql.CanSeesMapper">
+	<resultMap id="baseResultMap"
+		type="org.zbi.server.model.core.CanSeeWord">
+		<result column="gc_id" property="gcID" />
+		<result column="group_id" property="groupID" />
+		<result column="col_id" property="colID" />
+		<result column="word" property="word" />
+	</resultMap>
+
+	<insert id="insertWords">
+		insert into zbi_db.board_info (board_name,board_desc)
+		values(#{boardName},#{boardDesc})
+	</insert>
+
+	<select id="listWords" resultMap="baseResultMap">
+		select gc_id
+		,word,col_id,group_id from zbi_db.can_sees where
+		group_id=#{groupID}
+		AND col_id=#{colID}
+	</select>
+
+	<delete id="deleteCanSees">
+		delete from zbi_db.board_info where
+		board_id=#{boardID}
+	</delete>
+
+</mapper>

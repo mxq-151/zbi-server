@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.zbi.server.mapper.mysql.ReportInfoMapper">
+    <resultMap id="reportInfoResultMap" type="org.zbi.server.entity.mysql.ReportInfo">
+        <result column="report_id" property="reportID"/>
+        <result typeHandler="org.zbi.server.mapper.handler.MapHandler" column="other_params"
+                javaType="java.util.Map"
+                jdbcType="VARCHAR"
+                property="otherParams"/>
+        <result typeHandler="org.zbi.server.mapper.handler.RequestColumnHandler" column="request_dimensions"
+                javaType="java.util.List"
+                jdbcType="VARCHAR"
+                property="requestDimensions"/>
+                
+                
+        <result typeHandler="org.zbi.server.mapper.handler.RequestColumnHandler" column="drill_dimensions"
+                javaType="java.util.List"
+                jdbcType="VARCHAR"
+                property="drillDimensions"/>
+        <result typeHandler="org.zbi.server.mapper.handler.RequestMeasureHanlder" column="request_measures"
+                javaType="java.util.List"
+                jdbcType="VARCHAR"
+                property="requestMeasures"/>
+                
+        <result typeHandler="org.zbi.server.mapper.handler.RequestConditionHandler" column="request_conditions"
+                javaType="java.util.List"
+                jdbcType="VARCHAR"
+                property="requestConditions"/>
+        <result column="report_name" property="reportName"/>
+        <result column="report_desc" property="reportDesc"/>
+        <result column="model_tag" property="modelTag"/>
+        <result column="model_name" property="modelName"/>
+        <result column="board_id" property="boardID"/>
+    </resultMap>
+
+    <insert id="createReport" parameterType="org.zbi.server.entity.mysql.ReportInfo">
+        INSERT INTO zbi_db.report_info (report_name, report_desc, model_tag, model_name, other_params,
+        request_dimensions,drill_dimensions,
+        request_measures,request_conditions,board_id)
+        VALUES (#{reportName}, #{reportDesc}, #{modelTag}, #{modelName},
+                #{otherParams,typeHandler=org.zbi.server.mapper.handler.MapHandler},
+                #{requestDimensions,typeHandler=org.zbi.server.mapper.handler.RequestColumnHandler},
+                #{drillDimensions,typeHandler=org.zbi.server.mapper.handler.RequestColumnHandler},
+                #{requestMeasures,typeHandler=org.zbi.server.mapper.handler.RequestMeasureHanlder},
+                #{requestConditions,typeHandler=org.zbi.server.mapper.handler.RequestConditionHandler}
+                ,#{boardID})
+    </insert>
+
+    <select id="getReportByID" parameterType="int" resultMap="reportInfoResultMap">
+        SELECT
+            report_id,
+            report_name,
+            report_desc,
+            model_tag,
+            model_name,
+            other_params,
+            request_dimensions,
+            drill_dimensions,
+            request_measures,
+            request_conditions
+        FROM zbi_db.report_info
+        WHERE report_id = #{reportID}
+    </select>
+
+    <select id="getReportByBoardID" parameterType="int" resultMap="reportInfoResultMap">
+        SELECT
+            report_id,
+            report_name,
+            report_desc,
+            model_tag,
+            model_name,
+            other_params,
+            request_dimensions,
+            drill_dimensions,
+            request_measures,
+            request_conditions
+        FROM zbi_db.report_info
+        WHERE board_id = #{boardID}
+    </select>
+    
+    
+     <select id="checkReportByName" resultType="boolean" >
+        SELECT count(1)
+        FROM zbi_db.report_info
+        WHERE board_id = #{boardID} and report_name=#{reportName}
+    </select>
+    
+    
+    
+     <select id="getReportID" resultType="java.lang.Integer" >
+        SELECT report_id as reportID
+        FROM zbi_db.report_info
+        WHERE board_id = #{boardID}
+    </select>
+    
+    <select id="getReportByName"  resultMap="reportInfoResultMap">
+        SELECT
+            report_id,
+            report_name,
+            report_desc,
+            model_tag,
+            model_name,
+            other_params,
+            request_dimensions,
+            drill_dimensions,
+            request_measures,
+            request_conditions
+        FROM zbi_db.report_info
+        WHERE board_id = #{boardID} and report_name=#{reportName}
+    </select>
+    
+    
+     <update id="updateReport" parameterType="org.zbi.server.entity.mysql.ReportInfo">
+        update zbi_db.report_info set report_name=#{reportName},report_desc=#{reportDesc},model_name=#{modelName},model_tag=#{modelTag},
+        request_dimensions=#{requestDimensions,typeHandler=org.zbi.server.mapper.handler.RequestColumnHandler},
+        drill_dimensions=#{drillDimensions,typeHandler=org.zbi.server.mapper.handler.RequestColumnHandler},
+        request_conditions=#{drillDimensions,typeHandler=org.zbi.server.mapper.handler.RequestConditionHandler},
+        request_measures=#{drillDimensions,typeHandler=org.zbi.server.mapper.handler.RequestMeasureHanlder},
+        other_params=#{otherParams,typeHandler=org.zbi.server.mapper.handler.MapHandler}
+        where report_id=#{reportID}
+    </update>
+    
+    <delete id="deleteReport">
+    delete from zbi_db.report_info where report_id=#{reportID}
+    </delete>
+
+</mapper>

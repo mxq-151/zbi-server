@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.zbi.server.mapper.mysql.ConfigJoinMapper">
+	<resultMap id="BaseResultMap"
+		type="org.zbi.server.model.config.ConfigJoin">
+		<!--@mbg.generated -->
+		<!--@Table column_desc -->
+		<id column="join_id" jdbcType="VARCHAR" property="joinID" />
+		<id column="tbl_id1" jdbcType="VARCHAR" property="tblID1" />
+		<id column="col_id1" jdbcType="VARCHAR" property="colID1" />
+		<id column="tbl_id2" jdbcType="VARCHAR" property="tblID2" />
+		<id column="col_id2" jdbcType="VARCHAR" property="colID2" />
+	</resultMap>
+	<sql id="Base_Column_List">
+		<!--@mbg.generated -->
+		`join_id`, `tbl_id1`, `tbl_id2`, `col_id1`,`col_id2`
+	</sql>
+	<select id="selectByPrimaryKey" parameterType="java.lang.String"
+		resultMap="BaseResultMap">
+		<!--@mbg.generated -->
+		select
+		<include refid="Base_Column_List" />
+		from config_join
+		where `join_id`= #{joinID,jdbcType=VARCHAR}
+	</select>
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+		<!--@mbg.generated -->
+		delete from config_table
+		where `join_id`= #{joinID,jdbcType=VARCHAR}
+	</delete>
+	<insert id="insertJoin">
+		<!--@mbg.generated -->
+		insert into config_table (`join_id`, `tbl_id1`, `tbl_id2`,
+		`col_id1`,`col_id2`)
+		values
+		(#{joinID,jdbcType=VARCHAR},
+		#{tblID1,jdbcType=VARCHAR},
+		#{tblID2,jdbcType=VARCHAR},
+		#{colID1,jdbcType=VARCHAR},
+		#{colID2,jdbcType=VARCHAR})
+	</insert>
+
+	<select id="loadAllJoins" parameterType="java.lang.String"
+		resultMap="BaseResultMap">
+		<!--@mbg.generated -->
+		select
+		<include refid="Base_Column_List" />
+		from config_join
+	</select>
+
+
+</mapper>

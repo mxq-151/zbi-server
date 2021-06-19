@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.zbi.server.mapper.mysql.GroupInfoMapper">
+	<resultMap id="groupInfoResultMap"
+		type="org.zbi.server.entity.mysql.GroupInfo">
+		<result column="group_id" property="groupID" />
+		<result column="group_name" property="groupName" />
+		<result column="group_desc" property="groupDesc" />
+	</resultMap>
+
+	<insert id="createGroup">
+		insert into
+		zbi_db.group_info(group_name,group_desc,creater_id)
+		values(#{groupName},#{groupDesc})
+	</insert>
+
+	<select id="getGroupInfoById" resultMap="groupInfoResultMap">
+		select * from
+		zbi_db.group_info where group_id=#{groupID}
+	</select>
+
+	<select id="getUsersInGroup" resultMap="groupInfoResultMap">
+		select b.* from
+		zbi_db.group_user as a left join zbi_db.user_info as b on
+		a.user_id=b.user_id where group_id=#{groupID}
+	</select>
+
+	<update id="updateGroupInfo">
+		update zbi_db.group_info set
+		group_name=#{groupName},group_desc=#{group_desc}
+		where group_id=#{groupID}
+	</update>
+
+
+	<delete id="deleteBoard">
+		delete from zbi_db.group_info where
+		where group_id=#{groupID}
+	</delete>
+
+</mapper>

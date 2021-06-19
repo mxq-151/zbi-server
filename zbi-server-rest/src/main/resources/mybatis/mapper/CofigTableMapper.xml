@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.zbi.server.mapper.mysql.ConfigTableMapper">
+	<resultMap id="BaseResultMap"
+		type="org.zbi.server.model.config.ConfigTable">
+		<!--@mbg.generated -->
+		<!--@Table column_desc -->
+		<id column="table_id" jdbcType="VARCHAR" property="tableID" />
+		<id column="tbl_alias" jdbcType="VARCHAR" property="tblAlias" />
+		<id column="project" jdbcType="VARCHAR" property="project" />
+		<id column="table_name" jdbcType="VARCHAR" property="tableName" />
+		<id column="engine_type" jdbcType="VARCHAR" property="engineType" />
+		<id column="table_type" jdbcType="VARCHAR" property="tableType" />
+	</resultMap>
+	<sql id="Base_Column_List">
+		<!--@mbg.generated -->
+		`tbl_alias`, `project`, `table_name`, `engine_type`,
+		`table_type`,`table_id`
+	</sql>
+	<select id="selectByPrimaryKey" parameterType="java.lang.String"
+		resultMap="BaseResultMap">
+		<!--@mbg.generated -->
+		select
+		<include refid="Base_Column_List" />
+		from config_table
+		where `table_id`= #{tableID,jdbcType=VARCHAR}
+	</select>
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+		<!--@mbg.generated -->
+		delete from config_table
+		where `table_id`= #{tableID,jdbcType=VARCHAR}
+	</delete>
+	<insert id="insertTable">
+		<!--@mbg.generated -->
+		insert into config_table (`tbl_alias`, `project`, `table_name`,
+		`engine_type`,`table_type`,`table_id`)
+		values
+		(#{tblAlias,jdbcType=VARCHAR},
+		#{project,jdbcType=VARCHAR},
+		#{tableName,jdbcType=VARCHAR},
+		#{engineType,jdbcType=VARCHAR},
+		#{tableType,jdbcType=VARCHAR},
+		#{tableID,jdbcType=VARCHAR})
+	</insert>
+
+
+</mapper>

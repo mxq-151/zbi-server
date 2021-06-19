@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper
+	namespace="org.zbi.server.mapper.mysql.BoardInfoMapper">
+	<resultMap id="boardInfoResultMap"
+		type="org.zbi.server.entity.mysql.BoardInfo">
+		<result column="board_id" property="boardID" />
+		<result
+			typeHandler="org.zbi.server.mapper.handler.MapHandler"
+			column="other_params" javaType="java.util.Map" jdbcType="TEXT"
+			property="otherParams" />
+		<result column="board_name" property="boardName" />
+		<result column="board_desc" property="boardDesc" />
+		<result column="board_version" property="boardVersion" />
+	</resultMap>
+
+	<insert id="createBoard">
+		insert into zbi_db.board_info (board_name,board_desc)
+		values(#{boardName},#{boardDesc})
+	</insert>
+
+	<select id="getBoardByID" 
+		resultMap="boardInfoResultMap">
+		select board_id ,board_name ,board_desc ,other_params  from zbi_db.board_info where board_id=#{boardID}
+	</select>
+
+	<select id="getBoardByName" resultMap="boardInfoResultMap">
+		select board_id ,board_name ,board_desc ,other_params from zbi_db.board_info where
+		board_name=#{boardName}
+	</select>
+
+
+	<select id="checkBoardName" resultType="boolean">
+		select count(1) from zbi_db.board_info where board_name=#{boardName}
+	</select>
+
+
+	<update id="updateBoardParam">
+		update zbi_db.board_info set other_params=#{otherParams} where
+		board_id=#{boardID}
+	</update>
+
+	<update id="updateBoardName">
+		update zbi_db.board_info set board_name=#{boardName},board_desc=#{boardDesc}
+		where board_id=#{boardID}
+	</update>
+
+	<delete id="deleteBoard">
+		delete from zbi_db.board_info where board_id=#{boardID}
+	</delete>
+
+</mapper>

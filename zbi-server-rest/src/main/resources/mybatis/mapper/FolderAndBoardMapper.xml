@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.zbi.server.mapper.mysql.BoardInfoMapper">
+
+	
+	<resultMap id="boardInfoRespResultMap"
+		type="org.zbi.server.model.response.BoardInfoResp">
+		<result column="board_id" property="boardID" />
+		<result column="board_name" property="boardName" />
+		<result column="board_desc" property="boardDesc" />
+	</resultMap>
+
+	<insert id="addBoardToFolder">
+		insert zbi_db.folder_board (folder_id,board_id)
+		values(#{folderID},#{boardID})
+	</insert>
+
+	<select id="getBoardDescByFolderID"
+		resultMap="boardInfoRespResultMap">
+		select b.* from zbi_db.folder_board as a left join
+		zbi_db.board_info as b on a.board_id=b.board_id where
+		folder_id=#{folderID}
+	</select>
+	
+	<select id="getBoardsByFolderID"
+		resultMap="boardInfoResultMap">
+		select b.* from zbi_db.folder_board as a left join
+		zbi_db.board_info as b on a.board_id=b.board_id where
+		folder_id=#{folderID}
+	</select>
+
+	<delete id="deleteBoardInFolder">
+		delete from zbi_db.folder_board where folder_id=#{folderID} and board_id=#{boardID}
+	</delete>
+
+</mapper>

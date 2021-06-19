@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper
+	namespace="org.zbi.server.mapper.mysql.ConfigColumnMapper">
+	<resultMap id="BaseResultMap"
+		type="org.zbi.server.model.config.ConfigColumn">
+		<!--@mbg.generated -->
+		<!--@Table column_desc -->
+		<id column="is_measure" jdbcType="VARCHAR" property="isMeasure" />
+		<id column="chinese" jdbcType="VARCHAR" property="chinese" />
+		<id column="uuid" jdbcType="VARCHAR" property="uuid" />
+		<id column="alias" jdbcType="VARCHAR" property="alias" />
+		<id column="col_name" jdbcType="VARCHAR" property="colName" />
+		<id column="column_type" jdbcType="VARCHAR" property="columnType" />
+		<id column="agg_type" jdbcType="VARCHAR" property="AggType" />
+		<id column="force_dim" jdbcType="VARCHAR" property="forceDim" />
+		<id column="is_advanced" jdbcType="VARCHAR" property="isAdvanced" />
+		<id column="table_id" jdbcType="VARCHAR" property="tableID" />
+		<id column="col_properties" jdbcType="VARCHAR"
+			property="colProperties" />
+	</resultMap>
+	<sql id="Base_Column_List">
+		<!--@mbg.generated -->
+		`is_measure`, `chinese`, `alias`, `col_name`, `column_type`,
+		`agg_type`, `force_dim`, `is_advanced`,`table_id`,`colProperties`
+	</sql>
+	<select id="selectByPrimaryKey" parameterType="java.lang.String"
+		resultMap="BaseResultMap">
+		<!--@mbg.generated -->
+		select
+		<include refid="Base_Column_List" />
+		from config_column
+		where `uuid`= #{uuid,jdbcType=VARCHAR}
+	</select>
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+		<!--@mbg.generated -->
+		delete from config_column
+		where `uuid`= #{uuid,jdbcType=VARCHAR}
+	</delete>
+	<insert id="insertColumn"
+		parameterType="org.zbi.server.model.config.ConfigColumn">
+		<!--@mbg.generated -->
+		insert into config_column (`is_measure`, `chinese`,`alias`,
+		`col_name`,
+		`column_type`,
+		`agg_type`, `force_dim`,
+		`is_advanced`,`table_id`,`col_properties`)
+		values (#{isMeasure},
+		#{chinese,jdbcType=VARCHAR},
+		#{alias,jdbcType=VARCHAR},
+		#{colName,jdbcType=VARCHAR}, #{columnType,jdbcType=VARCHAR},
+		#{aggType,jdbcType=VARCHAR},
+		#{forceDim,jdbcType=BIT},
+		#{tableID,jdbcType=VARCHAR},
+		#{colProperties,jdbcType=VARCHAR})
+	</insert>
+
+	<delete id="deleteByTablelId" parameterType="java.lang.String">
+		delete from
+		config_column
+		where table_id = #{tableID,jdbcType=VARCHAR}
+	</delete>
+
+	<select id="listColumnsByTableID" resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from config_column
+		where table_id = #{tableID,jdbcType=VARCHAR}
+	</select>
+
+</mapper>
