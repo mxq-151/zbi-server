@@ -7,7 +7,6 @@ import javax.annotation.PostConstruct;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import org.zbi.server.dao.memory.MemoryConfigDao;
 import org.zbi.server.dao.service.ConfigDaoService;
 import org.zbi.server.model.config.ModelConfig;
 import org.zbi.server.model.core.EngineType;
@@ -33,11 +32,7 @@ public class DefaultQueryServiceImpl extends  AbstractQueryService {
 
 	@PostConstruct
 	public void mockData() {
-		if (daoService instanceof MemoryConfigDao) {
-			MemoryConfigDao memoryConfigDao = (MemoryConfigDao) (daoService);
-			memoryConfigDao.mockModelConfigs();
-		}
-
+		
 		try {
 			engineFactory.loadDefaultConnection();
 		} catch (SQLException e) {

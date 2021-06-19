@@ -1,5 +1,7 @@
 package org.zbi.server.model.config;
 
+import java.util.List;
+
 import org.zbi.server.model.core.EngineType;
 
 public class ConfigTable {
@@ -24,6 +26,7 @@ public class ConfigTable {
 	 * 1:事实表, 2：维度表：3：子表
 	 */
 	private int tableType;
+	
 
 	public String getTableID() {
 		return tableID;

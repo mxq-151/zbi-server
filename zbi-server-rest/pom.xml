@@ -37,6 +37,14 @@
 			</exclusions>
 		</dependency>
 
+		<!-- https://mvnrepository.com/artifact/org.springframework.security.oauth.boot/spring-security-oauth2-autoconfigure -->
+		<dependency>
+			<groupId>org.springframework.security.oauth.boot</groupId>
+			<artifactId>spring-security-oauth2-autoconfigure</artifactId>
+			<version>${springboot.version}</version>
+		</dependency>
+
+
 		<!-- https://mvnrepository.com/artifact/org.codehaus.janino/commons-compiler -->
 		<dependency>
 			<groupId>org.codehaus.janino</groupId>
@@ -44,7 +52,7 @@
 			<version>3.0.8</version>
 		</dependency>
 	</dependencies>
-	
+
 	<build>
 		<finalName>zbi-server-rest</finalName>
 		<plugins>
