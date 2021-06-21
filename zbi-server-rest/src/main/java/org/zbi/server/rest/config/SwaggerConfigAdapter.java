@@ -1,4 +1,4 @@
-package com.zbi.commons.server.config;
+package org.zbi.server.rest.config;
 
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;

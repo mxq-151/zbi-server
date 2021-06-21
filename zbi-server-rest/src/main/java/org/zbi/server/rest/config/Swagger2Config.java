@@ -1,4 +1,4 @@
-package com.zbi.commons.server.config;
+package org.zbi.server.rest.config;
 
 import java.util.List;
 

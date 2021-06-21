@@ -1,4 +1,4 @@
-package com.zbi.commons.server.rest;
+package org.zbi.server.rest.controller;
 
 import java.io.IOException;
 import java.sql.SQLException;

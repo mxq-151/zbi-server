@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import org.zbi.server.dao.service.ConfigDaoService;
 import org.zbi.server.mapper.mysql.ConfigColumnMapper;
 import org.zbi.server.mapper.mysql.ConfigTableMapper;
@@ -13,6 +14,7 @@ import org.zbi.server.model.config.ModelConfig;
 import org.zbi.server.model.facade.FacadeTable;
 import org.zbi.server.model.response.ModelDescResp;
 
+@Component
 public class MysqlConfigDaoService implements ConfigDaoService<String> {
 
 	@Autowired

@@ -43,6 +43,16 @@
 			<artifactId>spring-security-oauth2-autoconfigure</artifactId>
 			<version>${springboot.version}</version>
 		</dependency>
+		
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-data-redis</artifactId>
+		</dependency>
+		
+		<dependency>
+			<groupId>redis.clients</groupId>
+			<artifactId>jedis</artifactId>
+		</dependency>
 
 
 		<!-- https://mvnrepository.com/artifact/org.codehaus.janino/commons-compiler -->

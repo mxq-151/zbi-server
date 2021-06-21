@@ -9,7 +9,7 @@
 		<result column="board_id" property="boardID" />
 		<result
 			typeHandler="org.zbi.server.mapper.handler.MapHandler"
-			column="other_params" javaType="java.util.Map" jdbcType="TEXT"
+			column="other_params" javaType="java.util.Map" jdbcType="VARCHAR"
 			property="otherParams" />
 		<result column="board_name" property="boardName" />
 		<result column="board_desc" property="boardDesc" />
@@ -38,7 +38,7 @@
 
 
 	<update id="updateBoardParam">
-		update zbi_db.board_info set other_params=#{otherParams} where
+		update zbi_db.board_info set other_params=#{otherParams,jdbcType=LONGVARCHAR,typeHandler=org.zbi.server.mapper.handler.MapHandler} where
 		board_id=#{boardID}
 	</update>
 

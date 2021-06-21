@@ -1,4 +1,4 @@
-package com.zbi.commons.server;
+package org.zbi.server.rest;
 
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.SpringApplication;
