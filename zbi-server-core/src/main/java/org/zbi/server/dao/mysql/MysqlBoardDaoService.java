@@ -1,6 +1,7 @@
 package org.zbi.server.dao.mysql;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -42,8 +43,8 @@ public class MysqlBoardDaoService implements BoardDaoService {
 			throw new QueryException("看板名称已存在");
 		}
 
-		String boardID=java.util.UUID.randomUUID().toString();
-		boardInfoMapper.createBoard(boardID,boardName, boardDesc);
+		String boardID = java.util.UUID.randomUUID().toString();
+		boardInfoMapper.createBoard(boardID, boardName, boardDesc);
 
 		FacadeBoard facadeBoard = new FacadeBoard();
 		facadeBoard.setBoardDesc(boardDesc);
@@ -51,7 +52,7 @@ public class MysqlBoardDaoService implements BoardDaoService {
 		facadeBoard.setBoardID(boardID);
 		facadeBoard.setFolderID(folderID);
 		facadeBoard.setOtherParams(null);
-		facadeBoard.setReports(new ArrayList<Integer>());
+		facadeBoard.setReports(Collections.emptyList());
 
 		folderAndBoardMapper.addBoardToFolder(boardID, folderID);
 
@@ -74,6 +75,7 @@ public class MysqlBoardDaoService implements BoardDaoService {
 	@Override
 	public FacadeBoard updateBoardStype(Map<String, Object> otherParams, String boardID) throws QueryException {
 		// TODO Auto-generated method stub
+
 		this.boardInfoMapper.updateBoardParam(boardID, otherParams);
 		return toFacadeBoard(boardInfoMapper.getBoardByID(boardID));
 	}
@@ -92,19 +94,18 @@ public class MysqlBoardDaoService implements BoardDaoService {
 		facadeBoard.setBoardName(board.getBoardName());
 		facadeBoard.setBoardID(board.getBoardID());
 		facadeBoard.setOtherParams(board.getOtherParams());
-		facadeBoard.setReports(new ArrayList<Integer>());
+		facadeBoard.setReports(Collections.emptyList());
 
 		return facadeBoard;
 	}
 
-	protected FacadeBoard toFacadeBoard(BoardInfo board, List<Integer> reports) {
+	protected FacadeBoard toFacadeBoard(BoardInfo board, List<String> reports) {
 		FacadeBoard facadeBoard = new FacadeBoard();
 		facadeBoard.setBoardDesc(board.getBoardDesc());
 		facadeBoard.setBoardName(board.getBoardName());
 		facadeBoard.setBoardID(board.getBoardID());
 		facadeBoard.setOtherParams(board.getOtherParams());
 		facadeBoard.setReports(reports);
-
 		return facadeBoard;
 	}
 
@@ -116,11 +117,11 @@ public class MysqlBoardDaoService implements BoardDaoService {
 
 		List<FacadeBoard> fboards = new ArrayList<>();
 		for (BoardInfo board : boards) {
-			List<Integer> reportIDS = this.reportInfoMapper.getReportID(board.getBoardID());
+			List<String> reportIDS = this.reportInfoMapper.getReportID(board.getBoardID());
 			fboards.add(this.toFacadeBoard(board, reportIDS));
 		}
 
-		return null;
+		return fboards;
 	}
 
 }

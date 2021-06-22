@@ -22,6 +22,6 @@ public interface ReportInfoMapper {
 
 	public boolean deleteReport(String reportID);
 
-	public List<Integer> getReportID(String boardID);
+	public List<String> getReportID(String boardID);
 
 }

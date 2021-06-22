@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.zbi.server.dao.service.BoardDaoService;
 import org.zbi.server.dao.service.FolderDaoService;
+import org.zbi.server.model.exception.AdminException;
 import org.zbi.server.model.exception.QueryException;
 import org.zbi.server.model.facade.FacadeBoard;
 import org.zbi.server.model.facade.FacadeFolder;
@@ -70,7 +71,7 @@ public class BoardController extends BaseController {
 	public boolean deleteBoard(
 			@Valid @RequestParam(required = true) @ApiParam(value = "看板ID", required = true) String boardID,
 			@Valid @RequestParam(required = true) @ApiParam(value = "文件夹ID", required = true) String folderID)
-			throws QueryException {
+			throws AdminException {
 		return this.folderDaoService.removeBoard(boardID, folderID);
 	}
 

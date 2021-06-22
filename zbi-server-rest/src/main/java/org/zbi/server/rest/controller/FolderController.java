@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.zbi.server.dao.service.FolderDaoService;
-import org.zbi.server.model.exception.QueryException;
+import org.zbi.server.model.exception.AdminException;
 import org.zbi.server.model.facade.FacadeFolder;
 
 import io.swagger.annotations.ApiOperation;
@@ -38,7 +38,7 @@ public class FolderController extends BaseController {
 	@ApiResponses({ @ApiResponse(code = 400, message = "请求错误"), @ApiResponse(code = 500, message = "响应失败") })
 	public boolean deleteFolder(
 			@Valid @RequestParam(required = true) @ApiParam(value = "文件夹ID", required = true) String folderID)
-			throws QueryException {
+			throws AdminException {
 		folderDaoService.deleteFolder(folderID);
 		return true;
 
@@ -51,7 +51,7 @@ public class FolderController extends BaseController {
 			@Valid @RequestParam(required = true) @ApiParam(value = "文件夹ID", required = true) String folderID,
 			@Valid @RequestParam(required = true) @ApiParam(value = "文件夹名称", required = true) String folderName,
 			@Valid @RequestParam(required = true) @ApiParam(value = "文件夹描述", required = true) String folderDesc)
-			throws QueryException {
+			throws AdminException {
 		folderDaoService.updateFolder(folderID, folderName, folderDesc);
 		return true;
 
@@ -63,8 +63,8 @@ public class FolderController extends BaseController {
 	public FacadeFolder createFolder(
 			@Valid @RequestParam(required = true) @ApiParam(value = "文件夹名称", required = true) String folderName,
 			@Valid @RequestParam(required = true) @ApiParam(value = "文件夹描述", required = true) String folderDesc)
-			throws QueryException {
-		return this.folderDaoService.createFolder(folderName, folderDesc,null);
+			throws AdminException {
+		return this.folderDaoService.createFolder(folderName, folderDesc);
 
 	}
 

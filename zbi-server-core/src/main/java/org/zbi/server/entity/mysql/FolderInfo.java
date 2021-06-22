@@ -7,6 +7,11 @@ public class FolderInfo {
 	private String folderName;
 	
 	private String folderDesc;
+	
+	//个人文件夹或者组文件夹
+	private int folderType;
+	//创建者ID
+	private String adminID;
 
 	public String getFolderID() {
 		return folderID;
@@ -30,6 +35,22 @@ public class FolderInfo {
 
 	public void setFolderDesc(String folderDesc) {
 		this.folderDesc = folderDesc;
+	}
+
+	public int getFolderType() {
+		return folderType;
+	}
+
+	public void setFolderType(int folderType) {
+		this.folderType = folderType;
+	}
+
+	public String getAdminID() {
+		return adminID;
+	}
+
+	public void setAdminID(String adminID) {
+		this.adminID = adminID;
 	}
 
 	

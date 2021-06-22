@@ -3,66 +3,55 @@ package org.zbi.server.model.facade;
 import java.util.List;
 
 public class FacadeGroup {
-	
+
 	/**
 	 * 用户组ID
-	 * */
-	private int groupID;
-	
+	 */
+	private String groupID;
+
 	/**
 	 * 用户组名
-	 * */
+	 */
 	private String groupName;
 	
+	
+	private String groupDesc;
+
 	/**
 	 * 用户组内用户
-	 * */
-	private List<Integer> users;
-	
-	
-	/**
-	 * 用户组管理员
-	 * **/
-	private List<Integer> admins;
+	 */
+	private List<String> users;
 
-
-	public int getGroupID() {
+	public String getGroupID() {
 		return groupID;
 	}
-
 
 	public String getGroupName() {
 		return groupName;
 	}
 
-
-	public List<Integer> getUsers() {
+	public List<String> getUsers() {
 		return users;
 	}
 
-
-	public List<Integer> getAdmins() {
-		return admins;
-	}
-
-
-	public void setGroupID(int groupID) {
+	public void setGroupID(String groupID) {
 		this.groupID = groupID;
 	}
-
 
 	public void setGroupName(String groupName) {
 		this.groupName = groupName;
 	}
 
-
-	public void setUsers(List<Integer> users) {
+	public void setUsers(List<String> users) {
 		this.users = users;
 	}
 
+	public String getGroupDesc() {
+		return groupDesc;
+	}
 
-	public void setAdmins(List<Integer> admins) {
-		this.admins = admins;
+	public void setGroupDesc(String groupDesc) {
+		this.groupDesc = groupDesc;
 	}
 
 }

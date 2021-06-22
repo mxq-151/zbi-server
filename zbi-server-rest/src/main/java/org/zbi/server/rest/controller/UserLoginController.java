@@ -1,6 +1,5 @@
 package org.zbi.server.rest.controller;
 
-import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
@@ -23,24 +22,7 @@ public class UserLoginController extends BaseController {
 	@Autowired
 	UserDaoService UserDaoService;
 
-	@PostConstruct
-	public void initUser() {
-		FacadeUser user = new FacadeUser();
-		user.setEmail("578038303@qq.com");
-		user.setPassword("123456");
-		user.setUserID(1);
-		user.setUserName("moxuqiang");
-		user.setRoleType(1);
-		this.UserDaoService.createUser(user);
 
-		user = new FacadeUser();
-		user.setEmail("123456@qq.com");
-		user.setPassword("123456");
-		user.setUserID(1);
-		user.setUserName("moxuqiang");
-		user.setRoleType(1);
-		this.UserDaoService.createUser(user);
-	}
 
 	@RequestMapping(value = "/login", method = RequestMethod.GET)
 	@ApiOperation(value = "密码登录", code = 200, httpMethod = "GET", response = FacadeUser.class)
@@ -48,11 +30,7 @@ public class UserLoginController extends BaseController {
 			@Valid @RequestParam @ApiParam(value = "密码", required = true) String password,
 			HttpServletRequest httpServletRequest) throws LoginException {
 
-		FacadeUser userInfo = this.UserDaoService.getUserWrapperInfoByEmail(userName);
-		if (userInfo != null && userInfo.getPassword().equals(password)) {
-			httpServletRequest.getSession().setAttribute("", userInfo);
-			return userInfo;
-		}
+		
 		throw new LoginException("找不到用户或者密码不对");
 	}
 

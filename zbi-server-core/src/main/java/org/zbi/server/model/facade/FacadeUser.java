@@ -3,50 +3,39 @@ package org.zbi.server.model.facade;
 import java.util.List;
 
 public class FacadeUser {
-	
+
 	/**
 	 * 用户ID
-	 * */
-	private long userID;
-	
+	 */
+	private String userID;
+
 	/**
 	 * 邮箱
-	 * */
+	 */
 	private String email;
-	
+
 	/**
 	 * 用户名
-	 * */
+	 */
 	private String userName;
-	
-	
+
 	/**
 	 * 
-	 * 用户密码
-	 * */
-	private String password;
-	
-	
-	/**
-	 * 
-	 * 用户类型
-	 * 1：超级用户
-	 * 2：部门管理人员
-	 * 3.普通成员
-	 * */
+	 * 用户类型 1：超级用户 2：部门管理人员 3.普通成员
+	 */
 	private int roleType;
-	
+
 	/**
 	 * 管理的用户组
-	 * **/
-	private List<Long> adminGroups;
-	
+	 **/
+	private List<String> adminGroups;
+
 	/**
 	 * 所属的用户组
-	 * */
-	private List<Long> groups;
+	 */
+	private List<String> groups;
 
-	public long getUserID() {
+	public String getUserID() {
 		return userID;
 	}
 
@@ -58,8 +47,7 @@ public class FacadeUser {
 		return userName;
 	}
 
-
-	public void setUserID(long userID) {
+	public void setUserID(String userID) {
 		this.userID = userID;
 	}
 
@@ -79,29 +67,20 @@ public class FacadeUser {
 		this.roleType = roleType;
 	}
 
-	public List<Long> getAdminGroups() {
+	public List<String> getAdminGroups() {
 		return adminGroups;
 	}
 
-	public List<Long> getGroups() {
+	public List<String> getGroups() {
 		return groups;
 	}
 
-	public void setAdminGroups(List<Long> adminGroups) {
+	public void setAdminGroups(List<String> adminGroups) {
 		this.adminGroups = adminGroups;
 	}
 
-	public void setGroups(List<Long> groups) {
+	public void setGroups(List<String> groups) {
 		this.groups = groups;
 	}
-
-	public String getPassword() {
-		return password;
-	}
-
-	public void setPassword(String password) {
-		this.password = password;
-	}
-
 
 }

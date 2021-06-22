@@ -11,4 +11,6 @@ public interface ConfigColumnMapper {
 	public void deleteByTablelId(String tableID);
 
 	public void insertColumn(ConfigColumn column);
+	
+	public void batchInsert(List<ConfigColumn> list);
 }

@@ -1,5 +1,5 @@
 server:
-   port: 8711
+   port: 8020
 calcite: 
    model:
       path: /smart.json

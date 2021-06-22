@@ -6,18 +6,21 @@
 		type="org.zbi.server.model.config.ConfigColumn">
 		<!--@mbg.generated -->
 		<!--@Table column_desc -->
-		<result column="is_measure" jdbcType="VARCHAR" property="isMeasure" />
+		<result column="is_measure" jdbcType="VARCHAR"
+			property="isMeasure" />
 		<result column="chinese" jdbcType="VARCHAR" property="chinese" />
 		<result column="uuid" jdbcType="VARCHAR" property="uuid" />
 		<result column="alias" jdbcType="VARCHAR" property="alias" />
 		<result column="col_name" jdbcType="VARCHAR" property="colName" />
-		<result column="column_type" jdbcType="VARCHAR" property="columnType" />
+		<result column="column_type" jdbcType="VARCHAR"
+			property="columnType" />
 		<result column="agg_type" jdbcType="VARCHAR" property="AggType" />
-		<result column="force_dim" jdbcType="VARCHAR" property="forceDim" />
-		<result column="is_advanced" jdbcType="VARCHAR" property="isAdvanced" />
+		<result column="force_dim" jdbcType="VARCHAR"
+			property="forceDim" />
+		<result column="is_advanced" jdbcType="VARCHAR"
+			property="isAdvanced" />
 		<result column="table_id" jdbcType="VARCHAR" property="tableID" />
-		<result
-			typeHandler="org.zbi.server.mapper.handler.MapHandler"
+		<result typeHandler="org.zbi.server.mapper.handler.MapHandler"
 			column="col_properties" javaType="java.util.Map" jdbcType="VARCHAR"
 			property="colProperties" />
 	</resultMap>
@@ -39,6 +42,26 @@
 		delete from config_column
 		where `uuid`= #{uuid,jdbcType=VARCHAR}
 	</delete>
+
+	<insert id="batchInsert" parameterType="map">
+		<!--@mbg.generated -->
+		insert into config_column
+		(`is_measure`, `chinese`, `alias`, `col_name`, `column_type`,
+		`agg_type`, `force_dim`, `is_advanced`,`table_id`,`col_properties`)
+		values
+		<foreach collection="list" item="item" separator=",">
+			(#{item.isMeasure,jdbcType=BIT},
+			 #{item.chinese,jdbcType=VARCHAR},
+			#{item.colPath,jdbcType=VARCHAR},
+			#{item.colName,jdbcType=VARCHAR},
+			#{item.columnType,jdbcType=VARCHAR}, 
+			#{item.aggType,jdbcType=VARCHAR},
+			#{item.forceDim,jdbcType=BIT},
+			#{item.tableID,jdbcType=VARCHAR},
+			#{item.colProperties,jdbcType=VARCHAR,typeHandler=org.zbi.server.mapper.handler.MapHandler})
+		</foreach>
+	</insert>
+
 	<insert id="insertColumn"
 		parameterType="org.zbi.server.model.config.ConfigColumn">
 		<!--@mbg.generated -->

@@ -45,6 +45,7 @@ public class MysqlConfigDaoService implements ConfigDaoService<String> {
 		ConfigTable ct = new ConfigTable();
 		BeanUtils.copyProperties(table, ct);
 		this.configTableMapper.insertTable(ct);
+		this.configColumnMapper.batchInsert(table.getColumns());
 
 	}
 

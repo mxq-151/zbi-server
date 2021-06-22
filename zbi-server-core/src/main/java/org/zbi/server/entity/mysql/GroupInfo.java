@@ -18,7 +18,7 @@ public class GroupInfo {
 	private String groupDesc;
 	
 	
-	public int createrID;
+	public String createrID;
 
 	public int getGroupID() {
 		return groupID;
@@ -44,11 +44,11 @@ public class GroupInfo {
 		this.groupDesc = groupDesc;
 	}
 
-	public int getCreaterID() {
+	public String getCreaterID() {
 		return createrID;
 	}
 
-	public void setCreaterID(int createrID) {
+	public void setCreaterID(String createrID) {
 		this.createrID = createrID;
 	}
 
