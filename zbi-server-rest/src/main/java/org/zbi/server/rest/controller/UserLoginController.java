@@ -29,8 +29,6 @@ public class UserLoginController extends BaseController {
 	public FacadeUser login(@Valid @RequestParam @ApiParam(value = "用户名", required = true) String userName,
 			@Valid @RequestParam @ApiParam(value = "密码", required = true) String password,
 			HttpServletRequest httpServletRequest) throws LoginException {
-
-		
 		throw new LoginException("找不到用户或者密码不对");
 	}
 

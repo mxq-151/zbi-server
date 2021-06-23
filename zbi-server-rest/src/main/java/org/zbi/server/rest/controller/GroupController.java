@@ -1,8 +1,6 @@
 package org.zbi.server.rest.controller;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import javax.validation.Valid;
 
@@ -11,14 +9,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.zbi.server.dao.service.FolderDaoService;
 import org.zbi.server.dao.service.GroupDaoService;
 import org.zbi.server.model.exception.AdminException;
-import org.zbi.server.model.exception.QueryException;
 import org.zbi.server.model.facade.FacadeBoard;
-import org.zbi.server.model.facade.FacadeFolder;
 import org.zbi.server.model.facade.FacadeGroup;
-import org.zbi.server.model.response.BoardInfoResp;
 
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
