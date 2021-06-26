@@ -10,24 +10,18 @@ import org.zbi.server.mapper.mysql.ConfigColumnMapper;
 import org.zbi.server.mapper.mysql.ConfigTableMapper;
 import org.zbi.server.model.config.ConfigColumn;
 import org.zbi.server.model.config.ConfigTable;
-import org.zbi.server.model.config.ModelConfig;
+import org.zbi.server.model.config.QueryColumn;
 import org.zbi.server.model.facade.FacadeTable;
 import org.zbi.server.model.response.ModelDescResp;
 
 @Component
-public class MysqlConfigDaoService implements ConfigDaoService<String> {
+public class MysqlConfigDaoService implements ConfigDaoService {
 
 	@Autowired
 	private ConfigTableMapper configTableMapper;
 
 	@Autowired
 	private ConfigColumnMapper configColumnMapper;
-
-	@Override
-	public ModelConfig getQuerySqlModel(String modelTag) {
-		// TODO Auto-generated method stub
-		return null;
-	}
 
 	@Override
 	public List<ModelDescResp> getModelDscriptions(String key) {
@@ -63,9 +57,21 @@ public class MysqlConfigDaoService implements ConfigDaoService<String> {
 	}
 
 	@Override
-	public List<ConfigColumn> getColumns(String tableID) {
+	public List<ConfigColumn> getConfigColumns(String tableID) {
 		// TODO Auto-generated method stub
 		return this.configColumnMapper.listColumnsByTableID(tableID);
+	}
+
+	@Override
+	public List<QueryColumn> getQueryColumns(String modelTag) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public List<String> getColumnLimits(String colID) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

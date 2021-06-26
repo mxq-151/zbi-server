@@ -1,20 +1,10 @@
 package org.zbi.server.model.parse;
 
-import org.zbi.server.model.config.ModelDimension;
+import org.zbi.server.model.config.ConfigColumn;
 import org.zbi.server.model.core.SortType;
 
-public class ParseDimension extends ModelDimension {
-
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
-
-	/**
-	 * 所属表
-	 * */ 
-	private String fromTable;
-
+public class ParseColumn extends ConfigColumn {
+	
 	/**
 	 * 排序顺序
 	 */
@@ -24,14 +14,6 @@ public class ParseDimension extends ModelDimension {
 	 * 排序类型
 	 */
 	private SortType sortType;
-
-	public String getFromTable() {
-		return fromTable;
-	}
-
-	public void setFromTable(String fromTable) {
-		this.fromTable = fromTable;
-	}
 
 	public int getSortOrder() {
 		return sortOrder;

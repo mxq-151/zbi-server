@@ -6,7 +6,6 @@ import java.util.Map;
 
 import org.zbi.server.model.request.RequestColumn;
 import org.zbi.server.model.request.RequestCondition;
-import org.zbi.server.model.request.RequestMeasure;
 
 import io.swagger.annotations.ApiModelProperty;
 
@@ -66,7 +65,7 @@ public class ReportInfo {
 	private List<RequestColumn> drillDimensions = new ArrayList<>();
 
 	@ApiModelProperty(required = false, value = "请求度量")
-	private List<RequestMeasure> requestMeasures;
+	private List<RequestColumn> requestMeasures;
 
 	/**
 	 * 请求条件
@@ -138,11 +137,11 @@ public class ReportInfo {
 		this.requestDimensions = requestDimensions;
 	}
 
-	public List<RequestMeasure> getRequestMeasures() {
+	public List<RequestColumn> getRequestMeasures() {
 		return requestMeasures;
 	}
 
-	public void setRequestMeasures(List<RequestMeasure> requestMeasures) {
+	public void setRequestMeasures(List<RequestColumn> requestMeasures) {
 		this.requestMeasures = requestMeasures;
 	}
 

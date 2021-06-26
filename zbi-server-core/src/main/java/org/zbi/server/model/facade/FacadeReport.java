@@ -6,82 +6,74 @@ import java.util.Map;
 
 import org.zbi.server.model.request.RequestColumn;
 import org.zbi.server.model.request.RequestCondition;
-import org.zbi.server.model.request.RequestMeasure;
 
 import io.swagger.annotations.ApiModelProperty;
 
 /**
  * 关于报表的描述
- * */
+ */
 public class FacadeReport {
-	
-	
+
 	/**
 	 * 报表ID
-	 * */
+	 */
 	@ApiModelProperty(example = "1", required = false, value = "报表ID")
 	private String reportID;
-	
-	
+
 	/**
 	 * 所属看板ID
-	 * */
+	 */
 	@ApiModelProperty(example = "1", required = true, value = "所属看板ID")
 	private String boardID;
-	
-	
+
 	/**
 	 * 报表名称
-	 * */
+	 */
 	@ApiModelProperty(example = "test", required = true, value = "报表名称")
 	private String reportName;
-	
+
 	/**
 	 * 报表描述
-	 * */
+	 */
 	@ApiModelProperty(example = "this is a test", required = true, value = "报表描述")
 	private String reportDesc;
-	
-	
+
 	/**
 	 * 模型标识
-	 * */
+	 */
 	@ApiModelProperty(example = "123456", required = true, value = "所用模型标识")
 	private String modelTag;
-	
+
 	/**
 	 * 模型名称
-	 * */
+	 */
 	@ApiModelProperty(example = "销量模型", required = true, value = "所用模型名称")
 	private String modelName;
-	
-	
+
 	/**
 	 * 其他关于页展示的信息
-	 * */
-	@ApiModelProperty(required = false, value = "其他关于页展示的信息",dataType="Map")
-	private Map<String,Object> otherParams;
-	
+	 */
+	@ApiModelProperty(required = false, value = "其他关于页展示的信息", dataType = "Map")
+	private Map<String, Object> otherParams;
+
 	/**
 	 * 请求列
-	 * */
+	 */
 	@ApiModelProperty(required = false, value = "请求维度")
 	private List<RequestColumn> requestDimensions;
-	
-	
+
 	/**
 	 * 下钻维度
-	 * */
+	 */
 	@ApiModelProperty(required = false, value = "下钻维度")
-	private List<RequestColumn> drillDimensions=new ArrayList<>();
-	
-	
+	private List<RequestColumn> drillDimensions = new ArrayList<>();
+
 	@ApiModelProperty(required = false, value = "请求度量")
-	private List<RequestMeasure> requestMeasures;
-	
+	private List<RequestColumn> requestMeasures;
+
 	/**
 	 * 请求条件
-	 * */
+	 */
 	@ApiModelProperty(required = false, value = "请求条件")
 	private List<RequestCondition> requestConditions;
 
@@ -96,8 +88,6 @@ public class FacadeReport {
 	public Map<String, Object> getOtherParams() {
 		return otherParams;
 	}
-
-
 
 	public List<RequestCondition> getRequestConditions() {
 		return requestConditions;
@@ -159,11 +149,11 @@ public class FacadeReport {
 		this.requestDimensions = requestDimensions;
 	}
 
-	public List<RequestMeasure> getRequestMeasures() {
+	public List<RequestColumn> getRequestMeasures() {
 		return requestMeasures;
 	}
 
-	public void setRequestMeasures(List<RequestMeasure> requestMeasures) {
+	public void setRequestMeasures(List<RequestColumn> requestMeasures) {
 		this.requestMeasures = requestMeasures;
 	}
 
@@ -174,8 +164,5 @@ public class FacadeReport {
 	public void setDrillDimensions(List<RequestColumn> drillDimensions) {
 		this.drillDimensions = drillDimensions;
 	}
-	
-	
-	
 
 }

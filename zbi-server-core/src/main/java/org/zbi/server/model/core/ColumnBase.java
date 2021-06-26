@@ -7,6 +7,16 @@ import com.alibaba.fastjson.annotation.JSONField;
 
 public class ColumnBase implements Serializable {
 
+	public static final String PROPERTIETYPE = "properties_type";
+
+	public static final String PROPERTIETYPE_TOPN = "properties_type_topn";
+
+	public static final String PROPERTIETYPE_INVOLE_TABLE = "properties_type_invole_table";
+
+	public static final String PROPERTIETYPE_SUB_QUERY = "properties_type_sub_query";
+
+	public static final String PROPERTIETYPE_CASEWHEN = "properties_type_case_when";
+
 	/**
 	 * 
 	 */
@@ -52,6 +62,7 @@ public class ColumnBase implements Serializable {
 	/**
 	 * 字段属性，通过属性控制字段的变换
 	 */
+	@JSONField(serialize = false)
 	private Map<String, Object> colProperties;
 
 	public String getAlias() {

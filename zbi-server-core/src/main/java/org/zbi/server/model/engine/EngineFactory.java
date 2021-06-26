@@ -9,10 +9,6 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.zbi.server.model.core.EngineType;
-import org.zbi.server.model.decoder.DefaultRequestDecoder;
-import org.zbi.server.model.decoder.IRequestDecoder;
-import org.zbi.server.model.encoder.DefaultSqlEncoder;
-import org.zbi.server.model.encoder.ISqlEncoder;
 import org.zbi.server.model.exception.ParseException;
 import org.zbi.server.model.exception.ParseException.ExceptionType;
 
@@ -81,30 +77,6 @@ public class EngineFactory {
 				throw new ParseException("找不到链接:" + conName, ExceptionType.CONFIGERROR);
 			}
 			return new KylinEngine();
-		default:
-			break;
-
-		}
-
-		throw new ParseException("没有引擎:" + engineType, ExceptionType.CONFIGERROR);
-	}
-
-	public ISqlEncoder<?> getSqlEncoder(EngineType engineType) throws ParseException {
-		switch (engineType) {
-		case CALCITE:
-			return new DefaultSqlEncoder();
-		default:
-			break;
-
-		}
-
-		throw new ParseException("没有引擎SQL编码器:" + engineType, ExceptionType.CONFIGERROR);
-	}
-
-	public IRequestDecoder<?> getParamDecoder(EngineType engineType) throws ParseException {
-		switch (engineType) {
-		case CALCITE:
-			return new DefaultRequestDecoder();
 		default:
 			break;
 

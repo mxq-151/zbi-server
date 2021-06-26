@@ -10,13 +10,24 @@ public class ConfigColumn extends ColumnBase {
 	 */
 	private static final long serialVersionUID = 1L;
 
+	/**
+	 * 属于哪个表
+	 * */
 	private String tableID;
+	
+	/**
+	 * 来自哪个表
+	 * */
+	private String fromTableID;
 
 	/**
 	 * 强制维度，一定要显示的，保证在去重的情况下数据准确
 	 */
 	private boolean forceDim = false;
 
+	/**
+	 * 聚合类型
+	 * */
 	private AggType aggType;
 
 	public String getTableID() {
@@ -41,6 +52,14 @@ public class ConfigColumn extends ColumnBase {
 
 	public void setAggType(AggType aggType) {
 		this.aggType = aggType;
+	}
+
+	public String getFromTableID() {
+		return fromTableID;
+	}
+
+	public void setFromTableID(String fromTableID) {
+		this.fromTableID = fromTableID;
 	}
 
 }

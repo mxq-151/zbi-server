@@ -8,14 +8,14 @@ import java.util.List;
 
 import org.apache.ibatis.type.BaseTypeHandler;
 import org.apache.ibatis.type.JdbcType;
-import org.zbi.server.model.config.ModelDimension;
+import org.zbi.server.model.config.ConfigColumn;
 
 import com.alibaba.fastjson.JSONArray;
 
-public class DimensionHandler extends BaseTypeHandler<List<ModelDimension>>{
+public class DimensionHandler extends BaseTypeHandler<List<ConfigColumn>>{
 
 	@Override
-	public void setNonNullParameter(PreparedStatement ps, int i, List<ModelDimension> parameter, JdbcType jdbcType)
+	public void setNonNullParameter(PreparedStatement ps, int i, List<ConfigColumn> parameter, JdbcType jdbcType)
 			throws SQLException {
 		// TODO Auto-generated method stub
 		ps.setString(i, JSONArray.toJSONString(parameter));
@@ -23,21 +23,21 @@ public class DimensionHandler extends BaseTypeHandler<List<ModelDimension>>{
 	}
 
 	@Override
-	public List<ModelDimension> getNullableResult(ResultSet rs, String columnName) throws SQLException {
+	public List<ConfigColumn> getNullableResult(ResultSet rs, String columnName) throws SQLException {
 		// TODO Auto-generated method stub
-		return JSONArray.parseArray(rs.getString(columnName),ModelDimension.class);
+		return JSONArray.parseArray(rs.getString(columnName),ConfigColumn.class);
 	}
 
 	@Override
-	public List<ModelDimension> getNullableResult(ResultSet rs, int columnIndex) throws SQLException {
+	public List<ConfigColumn> getNullableResult(ResultSet rs, int columnIndex) throws SQLException {
 		// TODO Auto-generated method stub
-		return JSONArray.parseArray(rs.getString(columnIndex),ModelDimension.class);
+		return JSONArray.parseArray(rs.getString(columnIndex),ConfigColumn.class);
 	}
 
 	@Override
-	public List<ModelDimension> getNullableResult(CallableStatement cs, int columnIndex) throws SQLException {
+	public List<ConfigColumn> getNullableResult(CallableStatement cs, int columnIndex) throws SQLException {
 		// TODO Auto-generated method stub
-		return  JSONArray.parseArray(cs.getString(columnIndex),ModelDimension.class);
+		return  JSONArray.parseArray(cs.getString(columnIndex),ConfigColumn.class);
 	}
 
 	

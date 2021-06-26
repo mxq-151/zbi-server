@@ -1,7 +1,5 @@
 package org.zbi.server.model.config;
 
-import java.util.List;
-
 import org.zbi.server.model.core.EngineType;
 
 public class ConfigTable {
@@ -26,7 +24,9 @@ public class ConfigTable {
 	 * 1:事实表, 2：维度表：3：子表
 	 */
 	private int tableType;
-	
+
+	// 是否为源表
+	private boolean source;
 
 	public String getTableID() {
 		return tableID;
@@ -88,5 +88,14 @@ public class ConfigTable {
 	public void setEngineType(EngineType engineType) {
 		this.engineType = engineType;
 	}
+
+	public boolean isSource() {
+		return source;
+	}
+
+	public void setSource(boolean source) {
+		this.source = source;
+	}
+
 
 }
