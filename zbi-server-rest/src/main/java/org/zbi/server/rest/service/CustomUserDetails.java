@@ -18,10 +18,13 @@ public class CustomUserDetails implements UserDetails {
 	private String userName;
 
 	private String password;
+	
+	private String userID;
 
-	public CustomUserDetails(String userName, int roleType, String password) {
+	public CustomUserDetails(String userName, int roleType, String password,String userID) {
 		this.userName = userName;
 		this.roleType = roleType;
+		this.userID=userID;
 	}
 
 	@Override
@@ -80,6 +83,14 @@ public class CustomUserDetails implements UserDetails {
 
 	public void setUserName(String userName) {
 		this.userName = userName;
+	}
+
+	public String getUserID() {
+		return userID;
+	}
+
+	public void setUserID(String userID) {
+		this.userID = userID;
 	}
 
 }

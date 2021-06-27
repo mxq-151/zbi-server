@@ -9,7 +9,6 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.zbi.server.dao.service.ConfigDaoService;
-import org.zbi.server.model.config.QueryColumn;
 import org.zbi.server.model.exception.ParseException;
 import org.zbi.server.model.request.RequestColumn;
 import org.zbi.server.model.request.RequestCondition;
@@ -26,7 +25,7 @@ public class RequestDecodeService {
 	public RequestParam parseRquest(RequestParam param) throws ParseException {
 		// TODO Auto-generated method stub
 
-		List<QueryColumn> queryCols = this.configDaoService.getQueryColumns(param.getModelTag());
+		List<String> queryCols = this.configDaoService.queryUserTotalColLimit(param.getModelTag());
 
 		List<RequestColumn> dims = param.getDimensions();
 		List<RequestColumn> measures = param.getMeasures();
@@ -38,13 +37,13 @@ public class RequestDecodeService {
 				continue;
 			}
 			boolean find = false;
-			for (QueryColumn col : queryCols) {
-				if (dim.getUuid().equals(col.getColID())) {
+			for (String col : queryCols) {
+				if (dim.getUuid().equals(col)) {
 					newDims.add(dim);
-					List<String> limits = this.configDaoService.getColumnLimits(col.getColID());
+					List<String> limits = this.configDaoService.getDataLimit(col);
 					List<RequestCondition> conditions = param.getConditions();
 					for (RequestCondition condition : conditions) {
-						if (condition.getUuid().equals(col.getColID())) {
+						if (condition.getUuid().equals(col)) {
 							condition.getRequestValue().addAll(limits);
 						}
 					}
@@ -63,8 +62,8 @@ public class RequestDecodeService {
 				continue;
 			}
 			boolean find = false;
-			for (QueryColumn col : queryCols) {
-				if (measure.getUuid().equals(col.getColID())) {
+			for (String col : queryCols) {
+				if (measure.getUuid().equals(col)) {
 					newMeasures.add(measure);
 					find = true;
 				}

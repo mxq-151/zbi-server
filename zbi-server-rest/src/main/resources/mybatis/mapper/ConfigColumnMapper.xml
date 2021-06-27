@@ -46,17 +46,22 @@
 	<insert id="batchInsert" parameterType="map">
 		<!--@mbg.generated -->
 		insert into config_column
-		(`is_measure`, `chinese`, `alias`, `col_name`, `column_type`,
-		`agg_type`, `force_dim`, `is_advanced`,`table_id`,`col_properties`)
+		(`uuid`,`is_measure`, `chinese`, `alias`,
+		`col_name`, `column_type`,
+		`agg_type`, `force_dim`,
+		`is_advanced`,`table_id`,`col_properties`)
 		values
 		<foreach collection="list" item="item" separator=",">
-			(#{item.isMeasure,jdbcType=BIT},
-			 #{item.chinese,jdbcType=VARCHAR},
-			#{item.colPath,jdbcType=VARCHAR},
+			(
+			#{item.uuid,jdbcType=VARCHAR},
+			#{item.isMeasure,jdbcType=BIT},
+			#{item.chinese,jdbcType=VARCHAR},
+			#{item.alias,jdbcType=VARCHAR},
 			#{item.colName,jdbcType=VARCHAR},
-			#{item.columnType,jdbcType=VARCHAR}, 
+			#{item.columnType,jdbcType=VARCHAR},
 			#{item.aggType,jdbcType=VARCHAR},
 			#{item.forceDim,jdbcType=BIT},
+			#{item.isAdvanced,jdbcType=BIT},
 			#{item.tableID,jdbcType=VARCHAR},
 			#{item.colProperties,jdbcType=VARCHAR,typeHandler=org.zbi.server.mapper.handler.MapHandler})
 		</foreach>

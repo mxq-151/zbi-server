@@ -19,7 +19,7 @@
                 javaType="java.util.List"
                 jdbcType="VARCHAR"
                 property="drillDimensions"/>
-        <result typeHandler="org.zbi.server.mapper.handler.RequestMeasureHanlder" column="request_measures"
+        <result typeHandler="org.zbi.server.mapper.handler.RequestColumnHandler" column="request_measures"
                 javaType="java.util.List"
                 jdbcType="VARCHAR"
                 property="requestMeasures"/>
@@ -43,7 +43,7 @@
                 #{otherParams,typeHandler=org.zbi.server.mapper.handler.MapHandler},
                 #{requestDimensions,typeHandler=org.zbi.server.mapper.handler.RequestColumnHandler},
                 #{drillDimensions,typeHandler=org.zbi.server.mapper.handler.RequestColumnHandler},
-                #{requestMeasures,typeHandler=org.zbi.server.mapper.handler.RequestMeasureHanlder},
+                #{requestMeasures,typeHandler=org.zbi.server.mapper.handler.RequestColumnHandler},
                 #{requestConditions,typeHandler=org.zbi.server.mapper.handler.RequestConditionHandler}
                 ,#{boardID})
     </insert>
@@ -117,7 +117,7 @@
         request_dimensions=#{requestDimensions,typeHandler=org.zbi.server.mapper.handler.RequestColumnHandler},
         drill_dimensions=#{drillDimensions,typeHandler=org.zbi.server.mapper.handler.RequestColumnHandler},
         request_conditions=#{drillDimensions,typeHandler=org.zbi.server.mapper.handler.RequestConditionHandler},
-        request_measures=#{drillDimensions,typeHandler=org.zbi.server.mapper.handler.RequestMeasureHanlder},
+        request_measures=#{drillDimensions,typeHandler=org.zbi.server.mapper.handler.RequestColumnHandler},
         other_params=#{otherParams,typeHandler=org.zbi.server.mapper.handler.MapHandler}
         where report_id=#{reportID}
     </update>

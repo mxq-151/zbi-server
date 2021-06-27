@@ -7,11 +7,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.oauth2.provider.ClientDetails;
 import org.springframework.security.oauth2.provider.ClientDetailsService;
 import org.springframework.security.oauth2.provider.ClientRegistrationException;
+import org.springframework.stereotype.Component;
 import org.zbi.server.entity.mysql.SysClientInfo;
 import org.zbi.server.mapper.mysql.SysClientInfoMapper;
 
 import com.google.common.collect.Sets;
 
+@Component
 public class CustomClientDetailService implements ClientDetailsService {
 	
 	@Autowired

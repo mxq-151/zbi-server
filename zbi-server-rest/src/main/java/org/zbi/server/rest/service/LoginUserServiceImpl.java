@@ -13,10 +13,14 @@ public class LoginUserServiceImpl implements LoginUserService {
 	public FacadeUser getLoginUser() {
 		// TODO Auto-generated method stub
 
-		Authentication auth=SecurityContextHolder.getContext().getAuthentication();
+		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 
+		CustomUserDetails cud = (CustomUserDetails) auth.getPrincipal();
 
 		FacadeUser user = new FacadeUser();
+		user.setUserID(cud.getUserID());
+		user.setRoleType(cud.getRoleType());
+		user.setUserName(cud.getUserName());
 
 		return user;
 	}

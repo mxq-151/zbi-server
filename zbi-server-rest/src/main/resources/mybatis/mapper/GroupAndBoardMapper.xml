@@ -10,11 +10,13 @@
 		(board_id,group_id) values(#{boardID},#{groupID})
 	</insert>
 
-	<select id="getBoardInGroup" resultMap="boardInfoResultMap">
+	<select id="getBoardInGroup">
 		select a.*
 		from
-		zbi_db.group_board as a left join zbi_db.board_info as b on
-		a.board_id=b.board_id where group_id=#{groupID}
+		zbi_db.group_board as a left join
+		zbi_db.board_info as b on
+		a.board_id=b.board_id where
+		group_id=#{groupID}
 	</select>
 
 	<delete id="deleteBoardInGroup">

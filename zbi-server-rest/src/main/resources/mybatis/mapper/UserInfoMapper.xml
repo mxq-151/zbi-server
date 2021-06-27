@@ -23,7 +23,7 @@
 		user_id=#{userID}
 	</select>
 
-	<select id="getUserByEmail" resultMap="boardInfoResultMap">
+	<select id="getUserByEmail" resultMap="userInfoResultMap">
 		select * from
 		zbi_db.user_info where
 		`email`=#{email}

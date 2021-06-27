@@ -1,18 +1,26 @@
 package org.zbi.server.dao.mysql;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.zbi.server.dao.service.ConfigDaoService;
+import org.zbi.server.entity.mysql.GroupColLimit;
+import org.zbi.server.entity.mysql.GroupDataLimit;
+import org.zbi.server.entity.mysql.UserColLimit;
+import org.zbi.server.entity.mysql.UserDataLimit;
+import org.zbi.server.mapper.mysql.ColumnLimitMapper;
 import org.zbi.server.mapper.mysql.ConfigColumnMapper;
 import org.zbi.server.mapper.mysql.ConfigTableMapper;
+import org.zbi.server.mapper.mysql.DataLimitMapper;
+import org.zbi.server.mapper.mysql.QueryModelMapper;
 import org.zbi.server.model.config.ConfigColumn;
 import org.zbi.server.model.config.ConfigTable;
-import org.zbi.server.model.config.QueryColumn;
 import org.zbi.server.model.facade.FacadeTable;
 import org.zbi.server.model.response.ModelDescResp;
+import org.zbi.server.model.service.LoginUserService;
 
 @Component
 public class MysqlConfigDaoService implements ConfigDaoService {
@@ -23,6 +31,18 @@ public class MysqlConfigDaoService implements ConfigDaoService {
 	@Autowired
 	private ConfigColumnMapper configColumnMapper;
 
+	@Autowired
+	private DataLimitMapper dataLimitMapper;
+
+	@Autowired
+	private LoginUserService loginUserService;
+
+	@Autowired
+	private QueryModelMapper queryColumnMapper;
+
+	@Autowired
+	ColumnLimitMapper columnLimitMapper;
+
 	@Override
 	public List<ModelDescResp> getModelDscriptions(String key) {
 		// TODO Auto-generated method stub
@@ -30,11 +50,23 @@ public class MysqlConfigDaoService implements ConfigDaoService {
 	}
 
 	@Override
-	public void saveTable(FacadeTable table) {
+	public void saveConfigTable(FacadeTable table) {
 		// TODO Auto-generated method stub
 		if (table.getTableID() != null) {
 			this.configTableMapper.deleteByPrimaryKey(table.getTableID());
 			this.configColumnMapper.deleteByTablelId(table.getTableID());
+		}else
+		{
+			table.setTableID(java.util.UUID.randomUUID().toString());
+		}
+		
+		List<ConfigColumn> columns=table.getColumns();
+		for(ConfigColumn col:columns)
+		{
+			if(col.getUuid()==null)
+			{
+				col.setUuid(java.util.UUID.randomUUID().toString());
+			}
 		}
 		ConfigTable ct = new ConfigTable();
 		BeanUtils.copyProperties(table, ct);
@@ -44,14 +76,14 @@ public class MysqlConfigDaoService implements ConfigDaoService {
 	}
 
 	@Override
-	public void deleteTable(String tableID) {
+	public void deleteConfigTable(String tableID) {
 		// TODO Auto-generated method stub
 		this.configTableMapper.deleteByPrimaryKey(tableID);
 		this.configColumnMapper.deleteByTablelId(tableID);
 	}
 
 	@Override
-	public List<ConfigTable> queryTables() {
+	public List<ConfigTable> queryConfigTables() {
 		// TODO Auto-generated method stub
 		return this.configTableMapper.loadTables();
 	}
@@ -63,15 +95,112 @@ public class MysqlConfigDaoService implements ConfigDaoService {
 	}
 
 	@Override
-	public List<QueryColumn> getQueryColumns(String modelTag) {
+	public List<String> queryUserTotalColLimit(String modelTag) {
 		// TODO Auto-generated method stub
-		return null;
+		String userID = loginUserService.getLoginUser().getUserID();
+		return this.columnLimitMapper.queryUserTotalColLimit(userID, modelTag);
 	}
 
 	@Override
-	public List<String> getColumnLimits(String colID) {
+	public List<String> getDataLimit(String colID) {
 		// TODO Auto-generated method stub
-		return null;
+		String userID = loginUserService.getLoginUser().getUserID();
+		return this.dataLimitMapper.queryUserTotalDataLimit(userID, colID);
+	}
+
+	@Override
+	public List<GroupColLimit> queryGroupColLimit(String groupID, String modelTag) {
+		// TODO Auto-generated method stub
+		return this.columnLimitMapper.queryGroupColLimit(groupID, modelTag);
+	}
+
+	@Override
+	public List<UserColLimit> queryUserColLimit(String userID, String modelTag) {
+		// TODO Auto-generated method stub
+		return this.columnLimitMapper.queryUserColLimit(userID, modelTag);
+	}
+
+	@Override
+	public void insertUserColLimit(List<String> cols, String userID, String modelTag) {
+		// TODO Auto-generated method stub
+		this.columnLimitMapper.deleteUserColLimit(userID, modelTag);
+		List<UserColLimit> queryColumns = new ArrayList<>(cols.size());
+		for (String col : cols) {
+			UserColLimit limit = new UserColLimit();
+			limit.setColID(col);
+			limit.setModelTag(modelTag);
+			limit.setUserID(userID);
+			queryColumns.add(limit);
+		}
+		this.columnLimitMapper.insertUserColLimit(queryColumns);
+	}
+
+	@Override
+	public void insertGroupColLimit(List<String> cols, String groupID, String modelTag) {
+		// TODO Auto-generated method stub
+		this.columnLimitMapper.deleteGroupColLimit(groupID, modelTag);
+		List<GroupColLimit> queryColumns = new ArrayList<>(cols.size());
+		for (String col : cols) {
+			GroupColLimit limit = new GroupColLimit();
+			limit.setColID(col);
+			limit.setModelTag(modelTag);
+			limit.setGroupID(groupID);
+			queryColumns.add(limit);
+		}
+
+		this.columnLimitMapper.insertGroupColLimit(queryColumns);
+
+	}
+
+	@Override
+	public void insertUserDataLimit(List<String> words, String userID, String colID) {
+		// TODO Auto-generated method stub
+		this.dataLimitMapper.deleteUserDataLimit(userID, colID);
+		List<UserDataLimit> dataLimits = new ArrayList<>();
+
+		for (String word : words) {
+			UserDataLimit limit = new UserDataLimit();
+			limit.setColID(colID);
+			limit.setWord(word);
+			limit.setUserID(userID);
+			dataLimits.add(limit);
+		}
+		this.dataLimitMapper.insertUserDataLimit(dataLimits);
+
+	}
+
+	@Override
+	public List<String> queryUserDataLimit(String userID, String colID) {
+		// TODO Auto-generated method stub
+		return this.dataLimitMapper.queryUserDataLimit(userID, colID);
+	}
+
+	@Override
+	public void insertGroupDataLimit(List<String> words, String groupID, String colID) {
+		// TODO Auto-generated method stub
+		this.dataLimitMapper.deleteGroupDataLimit(groupID, colID);
+		List<GroupDataLimit> dataLimits = new ArrayList<>();
+
+		for (String word : words) {
+			GroupDataLimit limit = new GroupDataLimit();
+			limit.setColID(colID);
+			limit.setWord(word);
+			limit.setGroupID(groupID);
+			dataLimits.add(limit);
+		}
+		this.dataLimitMapper.insertGroupDataLimit(dataLimits);
+	}
+
+	@Override
+	public List<String> queryGroupDataLimit(String groupID, String colID) {
+		// TODO Auto-generated method stub
+		return this.dataLimitMapper.queryGroupDataLimit(groupID, colID);
+	}
+
+	@Override
+	public List<String> queryUserTotalDataLimit(String userID, String colID) {
+		// TODO Auto-generated method stub
+		return this.dataLimitMapper.queryUserTotalDataLimit(userID, colID);
 	}
 
 }

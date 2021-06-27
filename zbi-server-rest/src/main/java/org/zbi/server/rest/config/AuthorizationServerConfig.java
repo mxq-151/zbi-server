@@ -44,38 +44,35 @@ import org.springframework.security.oauth2.provider.token.TokenStore;
 import org.springframework.security.web.authentication.preauth.PreAuthenticatedAuthenticationToken;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
+import org.zbi.server.rest.service.CustomClientDetailService;
 import org.zbi.server.rest.service.CustomUserDetails;
 
 @Configuration
 @EnableAuthorizationServer
 public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdapter {
 
-	// 该对象用来支持 password 模式
 	@Autowired
 	AuthenticationManager authenticationManager;
 
-	// 该对象用来将令牌信息存储到内存中
 	@Autowired(required = false)
 	TokenStore inMemoryTokenStore;
 
-	// 该对象将为刷新token提供支持
 	@Autowired
 	UserDetailsService userDetailsService;
+
+	@Autowired
+	CustomClientDetailService clientDetailsService;
 
 	// 指定密码的加密方式
 	@Bean
 	PasswordEncoder passwordEncoder() {
-		// 使用BCrypt强哈希函数加密方案（密钥迭代次数默认为10）
 		return new BCryptPasswordEncoder();
 	}
 
 	// 配置 password 授权模式
 	@Override
 	public void configure(ClientDetailsServiceConfigurer clients) throws Exception {
-		clients.inMemory().withClient("password").authorizedGrantTypes("password", "refresh_token") // 授权模式为password和refresh_token两种
-				.accessTokenValiditySeconds(1800) // 配置access_token的过期时间
-				.resourceIds("rid") // 配置资源id
-				.scopes("all").secret("$2a$10$RMuFXGQ5AtH4wOvkUqyvuecpqUSeoxZYqilXzbz50dceRsga.WYiq"); // 123加密后的密码
+		clients.withClientDetails(clientDetailsService);
 	}
 
 	@Override
@@ -349,6 +346,7 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
 				CustomUserDetails cud = (CustomUserDetails) authentication.getPrincipal();
 				additionalInformation.put("userName", cud.getUsername());
 				additionalInformation.put("roleType", cud.getRoleType());
+				additionalInformation.put("userID", cud.getUserID());
 				token.setAdditionalInformation(additionalInformation);
 			}
 

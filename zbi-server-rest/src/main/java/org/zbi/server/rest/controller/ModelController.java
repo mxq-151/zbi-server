@@ -30,14 +30,14 @@ public class ModelController extends BaseController {
 	@ApiOperation(value = "保存表信息", code = 200, httpMethod = "POST", response = ModelDescResp.class, responseContainer = "List")
 	@ApiResponses({ @ApiResponse(code = 400, message = "请求错误"), @ApiResponse(code = 500, message = "响应失败") })
 	public void saveTable(@RequestBody FacadeTable table) {
-		this.daoService.saveTable(table);
+		this.daoService.saveConfigTable(table);
 	}
 	
 	@RequestMapping(value = "/delete/table", method = RequestMethod.POST)
 	@ApiOperation(value = "删除表信息", code = 200, httpMethod = "POST", response = ModelDescResp.class, responseContainer = "List")
 	@ApiResponses({ @ApiResponse(code = 400, message = "请求错误"), @ApiResponse(code = 500, message = "响应失败") })
 	public void deleteTable(@RequestBody FacadeTable table) {
-		this.daoService.saveTable(table);
+		this.daoService.saveConfigTable(table);
 	}
 
 	@RequestMapping(value = "/models", method = RequestMethod.GET)
