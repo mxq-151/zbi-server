@@ -25,6 +25,7 @@ public class CustomUserDetails implements UserDetails {
 		this.userName = userName;
 		this.roleType = roleType;
 		this.userID=userID;
+		this.password=password;
 	}
 
 	@Override

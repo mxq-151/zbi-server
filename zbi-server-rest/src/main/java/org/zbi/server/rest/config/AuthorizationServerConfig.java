@@ -55,7 +55,7 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
 	AuthenticationManager authenticationManager;
 
 	@Autowired(required = false)
-	TokenStore inMemoryTokenStore;
+	TokenStore tokenStore;
 
 	@Autowired
 	UserDetailsService userDetailsService;
@@ -79,7 +79,7 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
 	public void configure(AuthorizationServerEndpointsConfigurer endpoints) {
 
 		endpoints.tokenServices(getAuthorizationServerTokenServices());
-		endpoints.tokenStore(inMemoryTokenStore) // 配置令牌的存储（这里存放在内存中）
+		endpoints.tokenStore(tokenStore) // 配置令牌的存储（这里存放在内存中）
 				.authenticationManager(authenticationManager).userDetailsService(userDetailsService);
 	}
 
@@ -90,7 +90,11 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
 	}
 
 	private DefaultTokenServices getAuthorizationServerTokenServices() {
-		return new DefaultTokenServices();
+		DefaultTokenServices tokenService= new DefaultTokenServices();
+		tokenService.setAuthenticationManager(authenticationManager);
+		tokenService.setTokenStore(tokenStore);
+		tokenService.setClientDetailsService(clientDetailsService);
+		return tokenService;
 	}
 
 	public class DefaultTokenServices implements AuthorizationServerTokenServices, ResourceServerTokenServices,
@@ -341,7 +345,7 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
 			token.setRefreshToken(refreshToken);
 			token.setScope(authentication.getOAuth2Request().getScope());
 
-			if (authentication.isClientOnly()) {
+			if (!authentication.isClientOnly()) {
 				Map<String, Object> additionalInformation = new HashMap<>();
 				CustomUserDetails cud = (CustomUserDetails) authentication.getPrincipal();
 				additionalInformation.put("userName", cud.getUsername());

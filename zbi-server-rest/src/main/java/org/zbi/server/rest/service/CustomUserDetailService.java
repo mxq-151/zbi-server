@@ -24,7 +24,7 @@ public class CustomUserDetailService implements UserDetailsService {
 			throw new UsernameNotFoundException("user not exsist:" + username);
 		}
 
-		CustomUserDetails cud = new CustomUserDetails(user.getUserName(), user.getRoleType(), user.getPassword(),
+		CustomUserDetails cud = new CustomUserDetails(user.getEmail(), user.getRoleType(), user.getPassword(),
 				user.getUserID());
 		return cud;
 	}
