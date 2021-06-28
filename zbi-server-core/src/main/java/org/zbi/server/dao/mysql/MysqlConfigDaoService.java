@@ -9,8 +9,11 @@ import org.springframework.stereotype.Component;
 import org.zbi.server.dao.service.ConfigDaoService;
 import org.zbi.server.entity.mysql.GroupColLimit;
 import org.zbi.server.entity.mysql.GroupDataLimit;
+import org.zbi.server.entity.mysql.QueryColumn;
+import org.zbi.server.entity.mysql.QueryModel;
 import org.zbi.server.entity.mysql.UserColLimit;
 import org.zbi.server.entity.mysql.UserDataLimit;
+import org.zbi.server.entity.mysql.UserInfo;
 import org.zbi.server.mapper.mysql.ColumnLimitMapper;
 import org.zbi.server.mapper.mysql.ConfigColumnMapper;
 import org.zbi.server.mapper.mysql.ConfigTableMapper;
@@ -18,7 +21,9 @@ import org.zbi.server.mapper.mysql.DataLimitMapper;
 import org.zbi.server.mapper.mysql.QueryModelMapper;
 import org.zbi.server.model.config.ConfigColumn;
 import org.zbi.server.model.config.ConfigTable;
+import org.zbi.server.model.exception.AdminException;
 import org.zbi.server.model.facade.FacadeTable;
+import org.zbi.server.model.facade.FacadeUser;
 import org.zbi.server.model.response.ModelDescResp;
 import org.zbi.server.model.service.LoginUserService;
 
@@ -38,7 +43,7 @@ public class MysqlConfigDaoService implements ConfigDaoService {
 	private LoginUserService loginUserService;
 
 	@Autowired
-	private QueryModelMapper queryColumnMapper;
+	private QueryModelMapper queryModelMapper;
 
 	@Autowired
 	ColumnLimitMapper columnLimitMapper;
@@ -50,21 +55,21 @@ public class MysqlConfigDaoService implements ConfigDaoService {
 	}
 
 	@Override
-	public void saveConfigTable(FacadeTable table) {
+	public void saveConfigTable(FacadeTable table) throws AdminException {
 		// TODO Auto-generated method stub
+		
+		this.developConfigCheck();
+		
 		if (table.getTableID() != null) {
 			this.configTableMapper.deleteByPrimaryKey(table.getTableID());
 			this.configColumnMapper.deleteByTablelId(table.getTableID());
-		}else
-		{
+		} else {
 			table.setTableID(java.util.UUID.randomUUID().toString());
 		}
-		
-		List<ConfigColumn> columns=table.getColumns();
-		for(ConfigColumn col:columns)
-		{
-			if(col.getUuid()==null)
-			{
+
+		List<ConfigColumn> columns = table.getColumns();
+		for (ConfigColumn col : columns) {
+			if (col.getUuid() == null) {
 				col.setUuid(java.util.UUID.randomUUID().toString());
 			}
 		}
@@ -76,21 +81,24 @@ public class MysqlConfigDaoService implements ConfigDaoService {
 	}
 
 	@Override
-	public void deleteConfigTable(String tableID) {
+	public void deleteConfigTable(String tableID) throws AdminException {
 		// TODO Auto-generated method stub
+		this.developConfigCheck();
 		this.configTableMapper.deleteByPrimaryKey(tableID);
 		this.configColumnMapper.deleteByTablelId(tableID);
 	}
 
 	@Override
-	public List<ConfigTable> queryConfigTables() {
+	public List<ConfigTable> queryConfigTables() throws AdminException {
 		// TODO Auto-generated method stub
+		this.developConfigCheck();
 		return this.configTableMapper.loadTables();
 	}
 
 	@Override
-	public List<ConfigColumn> getConfigColumns(String tableID) {
+	public List<ConfigColumn> getConfigColumns(String tableID) throws AdminException {
 		// TODO Auto-generated method stub
+		this.developConfigCheck();
 		return this.configColumnMapper.listColumnsByTableID(tableID);
 	}
 
@@ -201,6 +209,66 @@ public class MysqlConfigDaoService implements ConfigDaoService {
 	public List<String> queryUserTotalDataLimit(String userID, String colID) {
 		// TODO Auto-generated method stub
 		return this.dataLimitMapper.queryUserTotalDataLimit(userID, colID);
+	}
+
+	@Override
+	public void saveModel(String modelTag, String modelName, List<QueryColumn> queryColumn) throws AdminException {
+		// TODO Auto-generated method stub
+
+		this.developConfigCheck();
+		if (modelTag == null) {
+			String modelID = java.util.UUID.randomUUID().toString();
+			QueryModel model = new QueryModel();
+			model.setModelID(modelID);
+			model.setModelTag(modelID);
+			model.setModelName(modelName);
+			for (QueryColumn qc : queryColumn) {
+				qc.setModelTag(modelID);
+			}
+			this.queryModelMapper.batchInsert(queryColumn);
+			this.queryModelMapper.createModel(model);
+		} else {
+			this.queryModelMapper.deleteModel(modelTag);
+			this.queryModelMapper.deleteQueryColumn(modelTag);
+
+			QueryModel model = new QueryModel();
+			model.setModelID(modelTag);
+			model.setModelTag(modelTag);
+			model.setModelName(modelName);
+
+			for (QueryColumn qc : queryColumn) {
+				qc.setModelTag(modelTag);
+			}
+			this.queryModelMapper.batchInsert(queryColumn);
+			this.queryModelMapper.createModel(model);
+		}
+
+	}
+
+	@Override
+	public List<QueryColumn> listQueryColumn(String modelTag) {
+		// TODO Auto-generated method stub
+		return this.queryModelMapper.listQueryColumn(modelTag);
+	}
+
+	@Override
+	public List<QueryModel> listQueryModel() {
+		// TODO Auto-generated method stub
+
+		FacadeUser user = this.loginUserService.getLoginUser();
+		if (user.getRoleType() != UserInfo.SUPERADMIN && user.getRoleType() != UserInfo.DEVELOPER) {
+			return this.queryModelMapper.listQueryModel(user.getUserID());
+		} else {
+			return this.queryModelMapper.listAllModel();
+		}
+
+	}
+
+	private void developConfigCheck() throws AdminException {
+		FacadeUser user = this.loginUserService.getLoginUser();
+		if (user.getRoleType() != UserInfo.SUPERADMIN && user.getRoleType() != UserInfo.DEVELOPER) {
+			throw new AdminException("没有权限执行操作");
+		}
 	}
 
 }

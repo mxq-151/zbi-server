@@ -2,16 +2,23 @@ package org.zbi.server.mapper.mysql;
 
 import java.util.List;
 
-import org.zbi.server.model.config.QueryColumn;
+import org.zbi.server.entity.mysql.QueryColumn;
+import org.zbi.server.entity.mysql.QueryModel;
 
 public interface QueryModelMapper {
 
-	public List<QueryColumn> queryQueryColumns(String userID, String modelTag);
-	
-	public List<QueryColumn> queryQueryColumnsByGroup(String groupID, String modelTag);
+	public void createModel(QueryModel model);
 
-	public void insertQueryColumns(List<QueryColumn> queryColumns);
+	public List<QueryModel> listQueryModel(String userID);
 
-	public void deleteQueryColumns(String groupID, String modelTag);
+	public List<QueryModel> listAllModel();
+
+	public void deleteModel(String modelTag);
+
+	public List<QueryColumn> listQueryColumn(String modelTag);
+
+	public void batchInsert(List<QueryColumn> queryColumns);
+
+	public void deleteQueryColumn(String modelTag);
 
 }

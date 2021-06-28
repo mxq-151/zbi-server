@@ -1,13 +1,11 @@
-package org.zbi.server.model.config;
+package org.zbi.server.entity.mysql;
 
 public class QueryColumn {
-	
+
 	private String modelTag;
-	
+
 	private String colID;
-	
-	private String groupID;
-	
+
 	private String fromTable;
 
 	public String getModelTag() {
@@ -32,14 +30,6 @@ public class QueryColumn {
 
 	public void setFromTable(String fromTable) {
 		this.fromTable = fromTable;
-	}
-
-	public String getGroupID() {
-		return groupID;
-	}
-
-	public void setGroupID(String groupID) {
-		this.groupID = groupID;
 	}
 
 }

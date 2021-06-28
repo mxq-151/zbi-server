@@ -1,7 +1,6 @@
 package org.zbi.server.model.engine;
 
 import java.io.IOException;
-import java.sql.SQLException;
 
 import org.zbi.server.model.exception.ParseException;
 import org.zbi.server.model.parse.ParseModel;

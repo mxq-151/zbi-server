@@ -34,7 +34,6 @@ public class ServiceTestBase {
 	private void setAuth(CustomUserDetails user) {
 		UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(user, null);
 		SecurityContextHolder.getContext().setAuthentication(authentication);
-		;
 	}
 
 }

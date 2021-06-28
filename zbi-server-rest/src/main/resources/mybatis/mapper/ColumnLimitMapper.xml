@@ -5,53 +5,59 @@
 <mapper namespace="org.zbi.server.mapper.mysql.ColumnLimitMapper">
 	<resultMap id="groupResultMap"
 		type="org.zbi.server.entity.mysql.GroupColLimit">
-		<result column="qc_id" property="qcID" />
 		<result column="group_id" property="groupID" />
 		<result column="col_id" property="colID" />
 		<result column="model_tag" property="modelTag" />
 	</resultMap>
-	
+
 	<resultMap id="userResultMap"
 		type="org.zbi.server.entity.mysql.UserColLimit">
-		<result column="qc_id" property="qcID" />
 		<result column="user_id" property="userID" />
 		<result column="col_id" property="colID" />
 		<result column="model_tag" property="modelTag" />
 	</resultMap>
 
-	<insert id="insertUserColLimit">
-		insert into zbi_db.user_col_limit (qc_id,user_id,col_id,model_tag)
+	<insert id="insertUserColLimit" parameterType="map">
+		insert into zbi_db.user_col_limit (user_id,col_id,model_tag)
 		values
 		<foreach collection="list" item="item" separator=",">
-		(#{qcID},#{userID},#{colID},#{modelTag})
+			(#{item.userID},#{item.colID},#{item.modelTag})
 		</foreach>
 	</insert>
-	
-	<insert id="insertGroupColLimit">
-		insert into zbi_db.group_col_limit (qc_id,group_id,col_id,model_tag)
+
+	<insert id="insertGroupColLimit" parameterType="map">
+		insert into zbi_db.group_col_limit (group_id,col_id,model_tag)
 		values
 		<foreach collection="list" item="item" separator=",">
-		(#{qcID},#{groupID},#{colID},#{modelTag})
+			(#{item.groupID},#{item.colID},#{item.modelTag})
 		</foreach>
 	</insert>
-	
-	<select id="queryUserTotalColLimit" >
-		select distinct col_id from zbi_db.group_col_limit where group_id=#{groupID} AND model_tag=#{modelTag}
+
+	<select id="queryUserTotalColLimit" resultType="string">
+		select distinct col_id from
+		zbi_db.group_col_limit where group_id in(select distinct group_id from zbi_db.group_user where user_id=#{userID}) 
+		union all 
+		select distinct col_id from
+		zbi_db.user_col_limit where user_id=#{userID}
 	</select>
 
 	<select id="queryGroupColLimit" resultMap="groupResultMap">
-		select * from zbi_db.group_col_limit where group_id=#{groupID} AND model_tag=#{modelTag}
+		select * from
+		zbi_db.group_col_limit where group_id=#{groupID} AND
+		model_tag=#{modelTag}
 	</select>
-	
+
 	<select id="queryUserColLimit" resultMap="userResultMap">
-		select * from zbi_db.user_col_limit where user_id=#{userID} AND model_tag=#{modelTag}
+		select * from
+		zbi_db.user_col_limit where user_id=#{userID} AND
+		model_tag=#{modelTag}
 	</select>
 
 	<delete id="deleteUserColLimit">
 		delete from zbi_db.user_col_limit where
 		user_id=#{userID} AND model_tag=#{modelTag}
 	</delete>
-	
+
 	<delete id="deleteGroupColLimit">
 		delete from zbi_db.group_col_limit where
 		group_id=#{groupID} AND model_tag=#{modelTag}

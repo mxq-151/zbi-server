@@ -15,9 +15,9 @@
 		<result column="column_type" jdbcType="VARCHAR"
 			property="columnType" />
 		<result column="agg_type" jdbcType="VARCHAR" property="AggType" />
-		<result column="force_dim" jdbcType="VARCHAR"
+		<result column="force_dim" jdbcType="BIT"
 			property="forceDim" />
-		<result column="is_advanced" jdbcType="VARCHAR"
+		<result column="is_advanced" jdbcType="BIT"
 			property="isAdvanced" />
 		<result column="table_id" jdbcType="VARCHAR" property="tableID" />
 		<result typeHandler="org.zbi.server.mapper.handler.MapHandler"

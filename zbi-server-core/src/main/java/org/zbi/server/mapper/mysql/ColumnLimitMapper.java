@@ -16,11 +16,11 @@ public interface ColumnLimitMapper {
 	//用于管理查看个人字段限制
 	public List<UserColLimit> queryUserColLimit(String userID, String modelTag);
 
-	public void insertUserColLimit(List<UserColLimit> queryColumns);
+	public void insertUserColLimit(List<UserColLimit> list);
 
 	public void deleteUserColLimit(String userID, String modelTag);
 	
-	public void insertGroupColLimit(List<GroupColLimit> queryColumns);
+	public void insertGroupColLimit(List<GroupColLimit> list);
 
 	public void deleteGroupColLimit(String groupID, String modelTag);
 

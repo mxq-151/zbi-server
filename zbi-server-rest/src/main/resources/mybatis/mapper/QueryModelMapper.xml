@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.zbi.server.mapper.mysql.QueryModelMapper">
+	<resultMap id="baseResultMap"
+		type="org.zbi.server.entity.mysql.QueryModel">
+		<result column="model_id" property="modelID" />
+		<result column="model_name" property="modelName" />
+		<result column="model_tag" property="modelTag" />
+	</resultMap>
+
+	<resultMap id="columnResultMap"
+		type="org.zbi.server.entity.mysql.QueryColumn">
+		<result column="from_table" property="fromTable" />
+		<result column="col_id" property="colID" />
+		<result column="model_tag" property="modelTag" />
+	</resultMap>
+
+
+	<insert id="createModel">
+		insert into zbi_db.query_model
+		(model_tag,model_name,model_id)
+		values(#{modelTag},#{modelName},#{modelID})
+	</insert>
+
+	<insert id="deleteModel">
+		delete from zbi_db.query_model where
+		model_tag=#{modelTag}
+	</insert>
+	
+	
+	<select id="listAllModel" resultMap="baseResultMap">
+		select model_id,model_tag,model_name from
+		zbi_db.query_model
+	</select>
+
+	<select id="listQueryModel" resultMap="baseResultMap">
+		select model_id,model_tag,model_name from
+		zbi_db.query_model where model_tag in
+		(
+		select distinct model_tag
+		zbi_db.user_col_limit where user_id=#{userID}
+		union all
+		select distinct
+		model_tag zbi_db.group_user as gu
+		left join
+		zbi_db.group_col_limit as
+		gcl on gu.group_id=gcl.group_id
+		where gu.user_id=#{userID} and
+		gcl.model_tag is not null
+		)
+	</select>
+
+	<insert id="batchInsert" parameterType="map">
+		<!--@mbg.generated -->
+		insert into query_column
+		(`model_tag`,`col_id`, `from_table`)
+		values
+		<foreach collection="list" item="item" separator=",">
+			(#{item.modelTag,jdbcType=VARCHAR},
+			#{item.colID,jdbcType=VARCHAR},
+			#{item.fromTable,jdbcType=VARCHAR})
+		</foreach>
+	</insert>
+
+	<select id="listQueryColumn" resultMap="columnResultMap">
+		select * from
+		zbi_db.query_column where
+		model_tag=#{modelTag}
+	</select>
+
+	<delete id="deleteQueryColumn">
+		delete from  zbi_db.query_column where
+		model_tag=#{modelTag}
+	</delete>
+
+</mapper>
