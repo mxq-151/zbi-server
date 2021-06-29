@@ -31,12 +31,11 @@
         <result column="report_name" property="reportName"/>
         <result column="report_desc" property="reportDesc"/>
         <result column="model_tag" property="modelTag"/>
-        <result column="model_name" property="modelName"/>
         <result column="board_id" property="boardID"/>
     </resultMap>
 
     <insert id="createReport" parameterType="org.zbi.server.entity.mysql.ReportInfo">
-        INSERT INTO zbi_db.report_info (report_name, report_desc, model_tag, model_name, other_params,
+        INSERT INTO zbi_db.report_info (report_name, report_desc, model_tag, other_params,
         request_dimensions,drill_dimensions,
         request_measures,request_conditions,board_id)
         VALUES (#{reportName}, #{reportDesc}, #{modelTag}, #{modelName},
@@ -54,7 +53,6 @@
             report_name,
             report_desc,
             model_tag,
-            model_name,
             other_params,
             request_dimensions,
             drill_dimensions,
@@ -64,13 +62,12 @@
         WHERE report_id = #{reportID}
     </select>
 
-    <select id="getReportByBoardID" parameterType="int" resultMap="reportInfoResultMap">
+    <select id="getReportByBoardID" parameterType="string" resultMap="reportInfoResultMap">
         SELECT
             report_id,
             report_name,
             report_desc,
             model_tag,
-            model_name,
             other_params,
             request_dimensions,
             drill_dimensions,
@@ -89,7 +86,7 @@
     
     
     
-     <select id="getReportID" resultType="java.lang.Integer" >
+     <select id="getReportID" resultType="string" >
         SELECT report_id as reportID
         FROM zbi_db.report_info
         WHERE board_id = #{boardID}
@@ -101,7 +98,6 @@
             report_name,
             report_desc,
             model_tag,
-            model_name,
             other_params,
             request_dimensions,
             drill_dimensions,
