@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.zbi.server.dao.service.BoardDaoService;
 import org.zbi.server.entity.mysql.BoardInfo;
+import org.zbi.server.entity.mysql.BoardInfo.BoardVersion;
 import org.zbi.server.mapper.mysql.BoardInfoMapper;
 import org.zbi.server.mapper.mysql.FolderAndBoardMapper;
 import org.zbi.server.mapper.mysql.FolderInfoMapper;
@@ -44,7 +45,13 @@ public class MysqlBoardDaoService implements BoardDaoService {
 		}
 
 		String boardID = java.util.UUID.randomUUID().toString();
-		boardInfoMapper.createBoard(boardID, boardName, boardDesc);
+		BoardInfo board = new BoardInfo();
+		board.setBoardDesc(boardDesc);
+		board.setBoardID(boardID);
+		board.setBoardName(boardName);
+		board.setBoardVersion(BoardVersion.V1);
+		board.setOtherParams(Collections.emptyMap());
+		boardInfoMapper.createBoard(board);
 
 		FacadeBoard facadeBoard = new FacadeBoard();
 		facadeBoard.setBoardDesc(boardDesc);

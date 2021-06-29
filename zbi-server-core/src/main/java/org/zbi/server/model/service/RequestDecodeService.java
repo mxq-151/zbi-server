@@ -40,6 +40,7 @@ public class RequestDecodeService {
 				boolean find = false;
 				for (String col : queryCols) {
 					if (dim.getUuid().equals(col)) {
+						find = true;
 						newDims.add(dim);
 						List<String> limits = this.configDaoService.getDataLimit(col);
 
@@ -57,7 +58,6 @@ public class RequestDecodeService {
 								condition.getRequestValue().addAll(limits);
 							}
 						}
-						find = true;
 					}
 				}
 				if (!find) {

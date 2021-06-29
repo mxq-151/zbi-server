@@ -30,8 +30,8 @@ public class MysqlFolderDaoService implements FolderDaoService {
 	@Override
 	public List<FacadeFolder> getFolders() {
 		// TODO Auto-generated method stub
-
-		List<FolderInfo> folders = folderInfoMapper.getFolders(this.loginUserService.getLoginUser().getUserID());
+		String userID=this.loginUserService.getLoginUser().getUserID();
+		List<FolderInfo> folders = folderInfoMapper.getFolders(userID);
 
 		List<FacadeFolder> allFolders = new ArrayList<>();
 		for (FolderInfo folder : folders) {
@@ -53,20 +53,25 @@ public class MysqlFolderDaoService implements FolderDaoService {
 	}
 
 	@Override
-	public FacadeFolder createFolder(String folderName, String folderDesc) throws AdminException {
+	public FacadeFolder createFolder(String folderName, String folderDesc, int folderType) throws AdminException {
 		// TODO Auto-generated method stub
 
 		if (this.loginUserService.getLoginUser().getRoleType() > UserInfo.DEVELOPER) {
 			throw new AdminException("无权限进行此操作");
 		}
 
-		if (this.folderInfoMapper.checkFolderByName(folderName)) {
+		if (this.folderInfoMapper.checkFolderByName(folderName, folderType,
+				this.loginUserService.getLoginUser().getUserID())) {
 			throw new AdminException("存在相同的文件夹名称");
 		}
 		String folderID = java.util.UUID.randomUUID().toString();
-		this.folderInfoMapper.createFolder(folderID, folderName, folderDesc,
-				this.loginUserService.getLoginUser().getUserID());
-		FolderInfo folder = this.folderInfoMapper.getFolder(folderID);
+		FolderInfo folder = new FolderInfo();
+		folder.setAdminID(this.loginUserService.getLoginUser().getUserID());
+		folder.setFolderDesc(folderDesc);
+		folder.setFolderName(folderName);
+		folder.setFolderType(folderType);
+		folder.setFolderID(folderID);
+		this.folderInfoMapper.createFolder(folder);
 
 		return this.getFolder(folder.getFolderID());
 	}
@@ -115,6 +120,9 @@ public class MysqlFolderDaoService implements FolderDaoService {
 		// 谁创建谁管理
 		if (!folder.getAdminID().equals(this.loginUserService.getLoginUser().getUserID())) {
 			throw new AdminException("无权操作此文件夹");
+		}
+		if (folder != null) {
+			throw new AdminException("无此文件夹");
 		}
 	}
 

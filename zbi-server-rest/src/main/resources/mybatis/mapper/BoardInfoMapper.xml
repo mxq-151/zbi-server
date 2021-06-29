@@ -17,8 +17,8 @@
 	</resultMap>
 
 	<insert id="createBoard">
-		insert into zbi_db.board_info (board_name,board_desc)
-		values(#{boardName},#{boardDesc})
+		insert into zbi_db.board_info (board_name,board_desc,other_params,board_id,board_version)
+		values(#{boardName},#{boardDesc},#{otherParams,typeHandler=org.zbi.server.mapper.handler.MapHandler},#{boardID},#{boardVersion})
 	</insert>
 
 	<select id="getBoardByID" 

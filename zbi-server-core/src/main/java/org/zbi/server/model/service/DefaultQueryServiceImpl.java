@@ -5,6 +5,8 @@ import java.sql.SQLException;
 
 import javax.annotation.PostConstruct;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.zbi.server.model.engine.EngineFactory;
@@ -26,6 +28,8 @@ public class DefaultQueryServiceImpl extends AbstractQueryService {
 
 	@Autowired
 	private ModelService modelService;
+	
+	private final Logger logger = LoggerFactory.getLogger(DefaultQueryServiceImpl.class);
 
 	@PostConstruct
 	public void mockData() {
@@ -44,9 +48,13 @@ public class DefaultQueryServiceImpl extends AbstractQueryService {
 		// TODO Auto-generated method stub
 		RequestParam newParam = this.requestDecodeService.parseRquest(param);
 		ParseModel model = this.modelService.getModel(newParam);
-
+		
 		IQueryEngine queryEngine = this.engineFactory.getQueryEngine(model.getConnID(), model.getEngineType());
-		return  queryEngine.query(model);
+		long start = System.currentTimeMillis();
+		QueryResultResp resp = queryEngine.query(model);
+		long end = System.currentTimeMillis();
+		resp.setDuration(end - start);
+		return resp;
 
 	}
 

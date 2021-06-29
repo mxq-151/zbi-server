@@ -11,7 +11,7 @@ public interface FolderDaoService {
 
 	public FacadeFolder getFolder(String folderID);
 
-	public FacadeFolder createFolder(String folderName, String folderDesc) throws AdminException;
+	public FacadeFolder createFolder(String folderName, String folderDesc,int folderType) throws AdminException;
 
 	public boolean addBoardToFolder(String folderID, String boardID, String boardName) throws AdminException;
 
@@ -21,4 +21,5 @@ public interface FolderDaoService {
 
 	public boolean updateFolder(String folderID, String folderName, String folderDesc) throws AdminException;
 
+	
 }

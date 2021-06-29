@@ -57,14 +57,15 @@ public class FolderController extends BaseController {
 
 	}
 
-	@RequestMapping(value = "/create/folder", method = RequestMethod.GET)
-	@ApiOperation(value = "创建文件夹接口", code = 200, httpMethod = "GET", response = Boolean.class)
+	@RequestMapping(value = "/create/folder", method = RequestMethod.PUT)
+	@ApiOperation(value = "创建文件夹接口", code = 200, httpMethod = "PUT", response = FacadeFolder.class)
 	@ApiResponses({ @ApiResponse(code = 400, message = "请求错误"), @ApiResponse(code = 500, message = "响应失败") })
 	public FacadeFolder createFolder(
 			@Valid @RequestParam(required = true) @ApiParam(value = "文件夹名称", required = true) String folderName,
-			@Valid @RequestParam(required = true) @ApiParam(value = "文件夹描述", required = true) String folderDesc)
+			@Valid @RequestParam(required = true) @ApiParam(value = "文件夹描述", required = true) String folderDesc,
+			@Valid @RequestParam(required = true) @ApiParam(value = "文件夹类型", required = true) int folderType)
 			throws AdminException {
-		return this.folderDaoService.createFolder(folderName, folderDesc);
+		return this.folderDaoService.createFolder(folderName, folderDesc, folderType);
 
 	}
 

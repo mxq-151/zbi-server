@@ -55,9 +55,9 @@ class ConfigDaoServiceTests extends ServiceTestBase {
 		table.setTblAlias("sd");
 		table.setConnID("calcite-1");
 		List<ConfigColumn> columns = new ArrayList<>();
-		columns.add(this.createColumn("日期", "sdate", "sale_date", ColumnType.DATE, true, false, "sd1", tableID, null));
-		columns.add(this.createColumn("销售员", "sm", "sale_man", ColumnType.STRING, false, false, "sm1", tableID, null));
-		columns.add(this.createColumn("销售量", "sn", "sale_num", ColumnType.NUMBER, false, false, "sn1", tableID,
+		columns.add(this.createColumn("日期", "sd", "statedate", ColumnType.DATE, true, false, "sd1", tableID, null));
+		columns.add(this.createColumn("销售员", "sm", "saller", ColumnType.STRING, false, false, "sm1", tableID, null));
+		columns.add(this.createColumn("销售量", "sn", "salenum", ColumnType.NUMBER, false, false, "sn1", tableID,
 				AggType.SUM));
 		table.setColumns(columns);
 
@@ -128,14 +128,13 @@ class ConfigDaoServiceTests extends ServiceTestBase {
 		ArrayList<String> cols = new ArrayList<>();
 		for (ConfigColumn col : columns) {
 			cols.add(col.getUuid());
-			break;
 		}
 
-		String modelTag=this.formatQueryModel().getModelTag();
+		String modelTag = this.formatQueryModel().getModelTag();
 		this.configDaoService.insertUserColLimit(cols, userID, modelTag);
-		Assert.assertEquals(1, this.configDaoService.queryUserColLimit(userID, modelTag).size());
+		Assert.assertEquals(columns.size(), this.configDaoService.queryUserColLimit(userID, modelTag).size());
 		this.departmentLogin();
-		Assert.assertEquals(1,this.configDaoService.queryUserTotalColLimit(modelTag).size());
+		Assert.assertEquals(columns.size(), this.configDaoService.queryUserTotalColLimit(modelTag).size());
 	}
 
 }

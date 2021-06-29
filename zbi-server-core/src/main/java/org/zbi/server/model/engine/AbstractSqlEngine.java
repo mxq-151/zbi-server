@@ -21,9 +21,8 @@ public class AbstractSqlEngine implements IQueryEngine {
 	protected Connection connection;
 
 	private ISqlEncoder sqlEncoder;
-	
-	private final static Logger logger = LoggerFactory.getLogger(AbstractSqlEngine.class);
 
+	private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
 	public AbstractSqlEngine(Connection connection, ISqlEncoder sqlEncoder) {
 		// TODO Auto-generated constructor stub
@@ -36,7 +35,7 @@ public class AbstractSqlEngine implements IQueryEngine {
 		// TODO Auto-generated method stub
 
 		String sql = this.sqlEncoder.encodeSql(model);
-		logger.info("query sql:{}",sql);
+		logger.info("query sql:{}", sql);
 		try {
 			ResultSet rs = this.connection.createStatement().executeQuery(sql);
 			return this.castToResult(rs);

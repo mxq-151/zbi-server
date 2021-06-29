@@ -2,14 +2,20 @@
 <!DOCTYPE mapper
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="org.zbi.server.mapper.mysql.BoardInfoMapper">
+<mapper namespace="org.zbi.server.mapper.mysql.FolderAndBoardMapper">
 
 	
 	<resultMap id="boardInfoRespResultMap"
-		type="org.zbi.server.model.response.BoardInfoResp">
+		type="org.zbi.server.entity.mysql.BoardInfo">
 		<result column="board_id" property="boardID" />
 		<result column="board_name" property="boardName" />
 		<result column="board_desc" property="boardDesc" />
+		<result
+			typeHandler="org.zbi.server.mapper.handler.MapHandler"
+			column="other_params" javaType="java.util.Map" jdbcType="VARCHAR"
+			property="otherParams" />
+		<result column="board_version" property="boardVersion" />
+		
 	</resultMap>
 
 	<insert id="addBoardToFolder">
@@ -19,13 +25,13 @@
 
 	<select id="getBoardDescByFolderID"
 		resultMap="boardInfoRespResultMap">
-		select b.* from zbi_db.folder_board as a left join
+		select b.board_id,b.board_name,b.board_desc,b.board_version from zbi_db.folder_board as a left join
 		zbi_db.board_info as b on a.board_id=b.board_id where
 		folder_id=#{folderID}
 	</select>
 	
 	<select id="getBoardsByFolderID"
-		resultMap="boardInfoResultMap">
+		resultMap="boardInfoRespResultMap">
 		select b.* from zbi_db.folder_board as a left join
 		zbi_db.board_info as b on a.board_id=b.board_id where
 		folder_id=#{folderID}

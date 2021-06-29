@@ -8,7 +8,7 @@ import org.zbi.server.entity.mysql.BoardInfo;
 @Mapper
 public interface BoardInfoMapper {
 
-	public boolean createBoard(String boardID,String boardName, String boardDesc);
+	public boolean createBoard(BoardInfo board);
 
 	public BoardInfo getBoardByID(String boardID);
 
