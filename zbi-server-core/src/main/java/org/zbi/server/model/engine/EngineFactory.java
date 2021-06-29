@@ -18,15 +18,15 @@ public class EngineFactory {
 	/**
 	 * 连接池
 	 */
-	private ConnectionFactory connectionFactory=new ConnectionFactory();
+	private ConnectionFactory connectionFactory = new ConnectionFactory();
 
 	@Value("${calcite.model.path:#{null}}")
 	private String modelPath;
 	/**
 	 * 
 	 * */
-	private Map<String,String> urls=new HashMap<>();
-	
+	private Map<String, String> urls = new HashMap<>();
+
 	public void addConConfig(EngineConnection config) throws SQLException {
 		this.connectionFactory.initConnnection(config);
 	}
@@ -36,7 +36,7 @@ public class EngineFactory {
 
 		Map<String, ConnectConfig> configMap = new HashMap<>();
 
-		URL path=this.getClass().getResource(this.modelPath);
+		URL path = this.getClass().getResource(this.modelPath);
 		configMap.put("datasource.driver-class-name", new ConnectConfig(true, "org.apache.calcite.jdbc.Driver"));
 		configMap.put("datasource.url",
 				new ConnectConfig(true, "jdbc:calcite:caseSensitive=false;model=" + path.getPath()));
@@ -57,24 +57,23 @@ public class EngineFactory {
 		addConConfig(connection);
 	}
 
-	public IQueryEngine getQueryEngine(String conName, EngineType engineType) throws ParseException, SQLException {
+	public IQueryEngine getQueryEngine(String connID, EngineType engineType) throws ParseException, SQLException {
 
-		Connection connection = this.connectionFactory.getConnection(conName);
+		Connection connection = this.connectionFactory.getConnection(connID);
 
 		switch (engineType) {
 		case CALCITE:
 
 			if (connection == null) {
-				throw new ParseException("找不到链接:" + conName, ExceptionType.CONFIGERROR);
+				throw new ParseException("找不到链接:" + connID, ExceptionType.CONFIGERROR);
 			}
 
 			return new CalciteEngine(connection);
 
 		case KYLIN:
-			String url=this.urls.get(conName);
-			if(url==null)
-			{
-				throw new ParseException("找不到链接:" + conName, ExceptionType.CONFIGERROR);
+			String url = this.urls.get(connID);
+			if (url == null) {
+				throw new ParseException("找不到链接:" + connID, ExceptionType.CONFIGERROR);
 			}
 			return new KylinEngine();
 		default:

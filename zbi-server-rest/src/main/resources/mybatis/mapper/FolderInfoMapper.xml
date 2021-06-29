@@ -18,9 +18,19 @@
 
 	<select id="getFolder" resultMap="folderInfoResultMap">
 		select * from
-		zbi_db.board_info
+		zbi_db.folder_info
 		where
 		folder_id=#{folderID}
+	</select>
+
+	<select id="getFolders" resultMap="folderInfoResultMap">
+		select * from
+		zbi_db.folder_info where folder_id in
+		(select distinct folder_id from
+		folder_board where board_id in (select
+		distinct board_id from group_board where group_id in (select group_id
+		from group_user where user_id=#{userID} union all select board_id
+		from user_board where user_id=#{userID})))
 	</select>
 
 

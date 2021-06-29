@@ -23,7 +23,7 @@ public class DefaultSqlEncoder implements ISqlEncoder {
 
 		StringBuilder sb = new StringBuilder();
 
-		this.formatSelect(model.getDimensions(), model.getMeasures(), model.getMainTable());
+		sb.append(this.formatSelect(model.getDimensions(), model.getMeasures(), model.getMainTable()));
 		ConfigTable mainTable = model.getMainTable();
 		sb.append(" from ");
 		if (mainTable.isSource()) {

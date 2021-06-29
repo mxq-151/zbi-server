@@ -25,6 +25,9 @@ public class ConfigTable {
 	 */
 	private int tableType;
 
+	/***/
+	private String connID;
+
 	// 是否为源表
 	private boolean source;
 
@@ -97,5 +100,12 @@ public class ConfigTable {
 		this.source = source;
 	}
 
+	public String getConnID() {
+		return connID;
+	}
+
+	public void setConnID(String connID) {
+		this.connID = connID;
+	}
 
 }

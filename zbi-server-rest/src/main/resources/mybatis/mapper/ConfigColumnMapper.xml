@@ -26,7 +26,7 @@
 	</resultMap>
 	<sql id="Base_Column_List">
 		<!--@mbg.generated -->
-		`is_measure`, `chinese`, `alias`, `col_name`, `column_type`,
+		`uuid`,`is_measure`, `chinese`, `alias`, `col_name`, `column_type`,
 		`agg_type`, `force_dim`, `is_advanced`,`table_id`,`col_properties`
 	</sql>
 	<select id="selectByPrimaryKey" parameterType="java.lang.String"

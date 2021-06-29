@@ -11,7 +11,6 @@ import org.zbi.server.entity.mysql.UserInfo;
 import org.zbi.server.mapper.mysql.FolderAndBoardMapper;
 import org.zbi.server.mapper.mysql.FolderInfoMapper;
 import org.zbi.server.model.exception.AdminException;
-import org.zbi.server.model.exception.QueryException;
 import org.zbi.server.model.facade.FacadeFolder;
 import org.zbi.server.model.response.BoardInfoResp;
 import org.zbi.server.model.service.LoginUserService;
@@ -31,7 +30,8 @@ public class MysqlFolderDaoService implements FolderDaoService {
 	@Override
 	public List<FacadeFolder> getFolders() {
 		// TODO Auto-generated method stub
-		List<FolderInfo> folders = folderInfoMapper.getFolders();
+
+		List<FolderInfo> folders = folderInfoMapper.getFolders(this.loginUserService.getLoginUser().getUserID());
 
 		List<FacadeFolder> allFolders = new ArrayList<>();
 		for (FolderInfo folder : folders) {

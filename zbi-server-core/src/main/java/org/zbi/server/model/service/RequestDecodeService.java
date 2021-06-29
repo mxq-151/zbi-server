@@ -31,46 +31,60 @@ public class RequestDecodeService {
 		List<RequestColumn> measures = param.getMeasures();
 
 		List<RequestColumn> newDims = new ArrayList<>();
-		for (RequestColumn dim : dims) {
-			if (dim.isAdvanced()) {
-				newDims.add(dim);
-				continue;
-			}
-			boolean find = false;
-			for (String col : queryCols) {
-				if (dim.getUuid().equals(col)) {
+		if (dims != null) {
+			for (RequestColumn dim : dims) {
+				if (dim.isAdvanced()) {
 					newDims.add(dim);
-					List<String> limits = this.configDaoService.getDataLimit(col);
-					List<RequestCondition> conditions = param.getConditions();
-					for (RequestCondition condition : conditions) {
-						if (condition.getUuid().equals(col)) {
-							condition.getRequestValue().addAll(limits);
-						}
-					}
-					find = true;
+					continue;
 				}
-			}
-			if (!find) {
-				logger.info("cant not  find col for {} in model {}", dim.getUuid(), param.getModelTag());
+				boolean find = false;
+				for (String col : queryCols) {
+					if (dim.getUuid().equals(col)) {
+						newDims.add(dim);
+						List<String> limits = this.configDaoService.getDataLimit(col);
+
+						if (limits.isEmpty()) {
+							continue;
+						}
+
+						List<RequestCondition> conditions = param.getConditions();
+						if (conditions == null) {
+							continue;
+						}
+
+						for (RequestCondition condition : conditions) {
+							if (condition.getUuid().equals(col)) {
+								condition.getRequestValue().addAll(limits);
+							}
+						}
+						find = true;
+					}
+				}
+				if (!find) {
+					logger.info("cant not  find col for {} in model {}", dim.getUuid(), param.getModelTag());
+				}
 			}
 		}
 
 		List<RequestColumn> newMeasures = new ArrayList<>();
-		for (RequestColumn measure : measures) {
-			if (measure.isAdvanced()) {
-				newMeasures.add(measure);
-				continue;
-			}
-			boolean find = false;
-			for (String col : queryCols) {
-				if (measure.getUuid().equals(col)) {
+		if (measures != null) {
+			for (RequestColumn measure : measures) {
+				if (measure.isAdvanced()) {
 					newMeasures.add(measure);
-					find = true;
+					continue;
+				}
+				boolean find = false;
+				for (String col : queryCols) {
+					if (measure.getUuid().equals(col)) {
+						newMeasures.add(measure);
+						find = true;
+					}
+				}
+				if (!find) {
+					logger.info("cant not  find col for {} in model {}", measure.getUuid(), param.getModelTag());
 				}
 			}
-			if (!find) {
-				logger.info("cant not  find col for {} in model {}", measure.getUuid(), param.getModelTag());
-			}
+
 		}
 
 		RequestParam newParam = new RequestParam();

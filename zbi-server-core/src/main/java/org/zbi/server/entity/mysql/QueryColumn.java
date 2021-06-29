@@ -6,7 +6,6 @@ public class QueryColumn {
 
 	private String colID;
 
-	private String fromTable;
 
 	public String getModelTag() {
 		return modelTag;
@@ -22,14 +21,6 @@ public class QueryColumn {
 
 	public void setColID(String colID) {
 		this.colID = colID;
-	}
-
-	public String getFromTable() {
-		return fromTable;
-	}
-
-	public void setFromTable(String fromTable) {
-		this.fromTable = fromTable;
 	}
 
 }

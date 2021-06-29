@@ -1,4 +1,4 @@
-package org.zbi.server.core.dao;
+package org.zbi.server.core.test;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -8,8 +8,8 @@ import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.stereotype.Component;
 import org.springframework.test.context.junit4.SpringRunner;
-import org.zbi.server.core.test.ServiceTestBase;
 import org.zbi.server.dao.service.ConfigDaoService;
 import org.zbi.server.entity.mysql.QueryColumn;
 import org.zbi.server.entity.mysql.QueryModel;
@@ -24,6 +24,7 @@ import org.zbi.server.rest.ZBiApp;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = ZBiApp.class)
+@Component
 class ConfigDaoServiceTests extends ServiceTestBase {
 	@Autowired
 	ConfigDaoService configDaoService;
@@ -42,7 +43,7 @@ class ConfigDaoServiceTests extends ServiceTestBase {
 		Assert.assertEquals(1, this.configDaoService.queryConfigTables().size());
 	}
 
-	private FacadeTable createTable() {
+	public FacadeTable createTable() {
 		FacadeTable table = new FacadeTable();
 		table.setConnName("11");
 		table.setEngineType(EngineType.CALCITE);
@@ -52,6 +53,7 @@ class ConfigDaoServiceTests extends ServiceTestBase {
 		table.setTableName("sale_detail");
 		table.setTableType(1);
 		table.setTblAlias("sd");
+		table.setConnID("calcite-1");
 		List<ConfigColumn> columns = new ArrayList<>();
 		columns.add(this.createColumn("日期", "sdate", "sale_date", ColumnType.DATE, true, false, "sd1", tableID, null));
 		columns.add(this.createColumn("销售员", "sm", "sale_man", ColumnType.STRING, false, false, "sm1", tableID, null));
@@ -92,7 +94,7 @@ class ConfigDaoServiceTests extends ServiceTestBase {
 		this.configDaoService.saveModel(model.getModelTag(), model.getModelName(), queryColumn);
 	}
 
-	private QueryModel formatQueryModel() {
+	public QueryModel formatQueryModel() {
 		QueryModel model = new QueryModel();
 		model.setModelID("m1");
 		model.setModelName("test");
@@ -100,7 +102,7 @@ class ConfigDaoServiceTests extends ServiceTestBase {
 		return model;
 	}
 
-	private List<QueryColumn> formatQueryColumns() {
+	public List<QueryColumn> formatQueryColumns() {
 
 		List<QueryColumn> array = new ArrayList<>();
 		QueryModel model = this.formatQueryModel();
@@ -109,7 +111,6 @@ class ConfigDaoServiceTests extends ServiceTestBase {
 		for (ConfigColumn cc : columns) {
 			QueryColumn qc = new QueryColumn();
 			qc.setColID(cc.getUuid());
-			qc.setFromTable(table.getTableID());
 			qc.setModelTag(model.getModelTag());
 			array.add(qc);
 		}

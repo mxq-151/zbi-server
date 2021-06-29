@@ -21,21 +21,22 @@
 		</foreach>
 	</insert>
 
-	<select id="queryUserTotalDataLimit">
-		select distinct word from
-		zbi_db.group_data_limit
-		where group_id=#{groupID} AND
-		col_id=#{colID}
+	<select id="queryUserTotalDataLimit" resultType='string' >
+		select  word from
+		zbi_db.group_data_limit where col_id=#{colID} AND group_id in(select distinct group_id from zbi_db.group_user where user_id=#{userID}) 
+		union all 
+		select  word from
+		zbi_db.user_data_limit where user_id=#{userID} and col_id=#{colID}
 	</select>
 
-	<select id="queryGroupDataLimit">
+	<select id="queryGroupDataLimit" resultType='string'>
 		select word from
 		zbi_db.group_data_limit where
 		group_id=#{groupID} AND
 		col_id=#{colID}
 	</select>
 
-	<select id="queryUserColLimit">
+	<select id="queryUserColLimit" resultType='string'>
 		select word from
 		zbi_db.user_data_limit where
 		user_id=#{userID} AND

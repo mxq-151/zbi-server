@@ -11,7 +11,7 @@ public interface FolderInfoMapper {
 
 	public FolderInfo getFolder(String folderID);
 
-	public List<FolderInfo> getFolders();
+	public List<FolderInfo> getFolders(String userID);
 
 	public boolean checkFolderByName(String folderName);
 

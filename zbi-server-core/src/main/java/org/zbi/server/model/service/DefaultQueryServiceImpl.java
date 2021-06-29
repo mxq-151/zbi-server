@@ -7,10 +7,11 @@ import javax.annotation.PostConstruct;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import org.zbi.server.dao.service.ConfigDaoService;
 import org.zbi.server.model.engine.EngineFactory;
+import org.zbi.server.model.engine.IQueryEngine;
 import org.zbi.server.model.exception.ParseException;
 import org.zbi.server.model.exception.QueryException;
+import org.zbi.server.model.parse.ParseModel;
 import org.zbi.server.model.request.RequestParam;
 import org.zbi.server.model.response.QueryResultResp;
 
@@ -21,7 +22,10 @@ public class DefaultQueryServiceImpl extends AbstractQueryService {
 	private EngineFactory engineFactory;
 
 	@Autowired
-	private ConfigDaoService daoService;
+	private RequestDecodeService requestDecodeService;
+
+	@Autowired
+	private ModelService modelService;
 
 	@PostConstruct
 	public void mockData() {
@@ -38,8 +42,12 @@ public class DefaultQueryServiceImpl extends AbstractQueryService {
 	@Override
 	public QueryResultResp query(RequestParam param) throws ParseException, SQLException, QueryException, IOException {
 		// TODO Auto-generated method stub
+		RequestParam newParam = this.requestDecodeService.parseRquest(param);
+		ParseModel model = this.modelService.getModel(newParam);
 
-		return null;
+		IQueryEngine queryEngine = this.engineFactory.getQueryEngine(model.getConnID(), model.getEngineType());
+		return  queryEngine.query(model);
+
 	}
 
 	@Override
