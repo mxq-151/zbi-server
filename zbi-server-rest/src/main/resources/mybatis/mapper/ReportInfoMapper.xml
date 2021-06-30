@@ -92,8 +92,8 @@
 		report_name=#{reportName},report_desc=#{reportDesc},model_name=#{modelName},
 		request_dimensions=#{requestDimensions,typeHandler=org.zbi.server.mapper.handler.RequestColumnHandler},
 		drill_dimensions=#{drillDimensions,typeHandler=org.zbi.server.mapper.handler.RequestColumnHandler},
-		request_conditions=#{drillDimensions,typeHandler=org.zbi.server.mapper.handler.RequestConditionHandler},
-		request_measures=#{drillDimensions,typeHandler=org.zbi.server.mapper.handler.RequestColumnHandler},
+		request_conditions=#{requestConditions,typeHandler=org.zbi.server.mapper.handler.RequestConditionHandler},
+		request_measures=#{requestMeasures,typeHandler=org.zbi.server.mapper.handler.RequestColumnHandler},
 		other_params=#{otherParams,typeHandler=org.zbi.server.mapper.handler.MapHandler}
 		where report_id=#{reportID}
 	</update>

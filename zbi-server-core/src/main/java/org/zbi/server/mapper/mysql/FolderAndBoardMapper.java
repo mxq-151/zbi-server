@@ -12,6 +12,8 @@ public interface FolderAndBoardMapper {
 	public boolean deleteBoardInFolder(String boardID, String folderID);
 
 	public boolean addBoardToFolder(String boardID, String folderID);
+	
+	public String getBoardFolder(String boardID);
 
 	public List<BoardInfo> getBoardsByFolderID(String folderID);
 

@@ -12,8 +12,6 @@ public interface BoardInfoMapper {
 
 	public BoardInfo getBoardByID(String boardID);
 
-	public BoardInfo getBoardByName(String boardName);
-
 	public boolean checkBoardName(String boardName);
 
 	public boolean updateBoardParam(String boardID, Map<String, Object> otherParams);

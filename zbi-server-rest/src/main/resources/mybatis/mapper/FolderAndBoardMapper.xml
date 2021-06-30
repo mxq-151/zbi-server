@@ -36,6 +36,11 @@
 		zbi_db.board_info as b on a.board_id=b.board_id where
 		folder_id=#{folderID}
 	</select>
+	
+	<select id="getBoardFolder"
+		resultType="string">
+		select folder_id from zbi_db.folder_board where board_id=#{boardID}
+	</select>
 
 	<delete id="deleteBoardInFolder">
 		delete from zbi_db.folder_board where folder_id=#{folderID} and board_id=#{boardID}
