@@ -42,7 +42,7 @@ public class FacadeReport {
 	 * 模型标识
 	 */
 	@ApiModelProperty(example = "123456", required = true, value = "所用模型标识")
-	private String modelTag;
+	private String modelID;
 
 	/**
 	 * 模型名称
@@ -77,10 +77,6 @@ public class FacadeReport {
 	@ApiModelProperty(required = false, value = "请求条件")
 	private List<RequestCondition> requestConditions;
 
-	public String getModelTag() {
-		return modelTag;
-	}
-
 	public String getModelName() {
 		return modelName;
 	}
@@ -91,10 +87,6 @@ public class FacadeReport {
 
 	public List<RequestCondition> getRequestConditions() {
 		return requestConditions;
-	}
-
-	public void setModelTag(String modelTag) {
-		this.modelTag = modelTag;
 	}
 
 	public void setModelName(String modelName) {
@@ -163,6 +155,14 @@ public class FacadeReport {
 
 	public void setDrillDimensions(List<RequestColumn> drillDimensions) {
 		this.drillDimensions = drillDimensions;
+	}
+
+	public String getModelID() {
+		return modelID;
+	}
+
+	public void setModelID(String modelID) {
+		this.modelID = modelID;
 	}
 
 }

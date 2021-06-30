@@ -45,7 +45,7 @@ public class DefaultSqlEncoder implements ISqlEncoder {
 			}
 		}
 
-		if (!model.getMeasures().isEmpty()) {
+		if (!model.getMeasures().isEmpty() && !model.getDimensions().isEmpty()) {
 			sb.append(" group by ").append(this.formatGroupBy(model.getDimensions()));
 		}
 
@@ -75,13 +75,20 @@ public class DefaultSqlEncoder implements ISqlEncoder {
 		}
 
 		if (!measures.isEmpty()) {
-			sb.append(", ");
-			int size = measures.size();
-			for (int i = 0; i < size; i++) {
+			if(!dimensions.isEmpty())
+			{
+				sb.append(", ");
+			}
+			
+			int size = measures.size() - 1;
+			for (int i = 0; i < measures.size(); i++) {
 				ParseColumn measure = measures.get(i);
 				sb.append(formatAggType(measure));
+				sb.append(" as ").append(measure.getAlias());
+				if (i < size) {
+					sb.append(",");
+				}
 
-				sb.append(" as ").append(measure.getAlias()).append(",");
 			}
 
 		}
@@ -162,7 +169,7 @@ public class DefaultSqlEncoder implements ISqlEncoder {
 
 	protected String formatLimit(int offset, int pageSize) {
 		StringBuffer sb = new StringBuffer();
-		int realOffset = offset * pageSize;
+		int realOffset = offset -1;
 
 		sb.append(" limit ");
 		sb.append(pageSize);

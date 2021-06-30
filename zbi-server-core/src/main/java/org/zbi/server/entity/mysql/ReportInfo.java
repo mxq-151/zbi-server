@@ -38,7 +38,7 @@ public class ReportInfo {
 	 * 模型标识
 	 */
 	@ApiModelProperty(example = "123456", required = true, value = "所用模型标识")
-	private String modelTag;
+	private String modelID;
 
 	/**
 	 * 模型名称
@@ -105,13 +105,6 @@ public class ReportInfo {
 		this.reportDesc = reportDesc;
 	}
 
-	public String getModelTag() {
-		return modelTag;
-	}
-
-	public void setModelTag(String modelTag) {
-		this.modelTag = modelTag;
-	}
 
 	public String getModelName() {
 		return modelName;
@@ -159,6 +152,14 @@ public class ReportInfo {
 
 	public void setDrillDimensions(List<RequestColumn> drillDimensions) {
 		this.drillDimensions = drillDimensions;
+	}
+
+	public String getModelID() {
+		return modelID;
+	}
+
+	public void setModelID(String modelID) {
+		this.modelID = modelID;
 	}
 
 }

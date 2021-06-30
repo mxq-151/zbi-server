@@ -7,29 +7,29 @@
 		type="org.zbi.server.entity.mysql.GroupColLimit">
 		<result column="group_id" property="groupID" />
 		<result column="col_id" property="colID" />
-		<result column="model_tag" property="modelTag" />
+		<result column="model_id" property="modelID" />
 	</resultMap>
 
 	<resultMap id="userResultMap"
 		type="org.zbi.server.entity.mysql.UserColLimit">
 		<result column="user_id" property="userID" />
 		<result column="col_id" property="colID" />
-		<result column="model_tag" property="modelTag" />
+		<result column="model_id" property="modelID" />
 	</resultMap>
 
 	<insert id="insertUserColLimit" parameterType="map">
-		insert into zbi_db.user_col_limit (user_id,col_id,model_tag)
+		insert into zbi_db.user_col_limit (user_id,col_id,model_id)
 		values
 		<foreach collection="list" item="item" separator=",">
-			(#{item.userID},#{item.colID},#{item.modelTag})
+			(#{item.userID},#{item.colID},#{item.modelID})
 		</foreach>
 	</insert>
 
 	<insert id="insertGroupColLimit" parameterType="map">
-		insert into zbi_db.group_col_limit (group_id,col_id,model_tag)
+		insert into zbi_db.group_col_limit (group_id,col_id,model_id)
 		values
 		<foreach collection="list" item="item" separator=",">
-			(#{item.groupID},#{item.colID},#{item.modelTag})
+			(#{item.groupID},#{item.colID},#{item.modelID})
 		</foreach>
 	</insert>
 
@@ -44,23 +44,23 @@
 	<select id="queryGroupColLimit" resultMap="groupResultMap">
 		select * from
 		zbi_db.group_col_limit where group_id=#{groupID} AND
-		model_tag=#{modelTag}
+		model_id=#{modelID}
 	</select>
 
 	<select id="queryUserColLimit" resultMap="userResultMap">
 		select * from
 		zbi_db.user_col_limit where user_id=#{userID} AND
-		model_tag=#{modelTag}
+		model_id=#{modelID}
 	</select>
 
 	<delete id="deleteUserColLimit">
 		delete from zbi_db.user_col_limit where
-		user_id=#{userID} AND model_tag=#{modelTag}
+		user_id=#{userID} AND model_id=#{modelID}
 	</delete>
 
 	<delete id="deleteGroupColLimit">
 		delete from zbi_db.group_col_limit where
-		group_id=#{groupID} AND model_tag=#{modelTag}
+		group_id=#{groupID} AND model_id=#{modelID}
 	</delete>
 
 </mapper>

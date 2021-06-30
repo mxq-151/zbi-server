@@ -6,11 +6,6 @@ package org.zbi.server.model.response;
 public class ModelDescResp {
 
 	/**
-	 * 模型标识
-	 */
-	private String modelTag;
-
-	/**
 	 * 模型名称
 	 */
 	private String modelName;
@@ -20,20 +15,12 @@ public class ModelDescResp {
 	 */
 	private String modelID;
 
-	public String getModelTag() {
-		return modelTag;
-	}
-
 	public String getModelName() {
 		return modelName;
 	}
 
 	public String getModelID() {
 		return modelID;
-	}
-
-	public void setModelTag(String modelTag) {
-		this.modelTag = modelTag;
 	}
 
 	public void setModelName(String modelName) {

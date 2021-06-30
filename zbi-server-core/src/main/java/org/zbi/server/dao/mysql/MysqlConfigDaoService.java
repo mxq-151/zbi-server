@@ -24,8 +24,10 @@ import org.zbi.server.model.config.ConfigTable;
 import org.zbi.server.model.exception.AdminException;
 import org.zbi.server.model.facade.FacadeTable;
 import org.zbi.server.model.facade.FacadeUser;
-import org.zbi.server.model.response.ModelDescResp;
+import org.zbi.server.model.response.ColumnInfoResp;
+import org.zbi.server.model.response.ModelInfoResp;
 import org.zbi.server.model.service.LoginUserService;
+import org.zbi.server.model.service.ModelService;
 
 @Component
 public class MysqlConfigDaoService implements ConfigDaoService {
@@ -47,11 +49,20 @@ public class MysqlConfigDaoService implements ConfigDaoService {
 
 	@Autowired
 	ColumnLimitMapper columnLimitMapper;
+	
+	@Autowired
+	private ModelService modelService;
 
 	@Override
-	public List<ModelDescResp> getModelDscriptions(String key) {
+	public List<QueryModel> getModelDscriptions(String key) {
 		// TODO Auto-generated method stub
-		return null;
+		FacadeUser user=this.loginUserService.getLoginUser();
+		if(user.getRoleType()==UserInfo.SUPERADMIN || user.getRoleType()==UserInfo.DEVELOPER)
+		{
+			return this.queryModelMapper.listAllModel();
+		}
+		String userID=this.loginUserService.getLoginUser().getUserID();
+		return this.queryModelMapper.listQueryModel(userID);
 	}
 
 	@Override
@@ -103,10 +114,23 @@ public class MysqlConfigDaoService implements ConfigDaoService {
 	}
 
 	@Override
-	public List<String> queryUserTotalColLimit(String modelTag) {
+	public List<String> queryUserTotalColLimit(String modelID) {
 		// TODO Auto-generated method stub
 		String userID = loginUserService.getLoginUser().getUserID();
-		return this.columnLimitMapper.queryUserTotalColLimit(userID, modelTag);
+		List<String> limits= this.columnLimitMapper.queryUserTotalColLimit(userID, modelID);
+		if(limits.isEmpty())
+		{
+			List<QueryColumn> cols=this.queryModelMapper.listQueryColumn(modelID);
+			List<String> res=new ArrayList<>(cols.size());
+			for(QueryColumn qc:cols)
+			{
+				res.add(qc.getColID());
+			}
+			return res;
+		}else
+		{
+			return limits;
+		}
 	}
 
 	@Override
@@ -117,26 +141,26 @@ public class MysqlConfigDaoService implements ConfigDaoService {
 	}
 
 	@Override
-	public List<GroupColLimit> queryGroupColLimit(String groupID, String modelTag) {
+	public List<GroupColLimit> queryGroupColLimit(String groupID, String modelID) {
 		// TODO Auto-generated method stub
-		return this.columnLimitMapper.queryGroupColLimit(groupID, modelTag);
+		return this.columnLimitMapper.queryGroupColLimit(groupID, modelID);
 	}
 
 	@Override
-	public List<UserColLimit> queryUserColLimit(String userID, String modelTag) {
+	public List<UserColLimit> queryUserColLimit(String userID, String modelID) {
 		// TODO Auto-generated method stub
-		return this.columnLimitMapper.queryUserColLimit(userID, modelTag);
+		return this.columnLimitMapper.queryUserColLimit(userID, modelID);
 	}
 
 	@Override
-	public void insertUserColLimit(List<String> cols, String userID, String modelTag) {
+	public void insertUserColLimit(List<String> cols, String userID, String modelID) {
 		// TODO Auto-generated method stub
-		this.columnLimitMapper.deleteUserColLimit(userID, modelTag);
+		this.columnLimitMapper.deleteUserColLimit(userID, modelID);
 		List<UserColLimit> queryColumns = new ArrayList<>(cols.size());
 		for (String col : cols) {
 			UserColLimit limit = new UserColLimit();
 			limit.setColID(col);
-			limit.setModelTag(modelTag);
+			limit.setModelID(modelID);
 			limit.setUserID(userID);
 			queryColumns.add(limit);
 		}
@@ -144,14 +168,14 @@ public class MysqlConfigDaoService implements ConfigDaoService {
 	}
 
 	@Override
-	public void insertGroupColLimit(List<String> cols, String groupID, String modelTag) {
+	public void insertGroupColLimit(List<String> cols, String groupID, String modelID) {
 		// TODO Auto-generated method stub
-		this.columnLimitMapper.deleteGroupColLimit(groupID, modelTag);
+		this.columnLimitMapper.deleteGroupColLimit(groupID, modelID);
 		List<GroupColLimit> queryColumns = new ArrayList<>(cols.size());
 		for (String col : cols) {
 			GroupColLimit limit = new GroupColLimit();
 			limit.setColID(col);
-			limit.setModelTag(modelTag);
+			limit.setModelTag(modelID);
 			limit.setGroupID(groupID);
 			queryColumns.add(limit);
 		}
@@ -212,32 +236,30 @@ public class MysqlConfigDaoService implements ConfigDaoService {
 	}
 
 	@Override
-	public void saveModel(String modelTag, String modelName, List<QueryColumn> queryColumn) throws AdminException {
+	public void saveModel(String modelID, String modelName, List<QueryColumn> queryColumn) throws AdminException {
 		// TODO Auto-generated method stub
 
 		this.developConfigCheck();
-		if (modelTag == null) {
-			String modelID = java.util.UUID.randomUUID().toString();
+		if (modelID == null) {
+			modelID = java.util.UUID.randomUUID().toString();
 			QueryModel model = new QueryModel();
 			model.setModelID(modelID);
-			model.setModelTag(modelID);
 			model.setModelName(modelName);
 			for (QueryColumn qc : queryColumn) {
-				qc.setModelTag(modelID);
+				qc.setModelID(modelID);
 			}
 			this.queryModelMapper.batchInsert(queryColumn);
 			this.queryModelMapper.createModel(model);
 		} else {
-			this.queryModelMapper.deleteModel(modelTag);
-			this.queryModelMapper.deleteQueryColumn(modelTag);
+			this.queryModelMapper.deleteModel(modelID);
+			this.queryModelMapper.deleteQueryColumn(modelID);
 
 			QueryModel model = new QueryModel();
-			model.setModelID(modelTag);
-			model.setModelTag(modelTag);
+			model.setModelID(modelID);
 			model.setModelName(modelName);
 
 			for (QueryColumn qc : queryColumn) {
-				qc.setModelTag(modelTag);
+				qc.setModelID(modelID);
 			}
 			this.queryModelMapper.batchInsert(queryColumn);
 			this.queryModelMapper.createModel(model);
@@ -246,9 +268,9 @@ public class MysqlConfigDaoService implements ConfigDaoService {
 	}
 
 	@Override
-	public List<QueryColumn> listQueryColumn(String modelTag) {
+	public List<QueryColumn> listQueryColumn(String modelID) {
 		// TODO Auto-generated method stub
-		return this.queryModelMapper.listQueryColumn(modelTag);
+		return this.queryModelMapper.listQueryColumn(modelID);
 	}
 
 	@Override
@@ -269,6 +291,32 @@ public class MysqlConfigDaoService implements ConfigDaoService {
 		if (user.getRoleType() != UserInfo.SUPERADMIN && user.getRoleType() != UserInfo.DEVELOPER) {
 			throw new AdminException("没有权限执行操作");
 		}
+	}
+
+	@Override
+	public ModelInfoResp getModelInfo(String modelID) {
+		// TODO Auto-generated method stub
+		List<QueryColumn> columns=this.queryModelMapper.listQueryColumn(modelID);
+		List<ColumnInfoResp> dims=new ArrayList<>();
+		List<ColumnInfoResp> meas=new ArrayList<>();
+		for(QueryColumn col:columns)
+		{
+			ConfigColumn cc=this.modelService.getColumn(col.getColID());
+			ColumnInfoResp ci=new ColumnInfoResp();
+			BeanUtils.copyProperties(cc, ci);
+			if(cc.isMeasure())
+			{
+				meas.add(ci);
+			}else
+			{
+				dims.add(ci);
+			}
+		}
+		
+		ModelInfoResp model=new ModelInfoResp();
+		model.setDimensions(dims);
+		model.setMeasures(meas);
+		return model;
 	}
 
 }

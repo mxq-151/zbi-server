@@ -73,7 +73,7 @@ public class ReportController extends BaseController {
 			throw new QueryException("看板不存在");
 		}
 
-		if (reportWrapperInfo.getReportID() == null) {
+		if (reportWrapperInfo.getReportID() == null || "-1".equals(reportWrapperInfo.getReportID())) {
 			FacadeReport rwf = this.reportDaoService.createNewReport(reportWrapperInfo);
 			return rwf;
 		} else {

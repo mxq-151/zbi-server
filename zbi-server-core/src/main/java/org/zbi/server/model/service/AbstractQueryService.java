@@ -16,7 +16,7 @@ public abstract class AbstractQueryService implements IQueryService {
 
 		for (ColumnMetaResp meta : metas) {
 			for (ParseColumn dim : dimensions) {
-				if (dim.getAlias().toLowerCase().equals(meta.getName().toLowerCase())) {
+				if (dim.getAlias().toLowerCase().equals(meta.getLabel().toLowerCase())) {
 					meta.setChinese(dim.getChinese());
 					meta.setMeasure(false);
 					meta.setUuid(dim.getUuid());
@@ -29,7 +29,7 @@ public abstract class AbstractQueryService implements IQueryService {
 
 		for (ColumnMetaResp meta : metas) {
 			for (ParseColumn measure : measures) {
-				if (measure.getAlias().toLowerCase().equals(meta.getName().toLowerCase())) {
+				if (measure.getAlias().toLowerCase().equals(meta.getLabel().toLowerCase())) {
 					meta.setChinese(measure.getChinese());
 					meta.setMeasure(true);
 					meta.setUuid(measure.getUuid());

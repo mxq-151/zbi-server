@@ -25,7 +25,7 @@ public class RequestDecodeService {
 	public RequestParam parseRquest(RequestParam param) throws ParseException {
 		// TODO Auto-generated method stub
 
-		List<String> queryCols = this.configDaoService.queryUserTotalColLimit(param.getModelTag());
+		List<String> queryCols = this.configDaoService.queryUserTotalColLimit(param.getModelID());
 
 		List<RequestColumn> dims = param.getDimensions();
 		List<RequestColumn> measures = param.getMeasures();
@@ -61,7 +61,7 @@ public class RequestDecodeService {
 					}
 				}
 				if (!find) {
-					logger.info("cant not  find col for {} in model {}", dim.getUuid(), param.getModelTag());
+					logger.info("cant not  find col for {} in model {}", dim.getUuid(), param.getModelID());
 				}
 			}
 		}
@@ -81,7 +81,7 @@ public class RequestDecodeService {
 					}
 				}
 				if (!find) {
-					logger.info("cant not  find col for {} in model {}", measure.getUuid(), param.getModelTag());
+					logger.info("cant not  find col for {} in model {}", measure.getUuid(), param.getModelID());
 				}
 			}
 

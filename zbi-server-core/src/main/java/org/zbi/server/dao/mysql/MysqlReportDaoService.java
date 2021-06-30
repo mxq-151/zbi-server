@@ -70,8 +70,8 @@ public class MysqlReportDaoService implements ReportDaoService {
 		FacadeReport report=new FacadeReport();
 		report.setReportID(reportInfo.getReportID());
 		report.setBoardID(reportInfo.getBoardID());
+		report.setModelID(reportInfo.getModelID());
 		report.setModelName(reportInfo.getModelName());
-		report.setModelTag(reportInfo.getModelTag());
 		report.setOtherParams(reportInfo.getOtherParams());
 		report.setReportDesc(reportInfo.getReportDesc());
 		report.setReportName(reportInfo.getReportName());
@@ -87,11 +87,11 @@ public class MysqlReportDaoService implements ReportDaoService {
 		ReportInfo report=new ReportInfo();
 		report.setBoardID(reportInfo.getBoardID());
 		report.setModelName(reportInfo.getModelName());
-		report.setModelTag(reportInfo.getModelTag());
 		report.setOtherParams(reportInfo.getOtherParams());
 		report.setReportDesc(reportInfo.getReportDesc());
 		report.setReportName(reportInfo.getReportName());
 		report.setReportID(reportInfo.getReportID());
+		report.setModelID(reportInfo.getModelID());
 		report.setRequestConditions(reportInfo.getRequestConditions());
 		report.setRequestDimensions(reportInfo.getRequestDimensions());
 		report.setDrillDimensions(reportInfo.getDrillDimensions());

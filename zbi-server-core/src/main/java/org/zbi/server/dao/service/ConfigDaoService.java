@@ -10,11 +10,11 @@ import org.zbi.server.model.config.ConfigColumn;
 import org.zbi.server.model.config.ConfigTable;
 import org.zbi.server.model.exception.AdminException;
 import org.zbi.server.model.facade.FacadeTable;
-import org.zbi.server.model.response.ModelDescResp;
+import org.zbi.server.model.response.ModelInfoResp;
 
 public interface ConfigDaoService {
 
-	public List<ModelDescResp> getModelDscriptions(String key);
+	public List<QueryModel> getModelDscriptions(String key);
 
 	public void saveConfigTable(FacadeTable table) throws AdminException;
 
@@ -24,17 +24,17 @@ public interface ConfigDaoService {
 
 	public List<ConfigColumn> getConfigColumns(String tableID) throws AdminException;
 
-	public List<String> queryUserTotalColLimit(String modelTag);
+	public List<String> queryUserTotalColLimit(String modelID);
 
-	public List<GroupColLimit> queryGroupColLimit(String groupID, String modelTag);
+	public List<GroupColLimit> queryGroupColLimit(String groupID, String modelID);
 
-	public List<UserColLimit> queryUserColLimit(String userID, String modelTag);
+	public List<UserColLimit> queryUserColLimit(String userID, String modelID);
 
 	public List<String> getDataLimit(String colID);
 
-	public void insertUserColLimit(List<String> cols, String userID, String modelTag);
+	public void insertUserColLimit(List<String> cols, String userID, String modelID);
 
-	public void insertGroupColLimit(List<String> cols, String groupID, String modelTag);
+	public void insertGroupColLimit(List<String> cols, String groupID, String modelID);
 
 	public void insertUserDataLimit(List<String> words, String userID, String colID);
 
@@ -46,10 +46,12 @@ public interface ConfigDaoService {
 
 	public List<String> queryUserTotalDataLimit(String userID, String colID);
 
-	public void saveModel(String modelTag, String modelName, List<QueryColumn> queryColumn) throws AdminException;
+	public void saveModel(String modelID, String modelName, List<QueryColumn> queryColumn) throws AdminException;
 
-	public List<QueryColumn> listQueryColumn(String modelTag);
+	public List<QueryColumn> listQueryColumn(String modelID);
 
 	public List<QueryModel> listQueryModel();
+	
+	public ModelInfoResp getModelInfo(String modelID);
 
 }

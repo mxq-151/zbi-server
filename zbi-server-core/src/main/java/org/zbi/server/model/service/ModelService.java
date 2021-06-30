@@ -85,6 +85,10 @@ public class ModelService {
 
 		}
 	}
+	
+	public ConfigColumn getColumn(String uuid) {
+		return this.columns.get(uuid);
+	}
 
 	public ParseModel getModel(RequestParam param) throws ParseException {
 
@@ -110,7 +114,7 @@ public class ModelService {
 			ConfigColumn cc = this.columns.get(col.getUuid());
 
 			if (cc == null) {
-				throw new ParseException("模型没有配置字段:" + param.getModelTag(), ExceptionType.CONFIGERROR);
+				throw new ParseException("模型没有配置字段:" + param.getModelID(), ExceptionType.CONFIGERROR);
 			}
 
 			ParseColumn pc = new ParseColumn();
@@ -126,7 +130,7 @@ public class ModelService {
 			ConfigTable configTable = this.tables.get(cc.getTableID());
 
 			if (configTable == null) {
-				throw new ParseException("模型没有配置字段:" + param.getModelTag(), ExceptionType.CONFIGERROR);
+				throw new ParseException("模型没有配置字段:" + param.getModelID(), ExceptionType.CONFIGERROR);
 			}
 
 			conns.add(configTable.getConnID());

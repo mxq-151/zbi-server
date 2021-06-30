@@ -49,7 +49,7 @@ public class AbstractSqlEngine implements IQueryEngine {
 		ConnectionFactory.closeConnection(this.connection, rs, null);
 	}
 
-	public QueryResultResp castToResult(ResultSet rs) throws SQLException {
+	public QueryResultResp castToResult(ResultSet rs) throws SQLException, IOException {
 
 		QueryResultResp resp = new QueryResultResp();
 		ResultSetMetaData metas = rs.getMetaData();
@@ -82,7 +82,7 @@ public class AbstractSqlEngine implements IQueryEngine {
 			});
 			results.add(oneRowData);
 		}
-
+		this.closeConnection(rs);
 		return resp;
 	}
 

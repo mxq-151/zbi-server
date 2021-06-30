@@ -8,17 +8,12 @@ import io.swagger.annotations.ApiModelProperty;
 @ApiModel
 public class RequestParam {
 
-	/**
-	 * 模型标识
-	 */
-	@ApiModelProperty(example = "123456", required = true, dataType = "string", value = "模型标识")
-	private String modelTag;
 
 	/**
 	 * 模型ID
 	 */
 	@ApiModelProperty(example = "1", required = true, dataType = "int", value = "模型ID")
-	private int modelID;
+	private String modelID;
 
 	/**
 	 * 维度
@@ -90,19 +85,12 @@ public class RequestParam {
 		this.pageSize = pageSize;
 	}
 
-	public String getModelTag() {
-		return modelTag;
-	}
 
-	public void setModelTag(String modelTag) {
-		this.modelTag = modelTag;
-	}
-
-	public int getModelID() {
+	public String getModelID() {
 		return modelID;
 	}
 
-	public void setModelID(int modelID) {
+	public void setModelID(String modelID) {
 		this.modelID = modelID;
 	}
 

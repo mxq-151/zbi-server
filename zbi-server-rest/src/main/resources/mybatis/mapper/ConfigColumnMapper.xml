@@ -14,7 +14,7 @@
 		<result column="col_name" jdbcType="VARCHAR" property="colName" />
 		<result column="column_type" jdbcType="VARCHAR"
 			property="columnType" />
-		<result column="agg_type" jdbcType="VARCHAR" property="AggType" />
+		<result column="agg_type" jdbcType="VARCHAR" property="aggType" />
 		<result column="force_dim" jdbcType="BIT"
 			property="forceDim" />
 		<result column="is_advanced" jdbcType="BIT"

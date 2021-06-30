@@ -42,9 +42,9 @@ public class DefaultQueryServiceTest extends ServiceTestBase {
 		RequestParam param = new RequestParam();
 		List<RequestColumn> dimensions = new ArrayList<>();
 		QueryModel model = config.formatQueryModel();
-		String modelTag = model.getModelTag();
+		String modelTag = model.getModelID();
 		param.setDimensions(dimensions);
-		param.setModelTag(modelTag);
+		param.setModelID(modelTag);
 		param.setPageSize(10);
 
 		List<QueryColumn> columns = config.formatQueryColumns();

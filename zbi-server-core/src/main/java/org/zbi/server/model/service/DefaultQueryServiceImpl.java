@@ -52,6 +52,7 @@ public class DefaultQueryServiceImpl extends AbstractQueryService {
 		IQueryEngine queryEngine = this.engineFactory.getQueryEngine(model.getConnID(), model.getEngineType());
 		long start = System.currentTimeMillis();
 		QueryResultResp resp = queryEngine.query(model);
+		this.encodeChinese(model, resp);
 		long end = System.currentTimeMillis();
 		resp.setDuration(end - start);
 		return resp;

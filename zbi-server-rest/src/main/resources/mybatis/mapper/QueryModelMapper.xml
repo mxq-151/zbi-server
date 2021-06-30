@@ -7,72 +7,69 @@
 		type="org.zbi.server.entity.mysql.QueryModel">
 		<result column="model_id" property="modelID" />
 		<result column="model_name" property="modelName" />
-		<result column="model_tag" property="modelTag" />
 	</resultMap>
 
 	<resultMap id="columnResultMap"
 		type="org.zbi.server.entity.mysql.QueryColumn">
-		<result column="from_table" property="fromTable" />
 		<result column="col_id" property="colID" />
-		<result column="model_tag" property="modelTag" />
+		<result column="model_id" property="modelID" />
 	</resultMap>
 
 
 	<insert id="createModel">
 		insert into zbi_db.query_model
-		(model_tag,model_name,model_id)
-		values(#{modelTag},#{modelName},#{modelID})
+		(model_name,model_id)
+		values(#{modelName},#{modelID})
 	</insert>
 
 	<insert id="deleteModel">
 		delete from zbi_db.query_model where
-		model_tag=#{modelTag}
+		model_id=#{modelID}
 	</insert>
 	
 	
 	<select id="listAllModel" resultMap="baseResultMap">
-		select model_id,model_tag,model_name from
+		select model_id,model_name from
 		zbi_db.query_model
 	</select>
 
 	<select id="listQueryModel" resultMap="baseResultMap">
-		select model_id,model_tag,model_name from
-		zbi_db.query_model where model_tag in
+		select model_id,model_name from
+		zbi_db.query_model where model_id in
 		(
-		select distinct model_tag
+		select distinct model_id
 		zbi_db.user_col_limit where user_id=#{userID}
 		union all
 		select distinct
-		model_tag zbi_db.group_user as gu
+		model_id zbi_db.group_user as gu
 		left join
 		zbi_db.group_col_limit as
 		gcl on gu.group_id=gcl.group_id
 		where gu.user_id=#{userID} and
-		gcl.model_tag is not null
+		gcl.model_id is not null
 		)
 	</select>
 
 	<insert id="batchInsert" parameterType="map">
 		<!--@mbg.generated -->
 		insert into query_column
-		(`model_tag`,`col_id`, `from_table`)
+		(`model_id`,`col_id`)
 		values
 		<foreach collection="list" item="item" separator=",">
-			(#{item.modelTag,jdbcType=VARCHAR},
-			#{item.colID,jdbcType=VARCHAR},
-			#{item.fromTable,jdbcType=VARCHAR})
+			(#{item.modelID,jdbcType=VARCHAR},
+			#{item.colID,jdbcType=VARCHAR})
 		</foreach>
 	</insert>
 
 	<select id="listQueryColumn" resultMap="columnResultMap">
 		select * from
 		zbi_db.query_column where
-		model_tag=#{modelTag}
+		model_id=#{modelID}
 	</select>
 
 	<delete id="deleteQueryColumn">
 		delete from  zbi_db.query_column where
-		model_tag=#{modelTag}
+		model_id=#{modelID}
 	</delete>
 
 </mapper>

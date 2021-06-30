@@ -2,19 +2,11 @@ package org.zbi.server.entity.mysql;
 
 public class UserColLimit {
 
-	String modelTag;
+	String modelID;
 
 	String colID;
 
 	String userID;
-
-	public String getModelTag() {
-		return modelTag;
-	}
-
-	public void setModelTag(String modelTag) {
-		this.modelTag = modelTag;
-	}
 
 	public String getColID() {
 		return colID;
@@ -30,6 +22,14 @@ public class UserColLimit {
 
 	public void setUserID(String userID) {
 		this.userID = userID;
+	}
+
+	public String getModelID() {
+		return modelID;
+	}
+
+	public void setModelID(String modelID) {
+		this.modelID = modelID;
 	}
 
 }

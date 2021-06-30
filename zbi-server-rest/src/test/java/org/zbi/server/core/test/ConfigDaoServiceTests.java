@@ -57,7 +57,7 @@ class ConfigDaoServiceTests extends ServiceTestBase {
 		List<ConfigColumn> columns = new ArrayList<>();
 		columns.add(this.createColumn("日期", "sd", "statedate", ColumnType.DATE, true, false, "sd1", tableID, null));
 		columns.add(this.createColumn("销售员", "sm", "saller", ColumnType.STRING, false, false, "sm1", tableID, null));
-		columns.add(this.createColumn("销售量", "sn", "salenum", ColumnType.NUMBER, false, false, "sn1", tableID,
+		columns.add(this.createColumn("销售量", "sn", "salenum", ColumnType.NUMBER, false, true, "sn1", tableID,
 				AggType.SUM));
 		table.setColumns(columns);
 
@@ -76,6 +76,7 @@ class ConfigDaoServiceTests extends ServiceTestBase {
 		cc.setMeasure(measure);
 		cc.setUuid(uuid);
 		cc.setTableID(tableID);
+		cc.setAggType(aggType);
 		return cc;
 	}
 
@@ -91,14 +92,14 @@ class ConfigDaoServiceTests extends ServiceTestBase {
 		this.developerLogin();
 		QueryModel model = this.formatQueryModel();
 		List<QueryColumn> queryColumn = this.formatQueryColumns();
-		this.configDaoService.saveModel(model.getModelTag(), model.getModelName(), queryColumn);
+		this.configDaoService.saveModel(model.getModelID(), model.getModelName(), queryColumn);
 	}
 
 	public QueryModel formatQueryModel() {
 		QueryModel model = new QueryModel();
 		model.setModelID("m1");
 		model.setModelName("test");
-		model.setModelTag("m1");
+		model.setModelID("m1");
 		return model;
 	}
 
@@ -111,7 +112,7 @@ class ConfigDaoServiceTests extends ServiceTestBase {
 		for (ConfigColumn cc : columns) {
 			QueryColumn qc = new QueryColumn();
 			qc.setColID(cc.getUuid());
-			qc.setModelTag(model.getModelTag());
+			qc.setModelID(model.getModelID());
 			array.add(qc);
 		}
 
@@ -130,7 +131,7 @@ class ConfigDaoServiceTests extends ServiceTestBase {
 			cols.add(col.getUuid());
 		}
 
-		String modelTag = this.formatQueryModel().getModelTag();
+		String modelTag = this.formatQueryModel().getModelID();
 		this.configDaoService.insertUserColLimit(cols, userID, modelTag);
 		Assert.assertEquals(columns.size(), this.configDaoService.queryUserColLimit(userID, modelTag).size());
 		this.departmentLogin();
