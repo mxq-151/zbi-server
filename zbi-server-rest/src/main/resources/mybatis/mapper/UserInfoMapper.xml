@@ -29,6 +29,11 @@
 		zbi_db.user_info where
 		`email`=#{email}
 	</select>
+	
+	<select id="loadUsers" resultMap="userInfoResultMap">
+		select * from
+		zbi_db.user_info
+	</select>
 
 
 	<select id="checkEmail" resultType="boolean">

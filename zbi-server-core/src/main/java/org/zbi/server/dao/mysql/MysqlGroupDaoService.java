@@ -6,15 +6,19 @@ import java.util.List;
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import org.zbi.server.dao.service.GroupDaoService;
 import org.zbi.server.entity.mysql.GroupInfo;
+import org.zbi.server.entity.mysql.GroupUser;
 import org.zbi.server.entity.mysql.UserInfo;
 import org.zbi.server.mapper.mysql.GroupInfoMapper;
 import org.zbi.server.mapper.mysql.UserInfoMapper;
 import org.zbi.server.model.exception.AdminException;
 import org.zbi.server.model.facade.FacadeGroup;
+import org.zbi.server.model.facade.FacadeUser;
 import org.zbi.server.model.service.LoginUserService;
 
+@Component
 public class MysqlGroupDaoService implements GroupDaoService {
 
 	@Autowired
@@ -42,14 +46,15 @@ public class MysqlGroupDaoService implements GroupDaoService {
 			throw new AdminException("无权限进行此操作");
 		}
 
-		boolean exsist = this.groupInfoMapper.checkGroupByName(groupName);
+		boolean exsist = this.groupInfoMapper.checkGroupByName(groupName,
+				this.loginUserService.getLoginUser().getUserID());
 		if (exsist) {
 			throw new AdminException("用户组已经存在" + groupName);
 		}
 
 		String groupID = java.util.UUID.randomUUID().toString();
 		String userID = loginUserService.getLoginUser().getUserID();
-		this.groupInfoMapper.createGroup(groupName, groupDesc, groupID, userID);
+		this.groupInfoMapper.createGroup(groupID, groupName, groupDesc, userID);
 
 		FacadeGroup group = new FacadeGroup();
 		group.setGroupDesc(groupDesc);
@@ -82,17 +87,11 @@ public class MysqlGroupDaoService implements GroupDaoService {
 	}
 
 	@Override
-	public int addUserToGroup(List<String> users, String groupID) throws AdminException {
+	public int addUserToGroup(List<GroupUser> users, String groupID) throws AdminException {
 		// TODO Auto-generated method stub
 		this.checkPermission(groupID);
-		return this.groupInfoMapper.addUserToGroup(users, groupID);
-	}
-
-	@Override
-	public int deleteUserInGroup(List<String> users, String groupID) throws AdminException {
-		// TODO Auto-generated method stub
-		this.checkPermission(groupID);
-		return this.groupInfoMapper.deleteUserInGroup(users, groupID);
+		this.groupInfoMapper.deleteUserInGroup(groupID);
+		return this.groupInfoMapper.addUserToGroup(users);
 	}
 
 	@Override
@@ -124,12 +123,19 @@ public class MysqlGroupDaoService implements GroupDaoService {
 
 	private void checkPermission(String groupID) throws AdminException {
 		GroupInfo group = this.groupInfoMapper.getGroupInfoById(groupID);
-		if (!group.getCreaterID().equals(this.loginUserService.getLoginUser().getUserID())
-				|| !(this.loginUserService.getLoginUser().getRoleType() == UserInfo.SUPERADMIN))
-
-		{
+		FacadeUser user = this.loginUserService.getLoginUser();
+		if (group.getAdminID().equals(user.getUserID()) || (user.getRoleType() == UserInfo.SUPERADMIN)
+				|| (user.getRoleType() == UserInfo.DEVELOPER)) {
+			return;
+		} else {
 			throw new AdminException("用户:" + this.loginUserService.getLoginUser().getUserName() + "没有删除权限");
 		}
+	}
+
+	@Override
+	public List<FacadeUser> getGroupUsers(String groupID) {
+		// TODO Auto-generated method stub
+		return this.groupInfoMapper.getGroupUsers(groupID);
 	}
 
 }

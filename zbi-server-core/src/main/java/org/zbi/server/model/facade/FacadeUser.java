@@ -25,15 +25,7 @@ public class FacadeUser {
 	 */
 	private int roleType;
 
-	/**
-	 * 管理的用户组
-	 **/
-	private List<String> adminGroups;
-
-	/**
-	 * 所属的用户组
-	 */
-	private List<String> groups;
+	private List<Integer> rights;
 
 	public String getUserID() {
 		return userID;
@@ -67,20 +59,12 @@ public class FacadeUser {
 		this.roleType = roleType;
 	}
 
-	public List<String> getAdminGroups() {
-		return adminGroups;
+	public List<Integer> getRights() {
+		return rights;
 	}
 
-	public List<String> getGroups() {
-		return groups;
-	}
-
-	public void setAdminGroups(List<String> adminGroups) {
-		this.adminGroups = adminGroups;
-	}
-
-	public void setGroups(List<String> groups) {
-		this.groups = groups;
+	public void setRights(List<Integer> rights) {
+		this.rights = rights;
 	}
 
 }

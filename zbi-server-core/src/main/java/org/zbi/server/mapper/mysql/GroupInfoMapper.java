@@ -3,23 +3,27 @@ package org.zbi.server.mapper.mysql;
 import java.util.List;
 
 import org.zbi.server.entity.mysql.GroupInfo;
+import org.zbi.server.entity.mysql.GroupUser;
+import org.zbi.server.model.facade.FacadeUser;
 
 public interface GroupInfoMapper {
 
-	public boolean createGroup(String groupName, String groupDesc, String groupID, String createID);
+	public boolean createGroup(String groupID, String groupName, String groupDesc, String adminID);
 
 	public GroupInfo getGroupInfoById(String groupID);
 
-	public boolean checkGroupByName(String groupName);
+	public List<FacadeUser> getGroupUsers(String groupID);
 
-	public List<GroupInfo> getAdminGroup(String userID);
+	public boolean checkGroupByName(String groupName, String adminID);
 
-	public int addUserToGroup(List<String> users, String groupID);
+	public List<GroupInfo> getAdminGroup(String adminID);
 
-	public int deleteUserInGroup(List<String> users, String groupID);
+	public int addUserToGroup(List<GroupUser> users);
+
+	public int deleteUserInGroup(String groupID);
 
 	public void updateGroupAdmin(String adminID, String groupID);
-	
+
 	public void deleteGroup(String groupID);
 
 }

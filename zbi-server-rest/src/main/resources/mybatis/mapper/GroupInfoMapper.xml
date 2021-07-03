@@ -11,10 +11,31 @@
 		<result column="admin_id" property="adminID" />
 	</resultMap>
 
+	<resultMap id="userResultMap"
+		type="org.zbi.server.model.facade.FacadeUser">
+		<result column="user_id" property="userID" />
+		<result column="email" property="email" />
+		<result column="user_name" property="userName" />
+		<result column="role_type" property="roleType" />
+	</resultMap>
+
 	<insert id="createGroup">
 		insert into
 		zbi_db.group_info(group_id,group_name,group_desc,admin_id)
 		values(#{groupID},#{groupName},#{groupDesc},#{adminID})
+	</insert>
+
+	<insert id="addUserToGroup" parameterType="map">
+		<!--@mbg.generated -->
+		insert into group_user
+		(`group_id`,`user_id`, `auth_right`)
+		values
+		<foreach collection="list" item="item" separator=",">
+			(
+			#{item.groupID,jdbcType=VARCHAR},
+			#{item.userID,jdbcType=VARCHAR},
+			#{item.authRight,jdbcType=INTEGER})
+		</foreach>
 	</insert>
 
 	<select id="getGroupInfoById" resultMap="groupInfoResultMap">
@@ -22,7 +43,18 @@
 		zbi_db.group_info where group_id=#{groupID}
 	</select>
 
-	<select id="getUsersInGroup" resultMap="groupInfoResultMap">
+	<select id="getAdminGroup" resultMap="groupInfoResultMap">
+		select * from
+		zbi_db.group_info where admin_id=#{adminID}
+	</select>
+
+	<select id="checkGroupByName" resultType="boolean">
+		select count(1) from
+		zbi_db.group_info where admin_id=#{adminID} and
+		group_name=#{groupName}
+	</select>
+
+	<select id="getGroupUsers" resultMap="userResultMap">
 		select b.* from
 		zbi_db.group_user as a left join zbi_db.user_info as b on
 		a.user_id=b.user_id where group_id=#{groupID}
@@ -31,13 +63,18 @@
 	<update id="updateGroupInfo">
 		update zbi_db.group_info set
 		group_name=#{groupName},group_desc=#{group_desc}
-		where group_id=#{groupID}
+		where
+		group_id=#{groupID}
 	</update>
 
 
-	<delete id="updateGroupAdmin">
-	update zbi_db.group_info admin_id=#{adminID} where
-	where group_id=#{groupID}
+	<update id="updateGroupAdmin">
+		update zbi_db.group_info admin_id=#{adminID} where
+		where group_id=#{groupID}
+	</update>
+	
+	<delete id="deleteUserInGroup">
+		delete from zbi_db.group_user where group_id=#{groupID}
 	</delete>
 
 </mapper>

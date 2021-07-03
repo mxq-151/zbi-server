@@ -5,7 +5,7 @@ public class GroupInfo {
 	/**
 	 * 用户组ID
 	 */
-	private int groupID;
+	private String groupID;
 
 	/**
 	 * 用户组名
@@ -18,13 +18,13 @@ public class GroupInfo {
 	private String groupDesc;
 	
 	
-	public String createrID;
+	public String adminID;
 
-	public int getGroupID() {
+	public String getGroupID() {
 		return groupID;
 	}
 
-	public void setGroupID(int groupID) {
+	public void setGroupID(String groupID) {
 		this.groupID = groupID;
 	}
 
@@ -44,12 +44,12 @@ public class GroupInfo {
 		this.groupDesc = groupDesc;
 	}
 
-	public String getCreaterID() {
-		return createrID;
+	public String getAdminID() {
+		return adminID;
 	}
 
-	public void setCreaterID(String createrID) {
-		this.createrID = createrID;
+	public void setAdminID(String adminID) {
+		this.adminID = adminID;
 	}
 
 }
