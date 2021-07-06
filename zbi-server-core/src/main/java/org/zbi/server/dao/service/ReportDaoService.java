@@ -2,31 +2,24 @@ package org.zbi.server.dao.service;
 
 import java.util.List;
 
-import org.zbi.server.model.exception.QueryException;
-import org.zbi.server.model.facade.FacadeReport;
+import org.zbi.server.entity.mysql.ReportInfo;
 
 public interface ReportDaoService {
 
 	/**
-	 * 创建新报表
-	 * @throws QueryException 
-	 * */
-	public FacadeReport createNewReport(FacadeReport rwi) throws QueryException;
-
-	/**
 	 * 根据报表ID获取报表信息
 	 * **/
-	public List<FacadeReport> getReportsByBoardID(String boardID);
+	public List<ReportInfo> getReportsByBoardID(String boardID);
 	
 	/**
 	 * 根据报表ID获取报表信息
 	 * **/
-	public FacadeReport getReportByID(String reportID);
+	public ReportInfo getReportByID(String reportID);
 
 	/**
 	 * 更新报表信息
 	 * **/
-	public FacadeReport updateReport(FacadeReport rwi);
+	public ReportInfo saveReport(ReportInfo rwi);
 
 	/**
 	 * 删除报表

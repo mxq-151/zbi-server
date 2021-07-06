@@ -1,6 +1,6 @@
 package org.zbi.server.entity.mysql;
 
-public class GroupDataLimit {
+public class GroupDataLimit extends EntityBase{
 	String groupID;
 	String word;
 	String colID;

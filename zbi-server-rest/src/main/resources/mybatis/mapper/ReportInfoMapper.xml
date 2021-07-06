@@ -37,19 +37,19 @@
 
 	<insert id="createReport"
 		parameterType="org.zbi.server.entity.mysql.ReportInfo">
-		INSERT INTO zbi_db.report_info (report_name,
+		INSERT INTO zbi_db.report_info (report_id,report_name,
 		report_desc,model_name,
 		other_params,
 		request_dimensions,drill_dimensions,
-		request_measures,request_conditions,board_id)
-		VALUES (#{reportName},
+		request_measures,request_conditions,board_id,model_id)
+		VALUES (#{reportID},#{reportName},
 		#{reportDesc}, #{modelName},
 		#{otherParams,typeHandler=org.zbi.server.mapper.handler.MapHandler},
 		#{requestDimensions,typeHandler=org.zbi.server.mapper.handler.RequestColumnHandler},
 		#{drillDimensions,typeHandler=org.zbi.server.mapper.handler.RequestColumnHandler},
 		#{requestMeasures,typeHandler=org.zbi.server.mapper.handler.RequestColumnHandler},
 		#{requestConditions,typeHandler=org.zbi.server.mapper.handler.RequestConditionHandler}
-		,#{boardID})
+		,#{boardID},#{modelID})
 	</insert>
 
 	<select id="getReportByID" parameterType="String"

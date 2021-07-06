@@ -8,6 +8,8 @@ import org.zbi.server.model.facade.FacadeFolder;
 public interface FolderDaoService {
 
 	public List<FacadeFolder> getFolders();
+	
+	public List<FacadeFolder> listAdminFolders();
 
 	public FacadeFolder getFolder(String folderID);
 

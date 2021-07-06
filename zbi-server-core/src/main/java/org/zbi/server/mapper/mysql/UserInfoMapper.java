@@ -16,5 +16,7 @@ public interface UserInfoMapper {
 	public UserInfo getUserByEmail(String email);
 	
 	public List<UserInfo> loadUsers();
+	
+	public void updateLoginNum(String userID);
 
 }

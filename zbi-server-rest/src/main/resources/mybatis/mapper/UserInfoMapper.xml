@@ -10,12 +10,17 @@
 		<result column="user_name" property="userName" />
 		<result column="role_type" property="roleType" />
 		<result column="password" property="password" />
+		<result column="login_num" property="loginNum" />
+		<result column="leave" property="leave" />
+		<result column="department" property="department" />
+		<result column="last_update" property="lastUpdate" />
+		<result column="last_updater" property="lastUpdater" />
 	</resultMap>
 
 	<insert id="createUser">
 		insert into
-		zbi_db.user_info(user_name,email,role_type)
-		values(#{userName},#{email},#{roleType},#{password}))
+		zbi_db.user_info(user_id,user_name,email,role_type,password,last_updater)
+		values(#{userID},#{userName},#{email},#{roleType},#{password},#{lastUpdater})
 	</insert>
 
 	<select id="getUserByUserID" resultMap="userInfoResultMap">
@@ -29,11 +34,16 @@
 		zbi_db.user_info where
 		`email`=#{email}
 	</select>
-	
+
 	<select id="loadUsers" resultMap="userInfoResultMap">
 		select * from
 		zbi_db.user_info
 	</select>
+
+	<update id="updateLoginNum">
+		update zbi_db.user_info set
+		login_num=login_num+1,last_update=now() where user_id=#{userID}
+	</update>
 
 
 	<select id="checkEmail" resultType="boolean">

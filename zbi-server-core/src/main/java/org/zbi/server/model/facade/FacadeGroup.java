@@ -1,57 +1,20 @@
 package org.zbi.server.model.facade;
 
-import java.util.List;
+import org.zbi.server.entity.mysql.GroupInfo;
 
-public class FacadeGroup {
-
-	/**
-	 * 用户组ID
-	 */
-	private String groupID;
+public class FacadeGroup extends GroupInfo {
 
 	/**
-	 * 用户组名
+	 * 组内用户数
 	 */
-	private String groupName;
-	
-	
-	private String groupDesc;
+	private int userNum;
 
-	/**
-	 * 用户组内用户
-	 */
-	private List<String> users;
-
-	public String getGroupID() {
-		return groupID;
+	public int getUserNum() {
+		return userNum;
 	}
 
-	public String getGroupName() {
-		return groupName;
-	}
-
-	public List<String> getUsers() {
-		return users;
-	}
-
-	public void setGroupID(String groupID) {
-		this.groupID = groupID;
-	}
-
-	public void setGroupName(String groupName) {
-		this.groupName = groupName;
-	}
-
-	public void setUsers(List<String> users) {
-		this.users = users;
-	}
-
-	public String getGroupDesc() {
-		return groupDesc;
-	}
-
-	public void setGroupDesc(String groupDesc) {
-		this.groupDesc = groupDesc;
+	public void setUserNum(int userNum) {
+		this.userNum = userNum;
 	}
 
 }

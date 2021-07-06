@@ -34,7 +34,7 @@ public class QueryController extends BaseController {
 	@ApiResponses({ @ApiResponse(code = 400, message = "请求错误"), @ApiResponse(code = 500, message = "响应失败") })
 	public QueryResultResp query(
 			@Valid @RequestBody @ApiParam(value = "查询的维度", required = true) org.zbi.server.model.request.RequestParam param)
-			throws QueryException, ParseException, SQLException, IOException {
+			throws ParseException, SQLException, QueryException, IOException {
 
 		QueryResultResp qr = this.queryService.query(param);
 		return qr;

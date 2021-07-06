@@ -6,5 +6,7 @@ public interface LoginUserService {
 	
 	
 	public FacadeUser getLoginUser();
+	
+	public String encodePassword(String pwd);
 
 }

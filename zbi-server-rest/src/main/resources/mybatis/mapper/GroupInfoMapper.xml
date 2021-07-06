@@ -21,20 +21,21 @@
 
 	<insert id="createGroup">
 		insert into
-		zbi_db.group_info(group_id,group_name,group_desc,admin_id)
-		values(#{groupID},#{groupName},#{groupDesc},#{adminID})
+		zbi_db.group_info(group_id,group_name,group_desc,admin_id,last_updater)
+		values(#{groupID},#{groupName},#{groupDesc},#{adminID},#{lastUpdater})
 	</insert>
 
 	<insert id="addUserToGroup" parameterType="map">
 		<!--@mbg.generated -->
 		insert into group_user
-		(`group_id`,`user_id`, `auth_right`)
+		(`group_id`,`user_id`,
+		`auth_right`,last_updater)
 		values
 		<foreach collection="list" item="item" separator=",">
 			(
 			#{item.groupID,jdbcType=VARCHAR},
 			#{item.userID,jdbcType=VARCHAR},
-			#{item.authRight,jdbcType=INTEGER})
+			#{item.authRight,jdbcType=INTEGER},#{item.lastUpdater,jdbcType=VARCHAR})
 		</foreach>
 	</insert>
 
@@ -72,9 +73,16 @@
 		update zbi_db.group_info admin_id=#{adminID} where
 		where group_id=#{groupID}
 	</update>
-	
+
+
+	<delete id="deleteGroup">
+		delete from zbi_db.group_info where
+		group_id=#{groupID}
+	</delete>
+
 	<delete id="deleteUserInGroup">
-		delete from zbi_db.group_user where group_id=#{groupID}
+		delete from zbi_db.group_user where
+		group_id=#{groupID}
 	</delete>
 
 </mapper>

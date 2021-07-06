@@ -8,6 +8,8 @@
 		<result column="group_id" property="groupID" />
 		<result column="col_id" property="colID" />
 		<result column="model_id" property="modelID" />
+		<result column="last_update" property="lastUpdate" />
+		<result column="last_updater" property="lastUpdater" />
 	</resultMap>
 
 	<resultMap id="userResultMap"
@@ -15,6 +17,8 @@
 		<result column="user_id" property="userID" />
 		<result column="col_id" property="colID" />
 		<result column="model_id" property="modelID" />
+		<result column="last_update" property="lastUpdate" />
+		<result column="last_updater" property="lastUpdater" />
 	</resultMap>
 
 	<insert id="insertUserColLimit" parameterType="map">
@@ -26,17 +30,19 @@
 	</insert>
 
 	<insert id="insertGroupColLimit" parameterType="map">
-		insert into zbi_db.group_col_limit (group_id,col_id,model_id)
+		insert into zbi_db.group_col_limit (group_id,col_id,model_id,last_updater)
 		values
 		<foreach collection="list" item="item" separator=",">
-			(#{item.groupID},#{item.colID},#{item.modelID})
+			(#{item.groupID},#{item.colID},#{item.modelID},#{item.lastUpdater})
 		</foreach>
 	</insert>
 
 	<select id="queryUserTotalColLimit" resultType="string">
-		select distinct col_id from
-		zbi_db.group_col_limit where group_id in(select distinct group_id from zbi_db.group_user where user_id=#{userID}) 
-		union all 
+		select distinct
+		col_id from
+		zbi_db.group_col_limit where group_id in(select distinct
+		group_id from zbi_db.group_user where user_id=#{userID})
+		union all
 		select distinct col_id from
 		zbi_db.user_col_limit where user_id=#{userID}
 	</select>

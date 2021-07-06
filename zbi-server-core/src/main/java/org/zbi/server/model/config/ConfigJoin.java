@@ -1,6 +1,8 @@
 package org.zbi.server.model.config;
 
-public class ConfigJoin {
+import org.zbi.server.entity.mysql.EntityBase;
+
+public class ConfigJoin extends EntityBase{
 	
 	private String joinID;
 

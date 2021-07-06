@@ -4,7 +4,6 @@ import java.util.List;
 
 import org.zbi.server.entity.mysql.FolderInfo;
 
-
 public interface FolderInfoMapper {
 
 	public boolean createFolder(FolderInfo folder);
@@ -13,7 +12,9 @@ public interface FolderInfoMapper {
 
 	public List<FolderInfo> getFolders(String userID);
 
-	public boolean checkFolderByName(String folderName,int folderType,String adminID);
+	public List<FolderInfo> getAdminFolders(String userID);
+
+	public boolean checkFolderByName(String folderName, int folderType, String adminID);
 
 	public void deleteFolderByID(String folderID);
 

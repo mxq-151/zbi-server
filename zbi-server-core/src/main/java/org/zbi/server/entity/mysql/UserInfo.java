@@ -1,6 +1,8 @@
 package org.zbi.server.entity.mysql;
 
-public class UserInfo {
+import java.sql.Timestamp;
+
+public class UserInfo extends EntityBase{
 
 	/**
 	 * 超级管理员
@@ -16,15 +18,15 @@ public class UserInfo {
 	 * 组管理员
 	 */
 	public static final int GROUPADMIN = 3;
-	
+
 	/**
 	 * 开发者
-	 * */
+	 */
 	public static final int DEVELOPER = 4;
-	
+
 	/**
 	 * 普通成员
-	 * */
+	 */
 	public static final int MEMBERS = 5;
 
 	/**
@@ -53,6 +55,22 @@ public class UserInfo {
 	 * 用户类型 1：超级用户 2：部门管理人员 3：组管理人员 4：开发人员 5：普通成员
 	 */
 	private int roleType;
+
+	// 最后登录
+	private Timestamp lastLogin;
+	
+	// 登录次数
+	private int loginNum;
+
+	/**
+	 * 部门
+	 */
+	private String department;
+
+	/**
+	 * 是否离职
+	 */
+	private boolean leave;
 
 	public String getUserID() {
 		return userID;
@@ -92,6 +110,38 @@ public class UserInfo {
 
 	public void setRoleType(int roleType) {
 		this.roleType = roleType;
+	}
+
+	public Timestamp getLastLogin() {
+		return lastLogin;
+	}
+
+	public void setLastLogin(Timestamp lastLogin) {
+		this.lastLogin = lastLogin;
+	}
+
+	public int getLoginNum() {
+		return loginNum;
+	}
+
+	public void setLoginNum(int loginNum) {
+		this.loginNum = loginNum;
+	}
+
+	public String getDepartment() {
+		return department;
+	}
+
+	public void setDepartment(String department) {
+		this.department = department;
+	}
+
+	public boolean isLeave() {
+		return leave;
+	}
+
+	public void setLeave(boolean leave) {
+		this.leave = leave;
 	}
 
 }

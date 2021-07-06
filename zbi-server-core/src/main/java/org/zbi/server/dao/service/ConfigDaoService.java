@@ -54,4 +54,6 @@ public interface ConfigDaoService {
 	
 	public ModelInfoResp getModelInfo(String modelID);
 
+	List<QueryModel> listQueryModelByGroup(String groupID);
+
 }

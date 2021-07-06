@@ -1,6 +1,6 @@
 package org.zbi.server.entity.mysql;
 
-public class GroupUser {
+public class GroupUser extends EntityBase{
 
 	public static final int EDITBOARD = 3;
 

@@ -1,6 +1,6 @@
 package org.zbi.server.entity.mysql;
 
-public class QueryColumn {
+public class QueryColumn extends EntityBase{
 
 	private String modelID;
 

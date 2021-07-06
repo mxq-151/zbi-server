@@ -1,26 +1,13 @@
 package org.zbi.server.model.facade;
 
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
+
+import org.zbi.server.entity.mysql.BoardInfo;
 
 import io.swagger.annotations.ApiModelProperty;
 
-public class FacadeBoard {
-
-	/**
-	 * 看板ID
-	 */
-	@ApiModelProperty(example = "-1", required = false, value = "看板ID")
-	private String boardID;
-
-	/**
-	 * 看板名称
-	 */
-	@ApiModelProperty(example = "大数据测试2", required = true, value = "看板名称")
-	private String boardName;
-
-	@ApiModelProperty(example = "这是个测试看板", required = true, value = "看板描述")
-	private String boardDesc;
+public class FacadeBoard extends BoardInfo {
 
 	/**
 	 * 所属文件夹
@@ -28,33 +15,16 @@ public class FacadeBoard {
 	@ApiModelProperty(example = "1", required = true, value = "所属文件夹ID")
 	private String folderID;
 
-	@ApiModelProperty(required = false, value = "其他参数")
-	private Map<String, Object> otherParams;
+	private String folderName;
 
 	/**
 	 * 报表ID,报表样式
 	 */
 	@ApiModelProperty(example = "", required = false, value = "看板下报表ID", dataType = "List")
-	private List<String> reports = null;
-
-	public String getBoardID() {
-		return boardID;
-	}
-
-	public String getBoardName() {
-		return boardName;
-	}
+	private List<String> reports = new ArrayList<>();
 
 	public String getFolderID() {
 		return folderID;
-	}
-
-	public void setBoardID(String boardID) {
-		this.boardID = boardID;
-	}
-
-	public void setBoardName(String boardName) {
-		this.boardName = boardName;
 	}
 
 	public void setFolderID(String folderID) {
@@ -69,20 +39,12 @@ public class FacadeBoard {
 		this.reports = reports;
 	}
 
-	public Map<String, Object> getOtherParams() {
-		return otherParams;
+	public String getFolderName() {
+		return folderName;
 	}
 
-	public void setOtherParams(Map<String, Object> otherParams) {
-		this.otherParams = otherParams;
-	}
-
-	public String getBoardDesc() {
-		return boardDesc;
-	}
-
-	public void setBoardDesc(String boardDesc) {
-		this.boardDesc = boardDesc;
+	public void setFolderName(String folderName) {
+		this.folderName = folderName;
 	}
 
 }

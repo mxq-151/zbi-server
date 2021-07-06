@@ -9,7 +9,7 @@ import org.zbi.server.model.request.RequestCondition;
 
 import io.swagger.annotations.ApiModelProperty;
 
-public class ReportInfo {
+public class ReportInfo extends EntityBase{
 
 	/**
 	 * 报表ID

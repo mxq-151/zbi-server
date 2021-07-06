@@ -10,6 +10,8 @@ public interface QueryModelMapper {
 	public void createModel(QueryModel model);
 
 	public List<QueryModel> listQueryModel(String userID);
+	
+	public List<QueryModel> listQueryModelByGroup(String groupID);
 
 	public List<QueryModel> listAllModel();
 

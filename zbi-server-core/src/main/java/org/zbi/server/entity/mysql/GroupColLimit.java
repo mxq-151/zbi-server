@@ -1,6 +1,6 @@
 package org.zbi.server.entity.mysql;
 
-public class GroupColLimit {
+public class GroupColLimit extends EntityBase {
 
 
 	String modelTag;

@@ -2,7 +2,7 @@ package org.zbi.server.entity.mysql;
 
 import java.util.Map;
 
-public class BoardInfo {
+public class BoardInfo extends EntityBase {
 
 	public enum BoardVersion {
 		V1, V2, V3, V4

@@ -29,6 +29,11 @@
 		select * from
 		zbi_db.folder_info where admin_id =#{userID}
 	</select>
+	
+	<select id="getAdminFolders" resultMap="folderInfoResultMap">
+		select * from
+		zbi_db.folder_info where admin_id =#{userID}
+	</select>
 
 
 	<select id="checkFolderByName" resultType="boolean">

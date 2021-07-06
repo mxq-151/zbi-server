@@ -3,9 +3,11 @@ package org.zbi.server.model.core;
 import java.io.Serializable;
 import java.util.Map;
 
+import org.zbi.server.entity.mysql.EntityBase;
+
 import com.alibaba.fastjson.annotation.JSONField;
 
-public class ColumnBase implements Serializable {
+public class ColumnBase extends EntityBase implements Serializable {
 
 	public static final String PROPERTIETYPE = "properties_type";
 

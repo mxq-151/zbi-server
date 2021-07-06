@@ -30,7 +30,7 @@ import org.zbi.server.model.service.LoginUserService;
 import org.zbi.server.model.service.ModelService;
 
 @Component
-public class MysqlConfigDaoService implements ConfigDaoService {
+public class MysqlConfigDaoService extends DaoServiceBase implements ConfigDaoService {
 
 	@Autowired
 	private ConfigTableMapper configTableMapper;
@@ -49,28 +49,28 @@ public class MysqlConfigDaoService implements ConfigDaoService {
 
 	@Autowired
 	ColumnLimitMapper columnLimitMapper;
-	
+
 	@Autowired
 	private ModelService modelService;
 
 	@Override
 	public List<QueryModel> getModelDscriptions(String key) {
 		// TODO Auto-generated method stub
-		FacadeUser user=this.loginUserService.getLoginUser();
-		if(user.getRoleType()==UserInfo.SUPERADMIN || user.getRoleType()==UserInfo.DEVELOPER)
-		{
+		FacadeUser user = this.loginUserService.getLoginUser();
+		if (user.getRoleType() == UserInfo.SUPERADMIN || user.getRoleType() == UserInfo.DEVELOPER) {
 			return this.queryModelMapper.listAllModel();
 		}
-		String userID=this.loginUserService.getLoginUser().getUserID();
+		String userID = this.loginUserService.getLoginUser().getUserID();
 		return this.queryModelMapper.listQueryModel(userID);
 	}
 
 	@Override
 	public void saveConfigTable(FacadeTable table) throws AdminException {
 		// TODO Auto-generated method stub
-		
+
+		this.preHandle(table);
 		this.developConfigCheck();
-		
+
 		if (table.getTableID() != null) {
 			this.configTableMapper.deleteByPrimaryKey(table.getTableID());
 			this.configColumnMapper.deleteByTablelId(table.getTableID());
@@ -83,9 +83,11 @@ public class MysqlConfigDaoService implements ConfigDaoService {
 			if (col.getUuid() == null) {
 				col.setUuid(java.util.UUID.randomUUID().toString());
 			}
+			this.preHandle(col);
 		}
 		ConfigTable ct = new ConfigTable();
 		BeanUtils.copyProperties(table, ct);
+		this.preHandle(ct);
 		this.configTableMapper.insertTable(ct);
 		this.configColumnMapper.batchInsert(table.getColumns());
 
@@ -117,18 +119,15 @@ public class MysqlConfigDaoService implements ConfigDaoService {
 	public List<String> queryUserTotalColLimit(String modelID) {
 		// TODO Auto-generated method stub
 		String userID = loginUserService.getLoginUser().getUserID();
-		List<String> limits= this.columnLimitMapper.queryUserTotalColLimit(userID, modelID);
-		if(limits.isEmpty())
-		{
-			List<QueryColumn> cols=this.queryModelMapper.listQueryColumn(modelID);
-			List<String> res=new ArrayList<>(cols.size());
-			for(QueryColumn qc:cols)
-			{
+		List<String> limits = this.columnLimitMapper.queryUserTotalColLimit(userID, modelID);
+		if (limits.isEmpty()) {
+			List<QueryColumn> cols = this.queryModelMapper.listQueryColumn(modelID);
+			List<String> res = new ArrayList<>(cols.size());
+			for (QueryColumn qc : cols) {
 				res.add(qc.getColID());
 			}
 			return res;
-		}else
-		{
+		} else {
 			return limits;
 		}
 	}
@@ -164,6 +163,7 @@ public class MysqlConfigDaoService implements ConfigDaoService {
 			limit.setUserID(userID);
 			queryColumns.add(limit);
 		}
+		this.preHandle(queryColumns);
 		this.columnLimitMapper.insertUserColLimit(queryColumns);
 	}
 
@@ -180,6 +180,7 @@ public class MysqlConfigDaoService implements ConfigDaoService {
 			queryColumns.add(limit);
 		}
 
+		this.preHandle(queryColumns);
 		this.columnLimitMapper.insertGroupColLimit(queryColumns);
 
 	}
@@ -197,6 +198,7 @@ public class MysqlConfigDaoService implements ConfigDaoService {
 			limit.setUserID(userID);
 			dataLimits.add(limit);
 		}
+		this.preHandle(dataLimits);
 		this.dataLimitMapper.insertUserDataLimit(dataLimits);
 
 	}
@@ -218,6 +220,7 @@ public class MysqlConfigDaoService implements ConfigDaoService {
 			limit.setColID(colID);
 			limit.setWord(word);
 			limit.setGroupID(groupID);
+			this.preHandle(limit);
 			dataLimits.add(limit);
 		}
 		this.dataLimitMapper.insertGroupDataLimit(dataLimits);
@@ -248,6 +251,8 @@ public class MysqlConfigDaoService implements ConfigDaoService {
 			for (QueryColumn qc : queryColumn) {
 				qc.setModelID(modelID);
 			}
+			this.preHandle(model);
+			this.preHandle(queryColumn);
 			this.queryModelMapper.batchInsert(queryColumn);
 			this.queryModelMapper.createModel(model);
 		} else {
@@ -261,6 +266,9 @@ public class MysqlConfigDaoService implements ConfigDaoService {
 			for (QueryColumn qc : queryColumn) {
 				qc.setModelID(modelID);
 			}
+
+			this.preHandle(model);
+			this.preHandle(queryColumn);
 			this.queryModelMapper.batchInsert(queryColumn);
 			this.queryModelMapper.createModel(model);
 		}
@@ -286,6 +294,14 @@ public class MysqlConfigDaoService implements ConfigDaoService {
 
 	}
 
+	@Override
+	public List<QueryModel> listQueryModelByGroup(String groupID) {
+		// TODO Auto-generated method stub
+
+		return this.queryModelMapper.listQueryModelByGroup(groupID);
+
+	}
+
 	private void developConfigCheck() throws AdminException {
 		FacadeUser user = this.loginUserService.getLoginUser();
 		if (user.getRoleType() != UserInfo.SUPERADMIN && user.getRoleType() != UserInfo.DEVELOPER) {
@@ -296,24 +312,21 @@ public class MysqlConfigDaoService implements ConfigDaoService {
 	@Override
 	public ModelInfoResp getModelInfo(String modelID) {
 		// TODO Auto-generated method stub
-		List<QueryColumn> columns=this.queryModelMapper.listQueryColumn(modelID);
-		List<ColumnInfoResp> dims=new ArrayList<>();
-		List<ColumnInfoResp> meas=new ArrayList<>();
-		for(QueryColumn col:columns)
-		{
-			ConfigColumn cc=this.modelService.getColumn(col.getColID());
-			ColumnInfoResp ci=new ColumnInfoResp();
+		List<QueryColumn> columns = this.queryModelMapper.listQueryColumn(modelID);
+		List<ColumnInfoResp> dims = new ArrayList<>();
+		List<ColumnInfoResp> meas = new ArrayList<>();
+		for (QueryColumn col : columns) {
+			ConfigColumn cc = this.modelService.getColumn(col.getColID());
+			ColumnInfoResp ci = new ColumnInfoResp();
 			BeanUtils.copyProperties(cc, ci);
-			if(cc.isMeasure())
-			{
+			if (cc.isMeasure()) {
 				meas.add(ci);
-			}else
-			{
+			} else {
 				dims.add(ci);
 			}
 		}
-		
-		ModelInfoResp model=new ModelInfoResp();
+
+		ModelInfoResp model = new ModelInfoResp();
 		model.setDimensions(dims);
 		model.setMeasures(meas);
 		return model;

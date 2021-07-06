@@ -60,7 +60,7 @@ public class MysqlGroupDaoService implements GroupDaoService {
 		group.setGroupDesc(groupDesc);
 		group.setGroupName(groupName);
 		group.setGroupID(groupID);
-		group.setUsers(Collections.emptyList());
+
 		return group;
 
 	}
@@ -68,7 +68,6 @@ public class MysqlGroupDaoService implements GroupDaoService {
 	private FacadeGroup toFacadeGroup(GroupInfo group, List<String> users) {
 		FacadeGroup fgroup = new FacadeGroup();
 		BeanUtils.copyProperties(group, fgroup);
-		fgroup.setUsers(users);
 		return fgroup;
 	}
 

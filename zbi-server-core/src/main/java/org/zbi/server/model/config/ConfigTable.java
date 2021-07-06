@@ -1,8 +1,9 @@
 package org.zbi.server.model.config;
 
+import org.zbi.server.entity.mysql.EntityBase;
 import org.zbi.server.model.core.EngineType;
 
-public class ConfigTable {
+public class ConfigTable extends EntityBase{
 
 	private String tableID;
 

@@ -14,9 +14,9 @@ public interface BoardInfoMapper {
 
 	public boolean checkBoardName(String boardName);
 
-	public boolean updateBoardParam(String boardID, Map<String, Object> otherParams);
+	public boolean updateBoardParam(String boardID, Map<String, Object> otherParams, String lastUpdater);
 
-	public boolean updateBoardName(String boardID, String boardName, String boardDesc);
+	public boolean updateBoardName(String boardID, String boardName, String boardDesc, String lastUpdater);
 
 	public boolean deleteBoard(String boardID);
 

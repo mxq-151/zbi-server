@@ -10,10 +10,13 @@
 		<id column="col_id1" jdbcType="VARCHAR" property="colID1" />
 		<id column="tbl_id2" jdbcType="VARCHAR" property="tblID2" />
 		<id column="col_id2" jdbcType="VARCHAR" property="colID2" />
+		<result column="last_update" property="lastUpdate" />
+		<result column="last_updater" property="lastUpdater" />
 	</resultMap>
 	<sql id="Base_Column_List">
 		<!--@mbg.generated -->
-		`join_id`, `tbl_id1`, `tbl_id2`, `col_id1`,`col_id2`
+		`join_id`, `tbl_id1`, `tbl_id2`,
+		`col_id1`,`col_id2`,`last_update`,`last_updater`
 	</sql>
 	<select id="selectByPrimaryKey" parameterType="java.lang.String"
 		resultMap="BaseResultMap">
@@ -31,13 +34,14 @@
 	<insert id="insertJoin">
 		<!--@mbg.generated -->
 		insert into config_table (`join_id`, `tbl_id1`, `tbl_id2`,
-		`col_id1`,`col_id2`)
+		`col_id1`,`col_id2`,`last_updater`)
 		values
 		(#{joinID,jdbcType=VARCHAR},
 		#{tblID1,jdbcType=VARCHAR},
 		#{tblID2,jdbcType=VARCHAR},
 		#{colID1,jdbcType=VARCHAR},
-		#{colID2,jdbcType=VARCHAR})
+		#{colID2,jdbcType=VARCHAR},
+		#{lastUpdater,jdbcType=VARCHAR})
 	</insert>
 
 	<select id="loadAllJoins" parameterType="java.lang.String"

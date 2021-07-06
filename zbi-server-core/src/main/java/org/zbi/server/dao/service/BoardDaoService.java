@@ -3,6 +3,7 @@ package org.zbi.server.dao.service;
 import java.util.List;
 import java.util.Map;
 
+import org.zbi.server.entity.mysql.BoardInfo;
 import org.zbi.server.model.exception.QueryException;
 import org.zbi.server.model.facade.FacadeBoard;
 
@@ -16,7 +17,7 @@ public interface BoardDaoService {
 	 * 
 	 * @throws QueryException
 	 */
-	public FacadeBoard createNewBoard(String boardName, String boardDesc, String folderID) throws QueryException;
+	public BoardInfo createNewBoard(String boardName, String boardDesc, String folderID) throws QueryException;
 
 	/**
 	 * 删除看板
@@ -26,7 +27,7 @@ public interface BoardDaoService {
 	/**
 	 * 获取看板
 	 */
-	public FacadeBoard getBoardByID(String boardID) throws QueryException;
+	public BoardInfo getBoardByID(String boardID) throws QueryException;
 
 	/**
 	 * 获取看板
@@ -36,11 +37,11 @@ public interface BoardDaoService {
 	/**
 	 * 更新看板布局信息
 	 */
-	public FacadeBoard updateBoardStype(Map<String, Object> otherParams, String boardID) throws QueryException;
+	public BoardInfo updateBoardStype(Map<String, Object> otherParams, String boardID) throws QueryException;
 
 	/***
 	 * 更新看板名称
 	 */
-	public FacadeBoard updateBoardName(String boardID, String boardName, String boardDesc) throws QueryException;
+	public BoardInfo updateBoardName(String boardID, String boardName, String boardDesc) throws QueryException;
 
 }

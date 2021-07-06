@@ -30,7 +30,7 @@ public class MysqlFolderDaoService implements FolderDaoService {
 	@Override
 	public List<FacadeFolder> getFolders() {
 		// TODO Auto-generated method stub
-		String userID=this.loginUserService.getLoginUser().getUserID();
+		String userID = this.loginUserService.getLoginUser().getUserID();
 		List<FolderInfo> folders = folderInfoMapper.getFolders(userID);
 
 		List<FacadeFolder> allFolders = new ArrayList<>();
@@ -124,6 +124,20 @@ public class MysqlFolderDaoService implements FolderDaoService {
 		if (folder != null) {
 			throw new AdminException("无此文件夹");
 		}
+	}
+
+	@Override
+	public List<FacadeFolder> listAdminFolders() {
+		// TODO Auto-generated method stub
+		List<FolderInfo> folders = this.folderInfoMapper
+				.getAdminFolders(this.loginUserService.getLoginUser().getUserID());
+
+		List<FacadeFolder> allFolders = new ArrayList<>();
+		for (FolderInfo folder : folders) {
+			List<BoardInfoResp> boards = folderAndBoardMapper.getBoardDescByFolderID(folder.getFolderID());
+			allFolders.add(this.transferFacadeFolder(folder, boards));
+		}
+		return allFolders;
 	}
 
 }

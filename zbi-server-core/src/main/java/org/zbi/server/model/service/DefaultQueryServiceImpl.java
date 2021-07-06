@@ -12,7 +12,6 @@ import org.springframework.stereotype.Component;
 import org.zbi.server.model.engine.EngineFactory;
 import org.zbi.server.model.engine.IQueryEngine;
 import org.zbi.server.model.exception.ParseException;
-import org.zbi.server.model.exception.QueryException;
 import org.zbi.server.model.parse.ParseModel;
 import org.zbi.server.model.request.RequestParam;
 import org.zbi.server.model.response.QueryResultResp;
@@ -28,7 +27,7 @@ public class DefaultQueryServiceImpl extends AbstractQueryService {
 
 	@Autowired
 	private ModelService modelService;
-	
+
 	private final Logger logger = LoggerFactory.getLogger(DefaultQueryServiceImpl.class);
 
 	@PostConstruct
@@ -44,18 +43,24 @@ public class DefaultQueryServiceImpl extends AbstractQueryService {
 	}
 
 	@Override
-	public QueryResultResp query(RequestParam param) throws ParseException, SQLException, QueryException, IOException {
+	public QueryResultResp query(RequestParam param) throws IOException {
 		// TODO Auto-generated method stub
-		RequestParam newParam = this.requestDecodeService.parseRquest(param);
-		ParseModel model = this.modelService.getModel(newParam);
-		
-		IQueryEngine queryEngine = this.engineFactory.getQueryEngine(model.getConnID(), model.getEngineType());
-		long start = System.currentTimeMillis();
-		QueryResultResp resp = queryEngine.query(model);
-		this.encodeChinese(model, resp);
-		long end = System.currentTimeMillis();
-		resp.setDuration(end - start);
-		return resp;
+		try {
+
+			RequestParam newParam = this.requestDecodeService.parseRquest(param);
+			ParseModel model = this.modelService.getModel(newParam);
+
+			IQueryEngine queryEngine = this.engineFactory.getQueryEngine(model.getConnID(), model.getEngineType());
+			long start = System.currentTimeMillis();
+			QueryResultResp resp = queryEngine.query(model);
+			this.encodeChinese(model, resp);
+			long end = System.currentTimeMillis();
+			resp.setDuration(end - start);
+			return resp;
+		} catch (Exception ex) {
+			logger.error("ex:{}", ex);
+			throw new IOException(ex);
+		}
 
 	}
 

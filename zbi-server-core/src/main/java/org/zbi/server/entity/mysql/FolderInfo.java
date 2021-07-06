@@ -1,6 +1,6 @@
 package org.zbi.server.entity.mysql;
 
-public class FolderInfo {
+public class FolderInfo extends EntityBase{
 
 	private String folderID;
 

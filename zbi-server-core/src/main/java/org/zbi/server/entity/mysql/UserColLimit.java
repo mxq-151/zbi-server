@@ -1,6 +1,6 @@
 package org.zbi.server.entity.mysql;
 
-public class UserColLimit {
+public class UserColLimit extends EntityBase{
 
 	String modelID;
 

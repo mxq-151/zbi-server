@@ -1,6 +1,6 @@
 package org.zbi.server.entity.mysql;
 
-public class GroupInfo {
+public class GroupInfo extends EntityBase{
 
 	/**
 	 * 用户组ID

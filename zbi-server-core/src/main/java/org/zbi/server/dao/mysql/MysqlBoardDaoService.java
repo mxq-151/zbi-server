@@ -5,6 +5,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.zbi.server.dao.service.BoardDaoService;
@@ -16,6 +17,7 @@ import org.zbi.server.mapper.mysql.FolderInfoMapper;
 import org.zbi.server.mapper.mysql.ReportInfoMapper;
 import org.zbi.server.model.exception.QueryException;
 import org.zbi.server.model.facade.FacadeBoard;
+import org.zbi.server.model.service.LoginUserService;
 
 @Component
 public class MysqlBoardDaoService implements BoardDaoService {
@@ -31,9 +33,12 @@ public class MysqlBoardDaoService implements BoardDaoService {
 
 	@Autowired
 	ReportInfoMapper reportInfoMapper;
+	
+	@Autowired
+	private LoginUserService loginUserService;
 
 	@Override
-	public FacadeBoard createNewBoard(String boardName, String boardDesc, String folderID) throws QueryException {
+	public BoardInfo createNewBoard(String boardName, String boardDesc, String folderID) throws QueryException {
 		// TODO Auto-generated method stub
 
 		if (this.folderInfoMapper.getFolder(folderID) == null) {
@@ -53,17 +58,9 @@ public class MysqlBoardDaoService implements BoardDaoService {
 		board.setOtherParams(Collections.emptyMap());
 		boardInfoMapper.createBoard(board);
 
-		FacadeBoard facadeBoard = new FacadeBoard();
-		facadeBoard.setBoardDesc(boardDesc);
-		facadeBoard.setBoardName(boardName);
-		facadeBoard.setBoardID(boardID);
-		facadeBoard.setFolderID(folderID);
-		facadeBoard.setOtherParams(null);
-		facadeBoard.setReports(Collections.emptyList());
-
 		folderAndBoardMapper.addBoardToFolder(boardID, folderID);
 
-		return facadeBoard;
+		return board;
 
 	}
 
@@ -74,59 +71,23 @@ public class MysqlBoardDaoService implements BoardDaoService {
 	}
 
 	@Override
-	public FacadeBoard getBoardByID(String boardID) throws QueryException {
+	public BoardInfo getBoardByID(String boardID) throws QueryException {
 		// TODO Auto-generated method stub
-		String folderID=this.folderAndBoardMapper.getBoardFolder(boardID);
-		return toFacadeBoard(boardInfoMapper.getBoardByID(boardID), this.reportInfoMapper.getReportID(boardID),folderID);
+		return this.boardInfoMapper.getBoardByID(boardID);
 	}
 
 	@Override
-	public FacadeBoard updateBoardStype(Map<String, Object> otherParams, String boardID) throws QueryException {
+	public BoardInfo updateBoardStype(Map<String, Object> otherParams, String boardID) throws QueryException {
 		// TODO Auto-generated method stub
-		String folderID=this.folderAndBoardMapper.getBoardFolder(boardID);
-		this.boardInfoMapper.updateBoardParam(boardID, otherParams);
-		return toFacadeBoard(boardInfoMapper.getBoardByID(boardID),folderID);
+		this.boardInfoMapper.updateBoardParam(boardID, otherParams,this.loginUserService.getLoginUser().getUserID());
+		return this.boardInfoMapper.getBoardByID(boardID);
 	}
 
 	@Override
-	public FacadeBoard updateBoardName(String boardID, String boardName, String boardDesc) throws QueryException {
+	public BoardInfo updateBoardName(String boardID, String boardName, String boardDesc) throws QueryException {
 		// TODO Auto-generated method stub
-		this.boardInfoMapper.updateBoardName(boardID, boardName, boardDesc);
-		String folderID=this.folderAndBoardMapper.getBoardFolder(boardID);
-		return toFacadeBoard(boardInfoMapper.getBoardByID(boardID),folderID);
-	}
-
-	protected FacadeBoard toFacadeBoard(BoardInfo board,String folderID) {
-		FacadeBoard facadeBoard = new FacadeBoard();
-		
-		if(board==null)
-		{
-			return facadeBoard;
-		}
-		
-		facadeBoard.setBoardDesc(board.getBoardDesc());
-		facadeBoard.setBoardName(board.getBoardName());
-		facadeBoard.setBoardID(board.getBoardID());
-		facadeBoard.setFolderID(folderID);
-		facadeBoard.setOtherParams(board.getOtherParams());
-		facadeBoard.setReports(Collections.emptyList());
-
-		return facadeBoard;
-	}
-
-	protected FacadeBoard toFacadeBoard(BoardInfo board, List<String> reports,String folderID) {
-		FacadeBoard facadeBoard = new FacadeBoard();
-		if(board==null)
-		{
-			return facadeBoard;
-		}
-		facadeBoard.setBoardDesc(board.getBoardDesc());
-		facadeBoard.setBoardName(board.getBoardName());
-		facadeBoard.setBoardID(board.getBoardID());
-		facadeBoard.setFolderID(folderID);
-		facadeBoard.setOtherParams(board.getOtherParams());
-		facadeBoard.setReports(reports);
-		return facadeBoard;
+		this.boardInfoMapper.updateBoardName(boardID, boardName, boardDesc,this.loginUserService.getLoginUser().getUserID());
+		return boardInfoMapper.getBoardByID(boardID);
 	}
 
 	@Override
@@ -137,8 +98,11 @@ public class MysqlBoardDaoService implements BoardDaoService {
 
 		List<FacadeBoard> fboards = new ArrayList<>();
 		for (BoardInfo board : boards) {
-			List<String> reportIDS = this.reportInfoMapper.getReportID(board.getBoardID());
-			fboards.add(this.toFacadeBoard(board, reportIDS,folderID));
+			List<String> reportIds = this.reportInfoMapper.getReportID(board.getBoardID());
+			FacadeBoard fb = new FacadeBoard();
+			BeanUtils.copyProperties(board, fb);
+			fb.setReports(reportIds);
+			fboards.add(fb);
 		}
 
 		return fboards;

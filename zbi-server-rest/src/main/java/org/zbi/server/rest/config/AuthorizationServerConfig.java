@@ -44,6 +44,7 @@ import org.springframework.security.oauth2.provider.token.TokenStore;
 import org.springframework.security.web.authentication.preauth.PreAuthenticatedAuthenticationToken;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
+import org.zbi.server.mapper.mysql.UserInfoMapper;
 import org.zbi.server.rest.service.CustomClientDetailService;
 import org.zbi.server.rest.service.CustomUserDetails;
 
@@ -62,6 +63,9 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
 
 	@Autowired
 	CustomClientDetailService clientDetailsService;
+	
+	@Autowired
+	private UserInfoMapper userInfoMapper;
 
 	// 指定密码的加密方式
 	@Bean
@@ -351,6 +355,7 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
 				additionalInformation.put("userName", cud.getUsername());
 				additionalInformation.put("roleType", cud.getRoleType());
 				additionalInformation.put("userID", cud.getUserID());
+				userInfoMapper.updateLoginNum(cud.getUserID());
 				token.setAdditionalInformation(additionalInformation);
 			}
 
