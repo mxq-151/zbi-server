@@ -58,10 +58,9 @@ public class BoardController extends BaseController {
 	@ApiOperation(value = "删除看板列表接口", code = 200, httpMethod = "GET", response = FacadeBoard.class, responseContainer = "List")
 	@ApiResponses({ @ApiResponse(code = 400, message = "请求错误"), @ApiResponse(code = 500, message = "响应失败") })
 	public boolean deleteBoard(
-			@Valid @RequestParam(required = true) @ApiParam(value = "看板ID", required = true) String boardID,
-			@Valid @RequestParam(required = true) @ApiParam(value = "文件夹ID", required = true) String folderID)
-			throws AdminException {
-		return this.folderDaoService.removeBoard(boardID, folderID);
+			@Valid @RequestParam(required = true) @ApiParam(value = "看板ID", required = true) String boardID)
+			throws AdminException, QueryException {
+		return this.boardDaoService.deleteBoard(boardID);
 	}
 
 	@RequestMapping(value = "/create/board", method = RequestMethod.GET)

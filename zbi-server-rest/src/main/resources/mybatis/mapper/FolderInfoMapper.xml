@@ -10,6 +10,8 @@
 		<result column="folder_desc" property="folderDesc" />
 		<result column="folder_type" property="folderType" />
 		<result column="admin_id" property="adminID" />
+		<result column="last_update" property="lastUpdate" />
+		<result column="last_updater" property="lastUpdater" />
 	</resultMap>
 
 	<insert id="createFolder" parameterType="map">
@@ -18,21 +20,23 @@
 		values(#{folderID},#{folderName},#{folderDesc},#{folderType},#{adminID})
 	</insert>
 
-	<select id="getFolder" resultMap="folderInfoResultMap">
+
+	<select id="getQueryFolders" resultMap="folderInfoResultMap">
 		select * from
-		zbi_db.folder_info
-		where
-		folder_id=#{folderID}
+		zbi_db.folder_info as b
+		where admin_id =#{userID} or folder_id in
+		(select folder_id from board_info where board_id in (select board_id
+		from group_board where group_id in (select group_id from group_user
+		where user_id=#{userID})))
 	</select>
 
-	<select id="getFolders" resultMap="folderInfoResultMap">
-		select * from
-		zbi_db.folder_info where admin_id =#{userID}
-	</select>
-	
 	<select id="getAdminFolders" resultMap="folderInfoResultMap">
 		select * from
-		zbi_db.folder_info where admin_id =#{userID}
+		zbi_db.folder_info as b
+		where admin_id =#{userID} or folder_id in
+		(select folder_id from board_info where board_id in (select board_id
+		from group_board where group_id in (select group_id from group_user
+		where auth_right=1 and user_id=#{userID})))
 	</select>
 
 

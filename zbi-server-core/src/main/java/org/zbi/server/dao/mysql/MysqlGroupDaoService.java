@@ -8,9 +8,11 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.zbi.server.dao.service.GroupDaoService;
+import org.zbi.server.entity.mysql.GroupBoard;
 import org.zbi.server.entity.mysql.GroupInfo;
 import org.zbi.server.entity.mysql.GroupUser;
 import org.zbi.server.entity.mysql.UserInfo;
+import org.zbi.server.mapper.mysql.GroupAndBoardMapper;
 import org.zbi.server.mapper.mysql.GroupInfoMapper;
 import org.zbi.server.mapper.mysql.UserInfoMapper;
 import org.zbi.server.model.exception.AdminException;
@@ -19,7 +21,7 @@ import org.zbi.server.model.facade.FacadeUser;
 import org.zbi.server.model.service.LoginUserService;
 
 @Component
-public class MysqlGroupDaoService implements GroupDaoService {
+public class MysqlGroupDaoService extends DaoServiceBase implements GroupDaoService {
 
 	@Autowired
 	private GroupInfoMapper groupInfoMapper;
@@ -29,6 +31,9 @@ public class MysqlGroupDaoService implements GroupDaoService {
 
 	@Autowired
 	private UserInfoMapper userInfoMapper;
+
+	@Autowired
+	private GroupAndBoardMapper groupAndBoardMapper;
 
 	@Override
 	public FacadeGroup getGroupByGroupID(String groupID) {
@@ -54,7 +59,15 @@ public class MysqlGroupDaoService implements GroupDaoService {
 
 		String groupID = java.util.UUID.randomUUID().toString();
 		String userID = loginUserService.getLoginUser().getUserID();
-		this.groupInfoMapper.createGroup(groupID, groupName, groupDesc, userID);
+		GroupInfo groupInfo = new GroupInfo();
+		groupInfo.setBoardNum(0);
+		groupInfo.setGroupName(groupName);
+		groupInfo.setGroupID(groupID);
+		groupInfo.setUserNum(0);
+		groupInfo.setAdminID(userID);
+		groupInfo.setGroupDesc(groupDesc);
+		this.preHandle(groupInfo);
+		this.groupInfoMapper.createGroup(groupInfo);
 
 		FacadeGroup group = new FacadeGroup();
 		group.setGroupDesc(groupDesc);
@@ -89,6 +102,7 @@ public class MysqlGroupDaoService implements GroupDaoService {
 	public int addUserToGroup(List<GroupUser> users, String groupID) throws AdminException {
 		// TODO Auto-generated method stub
 		this.checkPermission(groupID);
+		this.preHandle(users);
 		this.groupInfoMapper.deleteUserInGroup(groupID);
 		return this.groupInfoMapper.addUserToGroup(users);
 	}
@@ -107,7 +121,6 @@ public class MysqlGroupDaoService implements GroupDaoService {
 			throw new AdminException("用户:" + user.getUserName() + "不能被赋予组管理权限");
 		}
 		for (String groupID : groupIDS) {
-			GroupInfo gi = this.groupInfoMapper.getGroupInfoById(groupID);
 			this.groupInfoMapper.updateGroupAdmin(adminID, groupID);
 		}
 
@@ -135,6 +148,19 @@ public class MysqlGroupDaoService implements GroupDaoService {
 	public List<FacadeUser> getGroupUsers(String groupID) {
 		// TODO Auto-generated method stub
 		return this.groupInfoMapper.getGroupUsers(groupID);
+	}
+
+	@Override
+	public int addBoardToGroup(List<GroupBoard> boards) throws AdminException {
+		// TODO Auto-generated method stub
+		for (GroupBoard board : boards) {
+			this.checkPermission(board.getGroupID());
+			this.groupAndBoardMapper.deleteBoardInGroup(board.getGroupID());
+		}
+
+		this.preHandle(boards);
+		this.groupAndBoardMapper.addBoardToGroup(boards);
+		return boards.size();
 	}
 
 }

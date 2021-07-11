@@ -18,6 +18,10 @@ public class BoardInfo extends EntityBase {
 
 	private Map<String, Object> otherParams;
 
+	private String adminID;
+	
+	private String folderID;
+
 	public String getBoardID() {
 		return boardID;
 	}
@@ -56,6 +60,22 @@ public class BoardInfo extends EntityBase {
 
 	public void setBoardVersion(BoardVersion boardVersion) {
 		this.boardVersion = boardVersion;
+	}
+
+	public String getAdminID() {
+		return adminID;
+	}
+
+	public void setAdminID(String adminID) {
+		this.adminID = adminID;
+	}
+
+	public String getFolderID() {
+		return folderID;
+	}
+
+	public void setFolderID(String folderID) {
+		this.folderID = folderID;
 	}
 
 }

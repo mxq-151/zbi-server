@@ -62,7 +62,7 @@
 		select
 		distinct model_id from zbi_db.group_col_limit as gc
 		where
-		gu.group_id=#{groupID}
+		group_id=#{groupID}
 		)
 	</select>
 

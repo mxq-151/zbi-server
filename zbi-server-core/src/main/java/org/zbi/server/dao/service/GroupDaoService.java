@@ -2,6 +2,7 @@ package org.zbi.server.dao.service;
 
 import java.util.List;
 
+import org.zbi.server.entity.mysql.GroupBoard;
 import org.zbi.server.entity.mysql.GroupUser;
 import org.zbi.server.model.exception.AdminException;
 import org.zbi.server.model.facade.FacadeGroup;
@@ -23,6 +24,12 @@ public interface GroupDaoService {
 	 * 获取管理的用户组
 	 */
 	public List<FacadeGroup> getAdminGroup();
+	
+	
+	/**
+	 * 添加用户
+	 */
+	public int addBoardToGroup(List<GroupBoard> boards) throws AdminException;
 
 	/**
 	 * 添加用户

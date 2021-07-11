@@ -6,8 +6,12 @@
 	namespace="org.zbi.server.mapper.mysql.GroupAndBoardMapper">
 
 	<insert id="addBoardToGroup">
-		insert into table zbi_db.group_board
-		(board_id,group_id) values(#{boardID},#{groupID})
+		insert into zbi_db.group_board
+		(board_id,group_id,last_updater)
+		values
+		<foreach collection="list" item="item" separator=",">
+			(#{item.boardID},#{item.groupID},#{item.lastUpdater})
+		</foreach>
 	</insert>
 
 	<select id="getBoardInGroup">
@@ -21,7 +25,7 @@
 
 	<delete id="deleteBoardInGroup">
 		delete from zbi_db.group_board where
-		group_id=#{groupID} and board_id=#{boardID}
+		group_id=#{groupID}
 	</delete>
 
 </mapper>

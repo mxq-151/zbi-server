@@ -22,8 +22,7 @@ public class UserMockActionTest extends ServiceTestBase {
 	public void createFolder() throws AdminException {
 		this.developerLogin();
 		FacadeFolder folder = this.folderDaoService.createFolder("测试文件夹", "test", 1);
-		Assert.assertTrue(this.folderDaoService.getFolder(folder.getFolderID()) != null);
-		Assert.assertTrue(this.folderDaoService.getFolders().size() == 1);
+		Assert.assertTrue(this.folderDaoService.getQueryFolders().size() == 1);
 	}
 
 }

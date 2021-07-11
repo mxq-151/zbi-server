@@ -22,12 +22,12 @@ public interface BoardDaoService {
 	/**
 	 * 删除看板
 	 */
-	public boolean deleteBoard(String boardID) throws QueryException;;
+	public boolean deleteBoard(String boardID);;
 
 	/**
 	 * 获取看板
 	 */
-	public BoardInfo getBoardByID(String boardID) throws QueryException;
+	public BoardInfo getBoardByID(String boardID);
 
 	/**
 	 * 获取看板

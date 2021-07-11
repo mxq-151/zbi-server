@@ -1,18 +1,15 @@
 package org.zbi.server.dao.mysql;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.zbi.server.dao.service.BoardDaoService;
 import org.zbi.server.entity.mysql.BoardInfo;
 import org.zbi.server.entity.mysql.BoardInfo.BoardVersion;
 import org.zbi.server.mapper.mysql.BoardInfoMapper;
-import org.zbi.server.mapper.mysql.FolderAndBoardMapper;
 import org.zbi.server.mapper.mysql.FolderInfoMapper;
 import org.zbi.server.mapper.mysql.ReportInfoMapper;
 import org.zbi.server.model.exception.QueryException;
@@ -29,11 +26,8 @@ public class MysqlBoardDaoService implements BoardDaoService {
 	BoardInfoMapper boardInfoMapper;
 
 	@Autowired
-	FolderAndBoardMapper folderAndBoardMapper;
-
-	@Autowired
 	ReportInfoMapper reportInfoMapper;
-	
+
 	@Autowired
 	private LoginUserService loginUserService;
 
@@ -56,22 +50,20 @@ public class MysqlBoardDaoService implements BoardDaoService {
 		board.setBoardName(boardName);
 		board.setBoardVersion(BoardVersion.V1);
 		board.setOtherParams(Collections.emptyMap());
+		board.setFolderID(folderID);
 		boardInfoMapper.createBoard(board);
-
-		folderAndBoardMapper.addBoardToFolder(boardID, folderID);
-
 		return board;
 
 	}
 
 	@Override
-	public boolean deleteBoard(String boardID) throws QueryException {
+	public boolean deleteBoard(String boardID) {
 		// TODO Auto-generated method stub
 		return boardInfoMapper.deleteBoard(boardID);
 	}
 
 	@Override
-	public BoardInfo getBoardByID(String boardID) throws QueryException {
+	public BoardInfo getBoardByID(String boardID) {
 		// TODO Auto-generated method stub
 		return this.boardInfoMapper.getBoardByID(boardID);
 	}
@@ -79,33 +71,23 @@ public class MysqlBoardDaoService implements BoardDaoService {
 	@Override
 	public BoardInfo updateBoardStype(Map<String, Object> otherParams, String boardID) throws QueryException {
 		// TODO Auto-generated method stub
-		this.boardInfoMapper.updateBoardParam(boardID, otherParams,this.loginUserService.getLoginUser().getUserID());
+		this.boardInfoMapper.updateBoardParam(boardID, otherParams, this.loginUserService.getLoginUser().getUserID());
 		return this.boardInfoMapper.getBoardByID(boardID);
 	}
 
 	@Override
 	public BoardInfo updateBoardName(String boardID, String boardName, String boardDesc) throws QueryException {
 		// TODO Auto-generated method stub
-		this.boardInfoMapper.updateBoardName(boardID, boardName, boardDesc,this.loginUserService.getLoginUser().getUserID());
+		this.boardInfoMapper.updateBoardName(boardID, boardName, boardDesc,
+				this.loginUserService.getLoginUser().getUserID());
 		return boardInfoMapper.getBoardByID(boardID);
 	}
 
 	@Override
 	public List<FacadeBoard> getBoardByFolderID(String folderID) throws QueryException {
 		// TODO Auto-generated method stub
-
-		List<BoardInfo> boards = this.folderAndBoardMapper.getBoardsByFolderID(folderID);
-
-		List<FacadeBoard> fboards = new ArrayList<>();
-		for (BoardInfo board : boards) {
-			List<String> reportIds = this.reportInfoMapper.getReportID(board.getBoardID());
-			FacadeBoard fb = new FacadeBoard();
-			BeanUtils.copyProperties(board, fb);
-			fb.setReports(reportIds);
-			fboards.add(fb);
-		}
-
-		return fboards;
+		List<FacadeBoard> boards = this.boardInfoMapper.getBoardByFolder(folderID);
+		return boards;
 	}
 
 }

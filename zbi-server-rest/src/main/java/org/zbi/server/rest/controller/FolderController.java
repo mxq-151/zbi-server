@@ -29,7 +29,7 @@ public class FolderController extends BaseController {
 	@ApiOperation(value = "获取文件夹列表接口", code = 200, httpMethod = "GET", response = FacadeFolder.class, responseContainer = "List")
 	@ApiResponses({ @ApiResponse(code = 400, message = "请求错误"), @ApiResponse(code = 500, message = "响应失败") })
 	public List<FacadeFolder> getFolders() {
-		return this.folderDaoService.getFolders();
+		return this.folderDaoService.getQueryFolders();
 
 	}
 

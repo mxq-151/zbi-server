@@ -8,7 +8,7 @@ import org.zbi.server.model.facade.FacadeUser;
 
 public interface GroupInfoMapper {
 
-	public boolean createGroup(String groupID, String groupName, String groupDesc, String adminID);
+	public boolean createGroup(GroupInfo groupInfo);
 
 	public GroupInfo getGroupInfoById(String groupID);
 

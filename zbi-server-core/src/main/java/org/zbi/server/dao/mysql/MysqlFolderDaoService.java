@@ -1,14 +1,17 @@
 package org.zbi.server.dao.mysql;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.zbi.server.dao.service.FolderDaoService;
+import org.zbi.server.entity.mysql.BoardInfo;
 import org.zbi.server.entity.mysql.FolderInfo;
 import org.zbi.server.entity.mysql.UserInfo;
-import org.zbi.server.mapper.mysql.FolderAndBoardMapper;
+import org.zbi.server.mapper.mysql.BoardInfoMapper;
 import org.zbi.server.mapper.mysql.FolderInfoMapper;
 import org.zbi.server.model.exception.AdminException;
 import org.zbi.server.model.facade.FacadeFolder;
@@ -22,34 +25,47 @@ public class MysqlFolderDaoService implements FolderDaoService {
 	FolderInfoMapper folderInfoMapper;
 
 	@Autowired
-	FolderAndBoardMapper folderAndBoardMapper;
-
-	@Autowired
 	private LoginUserService loginUserService;
 
+	@Autowired
+	BoardInfoMapper boardInfoMapper;
+
 	@Override
-	public List<FacadeFolder> getFolders() {
+	public List<FacadeFolder> getQueryFolders() {
 		// TODO Auto-generated method stub
 		String userID = this.loginUserService.getLoginUser().getUserID();
-		List<FolderInfo> folders = folderInfoMapper.getFolders(userID);
-
-		List<FacadeFolder> allFolders = new ArrayList<>();
-		for (FolderInfo folder : folders) {
-			List<BoardInfoResp> boards = folderAndBoardMapper.getBoardDescByFolderID(folder.getFolderID());
-			allFolders.add(this.transferFacadeFolder(folder, boards));
-		}
-
-		return allFolders;
+		List<FolderInfo> folders = folderInfoMapper.getQueryFolders(userID);
+		return this.merge(folders);
 
 	}
 
-	@Override
-	public FacadeFolder getFolder(String folderID) {
-		// TODO Auto-generated method stub
+	private List<FacadeFolder> merge(List<FolderInfo> folders) {
+		List<String> fs = new ArrayList<>(folders.size());
+		for (FolderInfo folder : folders) {
+			fs.add(folder.getFolderID());
+		}
+		List<BoardInfo> boards = this.boardInfoMapper.getBoardByFolders(fs);
 
-		FolderInfo folder = this.folderInfoMapper.getFolder(folderID);
-		List<BoardInfoResp> boards = folderAndBoardMapper.getBoardDescByFolderID(folder.getFolderID());
-		return this.transferFacadeFolder(folder, boards);
+		List<FacadeFolder> array = new ArrayList<FacadeFolder>();
+		for (FolderInfo folder : folders) {
+			FacadeFolder ff = new FacadeFolder();
+			BeanUtils.copyProperties(folder, ff);
+			List<BoardInfoResp> list = new ArrayList<>();
+			for (BoardInfo board : boards) {
+				if (board.getFolderID().equals(folder.getFolderID())) {
+					BoardInfoResp br = new BoardInfoResp();
+					BeanUtils.copyProperties(board, br);
+					list.add(br);
+				}
+			}
+
+			if (!list.isEmpty()) {
+				ff.setBoards(list);
+				ff.setBoardNum(list.size());
+				array.add(ff);
+			}
+		}
+		return array;
 	}
 
 	@Override
@@ -73,21 +89,12 @@ public class MysqlFolderDaoService implements FolderDaoService {
 		folder.setFolderID(folderID);
 		this.folderInfoMapper.createFolder(folder);
 
-		return this.getFolder(folder.getFolderID());
-	}
+		FacadeFolder ff = new FacadeFolder();
+		BeanUtils.copyProperties(folder, ff);
+		ff.setBoards(Collections.emptyList());
 
-	@Override
-	public boolean addBoardToFolder(String folderID, String boardID, String boardName) throws AdminException {
-		// TODO Auto-generated method stub
-		this.checkPermission(folderID);
-		return folderAndBoardMapper.addBoardToFolder(boardID, folderID);
-	}
+		return ff;
 
-	@Override
-	public boolean removeBoard(String boardID, String folderID) throws AdminException {
-		// TODO Auto-generated method stub
-		this.checkPermission(folderID);
-		return this.folderAndBoardMapper.deleteBoardInFolder(boardID, folderID);
 	}
 
 	@Override
@@ -103,16 +110,6 @@ public class MysqlFolderDaoService implements FolderDaoService {
 		// TODO Auto-generated method stub
 		this.checkPermission(folderID);
 		return this.folderInfoMapper.updateFolder(folderID, folderName, folderDesc);
-	}
-
-	private FacadeFolder transferFacadeFolder(FolderInfo folderInfo, List<BoardInfoResp> boards) {
-		FacadeFolder folder = new FacadeFolder();
-		folder.setFolderDesc(folderInfo.getFolderDesc());
-		folder.setFolderID(folderInfo.getFolderID());
-		folder.setFolderName(folderInfo.getFolderName());
-		folder.setBoards(boards);
-		return folder;
-
 	}
 
 	private void checkPermission(String folderID) throws AdminException {
@@ -131,13 +128,7 @@ public class MysqlFolderDaoService implements FolderDaoService {
 		// TODO Auto-generated method stub
 		List<FolderInfo> folders = this.folderInfoMapper
 				.getAdminFolders(this.loginUserService.getLoginUser().getUserID());
-
-		List<FacadeFolder> allFolders = new ArrayList<>();
-		for (FolderInfo folder : folders) {
-			List<BoardInfoResp> boards = folderAndBoardMapper.getBoardDescByFolderID(folder.getFolderID());
-			allFolders.add(this.transferFacadeFolder(folder, boards));
-		}
-		return allFolders;
+		return this.merge(folders);
 	}
 
 }

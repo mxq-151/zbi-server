@@ -14,18 +14,56 @@
 		<result column="board_version" property="boardVersion" />
 		<result column="last_update" property="lastUpdate" />
 		<result column="last_updater" property="lastUpdater" />
+		<result column="admin_id" property="adminID" />
+		<result column="folder_id" property="folderID" />
+	</resultMap>
+
+	<resultMap id="facadeBoardInfoResultMap"
+		type="org.zbi.server.model.facade.FacadeBoard">
+		<result column="board_id" property="boardID" />
+		<result typeHandler="org.zbi.server.mapper.handler.MapHandler"
+			column="other_params" javaType="java.util.Map" jdbcType="VARCHAR"
+			property="otherParams" />
+		<result column="board_name" property="boardName" />
+		<result column="board_desc" property="boardDesc" />
+		<result column="board_version" property="boardVersion" />
+		<result column="last_update" property="lastUpdate" />
+		<result column="last_updater" property="lastUpdater" />
+		<result column="admin_id" property="adminID" />
+		<result column="folder_id" property="folderID" />
+		<result column="folder_id" property="folderID" />
 	</resultMap>
 
 	<insert id="createBoard">
 		insert into zbi_db.board_info
-		(board_name,board_desc,other_params,board_id,board_version,last_updater)
-		values(#{boardName},#{boardDesc},#{otherParams,typeHandler=org.zbi.server.mapper.handler.MapHandler},#{boardID},#{boardVersion},#{lastUpdater})
+		(board_name,board_desc,other_params,board_id,board_version,last_updater,admin_id,folder_id)
+		values(#{boardName},#{boardDesc},#{otherParams,typeHandler=org.zbi.server.mapper.handler.MapHandler},#{boardID},#{boardVersion},#{lastUpdater},#{adminID},#{folderID})
 	</insert>
 
 	<select id="getBoardByID" resultMap="boardInfoResultMap">
 		select * from
 		zbi_db.board_info where
 		board_id=#{boardID}
+	</select>
+
+	<select id="getBoardByFolder"
+		resultMap="facadeBoardInfoResultMap">
+		select * from
+		zbi_db.board_info as a left join
+		zbi_db.folder_info as b on a.folder_id=b.folder_id where
+		a.folder_id=#{folderID}
+	</select>
+
+
+	<select id="getBoardByFolders"
+		resultMap="boardInfoResultMap">
+		select * from
+		zbi_db.board_info where
+		folder_id in (
+		<foreach collection="list" item="item" separator=",">
+			#{item}
+		</foreach>
+		)
 	</select>
 
 	<select id="checkBoardName" resultType="boolean">

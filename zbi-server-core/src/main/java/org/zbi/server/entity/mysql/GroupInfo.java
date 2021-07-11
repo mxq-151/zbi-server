@@ -17,6 +17,22 @@ public class GroupInfo extends EntityBase{
 	 */
 	private String groupDesc;
 	
+	/**
+	 * 组内用户数
+	 */
+	private int userNum;
+	
+	private int boardNum;
+
+	public int getUserNum() {
+		return userNum;
+	}
+
+	public void setUserNum(int userNum) {
+		this.userNum = userNum;
+	}
+
+	
 	
 	public String adminID;
 
@@ -50,6 +66,14 @@ public class GroupInfo extends EntityBase{
 
 	public void setAdminID(String adminID) {
 		this.adminID = adminID;
+	}
+
+	public int getBoardNum() {
+		return boardNum;
+	}
+
+	public void setBoardNum(int boardNum) {
+		this.boardNum = boardNum;
 	}
 
 }

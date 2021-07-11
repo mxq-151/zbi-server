@@ -9,6 +9,10 @@
 		<result column="group_name" property="groupName" />
 		<result column="group_desc" property="groupDesc" />
 		<result column="admin_id" property="adminID" />
+		<result column="last_update" property="lastUpdate" />
+		<result column="last_updater" property="lastUpdater" />
+		<result column="user_num" property="userNum" />
+		<result column="board_num" property="boardNum" />
 	</resultMap>
 
 	<resultMap id="userResultMap"

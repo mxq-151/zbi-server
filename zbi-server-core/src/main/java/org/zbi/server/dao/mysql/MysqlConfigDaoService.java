@@ -3,10 +3,13 @@ package org.zbi.server.dao.mysql;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.zbi.server.dao.service.ConfigDaoService;
+import org.zbi.server.entity.mysql.ConnInfo;
+import org.zbi.server.entity.mysql.ConnParam;
 import org.zbi.server.entity.mysql.GroupColLimit;
 import org.zbi.server.entity.mysql.GroupDataLimit;
 import org.zbi.server.entity.mysql.QueryColumn;
@@ -17,6 +20,7 @@ import org.zbi.server.entity.mysql.UserInfo;
 import org.zbi.server.mapper.mysql.ColumnLimitMapper;
 import org.zbi.server.mapper.mysql.ConfigColumnMapper;
 import org.zbi.server.mapper.mysql.ConfigTableMapper;
+import org.zbi.server.mapper.mysql.ConnInfoMapper;
 import org.zbi.server.mapper.mysql.DataLimitMapper;
 import org.zbi.server.mapper.mysql.QueryModelMapper;
 import org.zbi.server.model.config.ConfigColumn;
@@ -46,6 +50,9 @@ public class MysqlConfigDaoService extends DaoServiceBase implements ConfigDaoSe
 
 	@Autowired
 	private QueryModelMapper queryModelMapper;
+	
+	@Autowired
+	private ConnInfoMapper connInfoMapper;
 
 	@Autowired
 	ColumnLimitMapper columnLimitMapper;
@@ -297,9 +304,12 @@ public class MysqlConfigDaoService extends DaoServiceBase implements ConfigDaoSe
 	@Override
 	public List<QueryModel> listQueryModelByGroup(String groupID) {
 		// TODO Auto-generated method stub
-
-		return this.queryModelMapper.listQueryModelByGroup(groupID);
-
+		FacadeUser user = this.loginUserService.getLoginUser();
+		if (user.getRoleType() != UserInfo.SUPERADMIN && user.getRoleType() != UserInfo.DEVELOPER) {
+			return this.queryModelMapper.listQueryModel(user.getUserID());
+		} else {
+			return this.queryModelMapper.listAllModel();
+		}
 	}
 
 	private void developConfigCheck() throws AdminException {
@@ -331,5 +341,40 @@ public class MysqlConfigDaoService extends DaoServiceBase implements ConfigDaoSe
 		model.setMeasures(meas);
 		return model;
 	}
+
+	@Override
+	public void saveConnect(ConnInfo conn) throws AdminException {
+		// TODO Auto-generated method stub
+		this.developConfigCheck();
+		if(StringUtils.isBlank(conn.getConnID()))
+		{
+			String connID=java.util.UUID.randomUUID().toString();
+			conn.setConnID(connID);
+		}
+		this.preHandle(conn);
+		this.connInfoMapper.createConnect(conn);
+	}
+
+	@Override
+	public void inserParam(List<ConnParam> list) throws AdminException {
+		// TODO Auto-generated method stub
+		this.developConfigCheck();
+		this.connInfoMapper.deleteParam(list.get(0).getConnID());
+		this.connInfoMapper.inserParam(list);
+	}
+
+
+	@Override
+	public List<ConnInfo> loadConn() {
+		// TODO Auto-generated method stub
+		return this.connInfoMapper.loadConn();
+	}
+
+	@Override
+	public List<ConnParam> getParams(String connID) {
+		// TODO Auto-generated method stub
+		return this.connInfoMapper.getParams(connID);
+	}
+
 
 }

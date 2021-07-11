@@ -1,6 +1,8 @@
 package org.zbi.server.model.response;
 
-public class BoardInfoResp {
+import org.zbi.server.entity.mysql.EntityBase;
+
+public class BoardInfoResp extends EntityBase{
 	
 	private String boardName;
 	

@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.zbi.server.mapper.mysql.ConnInfoMapper">
+	<resultMap id="connInfoResultMap"
+		type="org.zbi.server.entity.mysql.ConnInfo">
+		<result column="conn_id" property="connID" />
+		<result column="conn_name" property="connName" />
+		<result column="engine_type" property="engineType" />
+		<result column="url" property="url" />
+		<result column="last_update" property="lastUpdate" />
+		<result column="last_updater" property="lastUpdater" />
+	</resultMap>
+
+	<resultMap id="connParamResultMap"
+		type="org.zbi.server.entity.mysql.ConnParam">
+		<result column="conn_id" property="connID" />
+		<result column="param_key" property="paramKey" />
+		<result column="param_val" property="paramVal" />
+	</resultMap>
+
+	<insert id="createConnect">
+		insert into
+		zbi_db.conn_info(conn_id,conn_name,engine_type,url,last_updater)
+		values(#{connID},#{connName},#{engineType},#{url},#{lastUpdater})
+	</insert>
+
+	<insert id="inserParam" parameterType="map">
+		<!--@mbg.generated -->
+		insert into zbi_db.conn_param
+		(`conn_id`,`param_key`,`param_val`)
+		values
+		<foreach collection="list" item="item" separator=",">
+			(#{item.connID,jdbcType=VARCHAR},
+			#{item.paramKey,jdbcType=VARCHAR},
+			#{item.paramVal,jdbcType=VARCHAR})
+		</foreach>
+	</insert>
+
+	<delete id="deleteParam" parameterType="string">
+		delete from zbi_db.conn_param where conn_id=#{connID}
+	</delete>
+	
+	<select id="getParams" resultMap="connParamResultMap">
+		select * from zbi_db.conn_param where conn_id=#{connID}
+	</select>
+
+
+
+	<select id="loadConn" resultMap="connInfoResultMap">
+		select * from
+		zbi_db.conn_info
+	</select>
+
+
+
+	<delete id="deleteConn">
+		delete from zbi_db.group_info where
+		group_id=#{groupID}
+	</delete>
+
+
+</mapper>
