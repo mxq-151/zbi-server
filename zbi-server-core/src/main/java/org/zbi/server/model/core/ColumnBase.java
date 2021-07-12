@@ -42,13 +42,11 @@ public class ColumnBase extends EntityBase implements Serializable {
 	/**
 	 * 别名
 	 */
-	@JSONField(serialize = false)
 	private String alias;
 
 	/**
 	 * 列名，全限定
 	 */
-	@JSONField(serialize = false)
 	private String colName;
 
 	/**
@@ -64,7 +62,6 @@ public class ColumnBase extends EntityBase implements Serializable {
 	/**
 	 * 字段属性，通过属性控制字段的变换
 	 */
-	@JSONField(serialize = false)
 	private Map<String, Object> colProperties;
 
 	public String getAlias() {

@@ -39,11 +39,13 @@
 	</insert>
 
 	<delete id="deleteParam" parameterType="string">
-		delete from zbi_db.conn_param where conn_id=#{connID}
+		delete from
+		zbi_db.conn_param where conn_id=#{connID}
 	</delete>
-	
+
 	<select id="getParams" resultMap="connParamResultMap">
-		select * from zbi_db.conn_param where conn_id=#{connID}
+		select * from zbi_db.conn_param
+		where conn_id=#{connID}
 	</select>
 
 
@@ -53,6 +55,11 @@
 		zbi_db.conn_info
 	</select>
 
+
+	<select id="loadConnInfo" resultMap="connInfoResultMap">
+		select * from
+		zbi_db.conn_info where conn_id=#{connID}
+	</select>
 
 
 	<delete id="deleteConn">

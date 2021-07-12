@@ -3,8 +3,6 @@ package org.zbi.server.model.service;
 import java.io.IOException;
 import java.sql.SQLException;
 
-import javax.annotation.PostConstruct;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,17 +28,7 @@ public class DefaultQueryServiceImpl extends AbstractQueryService {
 
 	private final Logger logger = LoggerFactory.getLogger(DefaultQueryServiceImpl.class);
 
-	@PostConstruct
-	public void mockData() {
 
-		try {
-			engineFactory.loadDefaultConnection();
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-			System.exit(0);
-		}
-	}
 
 	@Override
 	public QueryResultResp query(RequestParam param) throws IOException {
@@ -50,7 +38,7 @@ public class DefaultQueryServiceImpl extends AbstractQueryService {
 			RequestParam newParam = this.requestDecodeService.parseRquest(param);
 			ParseModel model = this.modelService.getModel(newParam);
 
-			IQueryEngine queryEngine = this.engineFactory.getQueryEngine(model.getConnID(), model.getEngineType());
+			IQueryEngine queryEngine = this.engineFactory.getQueryEngine(model.getConnID());
 			long start = System.currentTimeMillis();
 			QueryResultResp resp = queryEngine.query(model);
 			this.encodeChinese(model, resp);

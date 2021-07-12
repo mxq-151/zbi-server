@@ -16,5 +16,7 @@ public interface ConnInfoMapper {
 	public List<ConnParam> getParams(String connID);
 	
 	public List<ConnInfo> loadConn();
+	
+	public ConnInfo loadConnInfo(String connID);
 
 }

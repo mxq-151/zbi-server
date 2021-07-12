@@ -1,5 +1,6 @@
 package org.zbi.server.dao.service;
 
+import java.sql.SQLException;
 import java.util.List;
 
 import org.zbi.server.entity.mysql.ConnInfo;
@@ -11,6 +12,7 @@ import org.zbi.server.entity.mysql.UserColLimit;
 import org.zbi.server.model.config.ConfigColumn;
 import org.zbi.server.model.config.ConfigTable;
 import org.zbi.server.model.exception.AdminException;
+import org.zbi.server.model.exception.ParseException;
 import org.zbi.server.model.facade.FacadeTable;
 import org.zbi.server.model.response.ModelInfoResp;
 
@@ -22,7 +24,7 @@ public interface ConfigDaoService {
 
 	public void deleteConfigTable(String tableID) throws AdminException;
 
-	public List<ConfigTable> queryConfigTables() throws AdminException;
+	public List<ConfigTable> queryConfigTables(boolean source) throws AdminException;
 
 	public List<ConfigColumn> getConfigColumns(String tableID) throws AdminException;
 
@@ -60,7 +62,7 @@ public interface ConfigDaoService {
 
 	public void saveConnect(ConnInfo conn) throws AdminException;
 
-	public void inserParam(List<ConnParam> list)throws AdminException;
+	public void inserParam(List<ConnParam> list)throws AdminException, SQLException, ParseException;
 
 	public List<ConnInfo> loadConn();
 	

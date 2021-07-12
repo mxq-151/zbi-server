@@ -16,7 +16,6 @@ import org.zbi.server.entity.mysql.QueryModel;
 import org.zbi.server.model.config.ConfigColumn;
 import org.zbi.server.model.core.AggType;
 import org.zbi.server.model.core.ColumnType;
-import org.zbi.server.model.core.EngineType;
 import org.zbi.server.model.exception.AdminException;
 import org.zbi.server.model.facade.FacadeTable;
 import org.zbi.server.model.service.LoginUserService;
@@ -40,13 +39,12 @@ class ConfigDaoServiceTests extends ServiceTestBase {
 		FacadeTable table = this.createTable();
 		this.configDaoService.saveConfigTable(table);
 		Assert.assertTrue(this.configDaoService.getConfigColumns(tableID).size() == 3);
-		Assert.assertEquals(1, this.configDaoService.queryConfigTables().size());
+		Assert.assertEquals(1, this.configDaoService.queryConfigTables(true).size());
 	}
 
 	public FacadeTable createTable() {
 		FacadeTable table = new FacadeTable();
 		table.setConnName("11");
-		table.setEngineType(EngineType.CALCITE);
 		table.setProject("sales");
 		table.setSource(true);
 		table.setTableID(tableID);
@@ -84,7 +82,7 @@ class ConfigDaoServiceTests extends ServiceTestBase {
 	public void testDeleteTable() throws AdminException {
 		this.developerLogin();
 		this.configDaoService.deleteConfigTable(tableID);
-		Assert.assertEquals(0, this.configDaoService.queryConfigTables().size());
+		Assert.assertEquals(0, this.configDaoService.queryConfigTables(true).size());
 	}
 
 	@Test

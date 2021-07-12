@@ -1,9 +1,8 @@
 package org.zbi.server.model.config;
 
 import org.zbi.server.entity.mysql.EntityBase;
-import org.zbi.server.model.core.EngineType;
 
-public class ConfigTable extends EntityBase{
+public class ConfigTable extends EntityBase {
 
 	private String tableID;
 
@@ -17,16 +16,13 @@ public class ConfigTable extends EntityBase{
 	private String tableName;
 
 	/**
-	 * 引擎类型
-	 */
-	private EngineType engineType;
-
-	/**
 	 * 1:事实表, 2：维度表：3：子表
 	 */
 	private int tableType;
 
-	/***/
+	/**
+	 * 连接ID
+	 * */
 	private String connID;
 
 	// 是否为源表
@@ -83,14 +79,6 @@ public class ConfigTable extends EntityBase{
 
 	public void setTableName(String tableName) {
 		this.tableName = tableName;
-	}
-
-	public EngineType getEngineType() {
-		return engineType;
-	}
-
-	public void setEngineType(EngineType engineType) {
-		this.engineType = engineType;
 	}
 
 	public boolean isSource() {

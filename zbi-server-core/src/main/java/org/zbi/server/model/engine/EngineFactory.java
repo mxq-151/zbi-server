@@ -1,13 +1,16 @@
 package org.zbi.server.model.engine;
 
-import java.net.URL;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
-import org.springframework.beans.factory.annotation.Value;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
+import org.zbi.server.entity.mysql.ConnInfo;
+import org.zbi.server.entity.mysql.ConnParam;
 import org.zbi.server.model.core.EngineType;
 import org.zbi.server.model.exception.ParseException;
 import org.zbi.server.model.exception.ParseException.ExceptionType;
@@ -20,68 +23,56 @@ public class EngineFactory {
 	 */
 	private ConnectionFactory connectionFactory = new ConnectionFactory();
 
-	@Value("${calcite.model.path:#{null}}")
-	private String modelPath;
-	/**
-	 * 
-	 * */
-	private Map<String, String> urls = new HashMap<>();
+	private Map<String, ConnInfo> connections = new HashMap<>();
 
-	public void addConConfig(EngineConnection config) throws SQLException {
-		this.connectionFactory.initConnnection(config);
-	}
+	private Map<String, List<ConnParam>> params = new HashMap<>();
 
-	public void loadDefaultConnection() throws SQLException {
-		EngineConnection connection = new EngineConnection();
+	private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
-		Map<String, ConnectConfig> configMap = new HashMap<>();
+	public void putConnection(List<ConnParam> params, ConnInfo connInfo) throws SQLException, ParseException {
 
-		URL path = this.getClass().getResource(this.modelPath);
-		configMap.put("datasource.driver-class-name", new ConnectConfig(true, "org.apache.calcite.jdbc.Driver"));
-		configMap.put("datasource.url",
-				new ConnectConfig(true, "jdbc:calcite:caseSensitive=false;model=" + path.getPath()));
-
-		configMap.put("datasource.initial.size", new ConnectConfig(true, "5"));
-
-		configMap.put("datasource.min.idle", new ConnectConfig(true, "1"));
-
-		configMap.put("datasource.max.active", new ConnectConfig(true, "10"));
-
-		configMap.put("datasource.username", new ConnectConfig(true, ""));
-
-		configMap.put("datasource.password", new ConnectConfig(true, ""));
-
-		connection.setConfigMap(configMap);
-		connection.setConnName("calcite-1");
-		connection.setEngineType(EngineType.CALCITE);
-		addConConfig(connection);
-	}
-
-	public IQueryEngine getQueryEngine(String connID, EngineType engineType) throws ParseException, SQLException {
-
-		Connection connection = this.connectionFactory.getConnection(connID);
-
-		switch (engineType) {
+		EngineType engine = connInfo.getEngineType();
+		switch (engine) {
 		case CALCITE:
-
-			if (connection == null) {
-				throw new ParseException("找不到链接:" + connID, ExceptionType.CONFIGERROR);
+		case MYSQL:
+		case DORIS:
+		case KUDU:
+			for (String param : ConnectionFactory.array) {
+				boolean find = false;
+				for (ConnParam p : params) {
+					if (p.getParamKey().equals(param)) {
+						find = true;
+						break;
+					}
+				}
+				if (!find) {
+					throw new ParseException("can not find param for:" + param, ExceptionType.CONFIGERROR);
+				}
 			}
-
-			return new CalciteEngine(connection);
-
-		case KYLIN:
-			String url = this.urls.get(connID);
-			if (url == null) {
-				throw new ParseException("找不到链接:" + connID, ExceptionType.CONFIGERROR);
-			}
-			return new KylinEngine();
 		default:
 			break;
-
 		}
 
-		throw new ParseException("没有引擎:" + engineType, ExceptionType.CONFIGERROR);
+		logger.info("init connection for {}", connInfo.getConnName());
+		this.connections.put(connInfo.getConnID(), connInfo);
+		this.params.put(connInfo.getConnID(), params);
+		connectionFactory.initConnnection(params, connInfo.getUrl(), connInfo.getConnID());
+	}
+
+	public IQueryEngine getQueryEngine(String connID) throws ParseException, SQLException {
+
+		ConnInfo connInfo = this.connections.get(connID);
+		switch (connInfo.getEngineType()) {
+		case CALCITE:
+		case MYSQL:
+		case DORIS:
+		case KUDU:
+			Connection conn = this.connectionFactory.getConnection(connID);
+			return new DefaultSqlEngine(conn);
+		default:
+			throw new ParseException("can not find connection for this engine", ExceptionType.CONFIGERROR);
+		}
+
 	}
 
 }

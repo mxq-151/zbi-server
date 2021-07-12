@@ -7,12 +7,14 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.sql.PooledConnection;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.zbi.server.entity.mysql.ConnParam;
 
 import com.alibaba.druid.pool.DruidDataSource;
 
@@ -20,47 +22,50 @@ import com.alibaba.druid.pool.DruidDataSource;
  * 连接池
  */
 public class ConnectionFactory {
+
+	public static final String URL = "datasource.url";
+
+	public static final String CLASS = "datasource.driver-class-name";
+
+	public static final String USER = "datasource.username";
+
+	public static final String PASSWORD = "datasource.password";
+
+	public static final String INITSIZE = "datasource.initial.size";
+
+	public static final String IDLSIZE = "datasource.min.idle";
+
+	public static final String MAXSIZE = "datasource.max.active";
+
+	public static final String[] array = {URL,CLASS,USER,PASSWORD,INITSIZE,IDLSIZE,MAXSIZE};
+
 	private final static Logger logger = LoggerFactory.getLogger(ConnectionFactory.class);
 	private Map<String, PooledConnection> pools = new HashMap<>();
 	private Map<String, DruidDataSource> dataSourceMap = new HashMap<>();
 
-	public void initConnnection(EngineConnection connection) throws SQLException {
+	public void initConnnection(List<ConnParam> params, String url, String connID) throws SQLException {
 		Map<String, String> maps = new HashMap<>(6);
-		Map<String, ConnectConfig> connectionMap = connection.getConfigMap();
 
-		maps.put("datasource.driver-class-name", connectionMap.get("datasource.driver-class-name").getDefaultVal());
-
-		maps.put("datasource.url", connectionMap.get("datasource.url").getDefaultVal());
-
-		maps.put("datasource.initial.size", connectionMap.get("datasource.initial.size").getDefaultVal());
-
-		maps.put("datasource.min.idle", connectionMap.get("datasource.min.idle").getDefaultVal());
-
-		maps.put("datasource.max.active", connectionMap.get("datasource.max.active").getDefaultVal());
-
-		maps.put("datasource.username", connectionMap.get("datasource.username").getDefaultVal());
-
-		maps.put("datasource.password", connectionMap.get("datasource.password").getDefaultVal());
-		
+		for (ConnParam param : params) {
+			maps.put(param.getParamKey(), param.getParamVal());
+		}
 		DruidDataSource dataSource = createDataSource(maps);
 		PooledConnection pooledConnection = dataSource.getPooledConnection();
-		dataSourceMap.put(connection.getConnName(), dataSource);
-		pools.put(connection.getConnName(), pooledConnection);
+		dataSourceMap.put(connID, dataSource);
+		pools.put(connID, pooledConnection);
 
 	}
 
-
-
 	public DruidDataSource createDataSource(Map<String, String> info) throws SQLException {
-		logger.info("try to connect to server:" + info.get("datasource.url"));
+		logger.info("try to connect to server:" + info.get(URL));
 		DruidDataSource dataSource = new DruidDataSource();
-		dataSource.setDriverClassName(info.get("datasource.driver-class-name"));
-		dataSource.setUsername(info.get("datasource.username"));
-		dataSource.setPassword(info.get("datasource.password"));
-		dataSource.setUrl(info.get("datasource.url"));
-		dataSource.setInitialSize(Integer.parseInt(info.get("datasource.initial.size")));
-		dataSource.setMinIdle(Integer.parseInt(info.get("datasource.min.idle")));
-		dataSource.setMaxActive(Integer.parseInt(info.get("datasource.max.active")));
+		dataSource.setDriverClassName(info.get(CLASS));
+		dataSource.setUsername(info.get(USER));
+		dataSource.setPassword(info.get(PASSWORD));
+		dataSource.setUrl(info.get(URL));
+		dataSource.setInitialSize(Integer.parseInt(info.get(INITSIZE)));
+		dataSource.setMinIdle(Integer.parseInt(info.get(IDLSIZE)));
+		dataSource.setMaxActive(Integer.parseInt(info.get(MAXSIZE)));
 		/**
 		 * 设置断开重连机制
 		 */
@@ -68,11 +73,7 @@ public class ConnectionFactory {
 		dataSource.setTestWhileIdle(true);
 		dataSource.setValidationQuery("select 1");
 		dataSource.init();
-		// 启用监控统计功能 dataSource.setFilters("stat");
-		// dataSource.setPoolPreparedStatements(false);
-		// PooledConnection pooledConnection = dataSource.getPooledConnection();
-		// pooledConnection.getConnection().createStatement()
-		logger.info("success to connect to server:" + info.get("datasource.url"));
+		logger.info("success to connect to server:" + info.get(URL));
 		return dataSource;
 	}
 

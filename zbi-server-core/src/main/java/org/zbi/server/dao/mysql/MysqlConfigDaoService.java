@@ -1,7 +1,10 @@
 package org.zbi.server.dao.mysql;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+
+import javax.annotation.PostConstruct;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
@@ -25,7 +28,9 @@ import org.zbi.server.mapper.mysql.DataLimitMapper;
 import org.zbi.server.mapper.mysql.QueryModelMapper;
 import org.zbi.server.model.config.ConfigColumn;
 import org.zbi.server.model.config.ConfigTable;
+import org.zbi.server.model.engine.EngineFactory;
 import org.zbi.server.model.exception.AdminException;
+import org.zbi.server.model.exception.ParseException;
 import org.zbi.server.model.facade.FacadeTable;
 import org.zbi.server.model.facade.FacadeUser;
 import org.zbi.server.model.response.ColumnInfoResp;
@@ -50,7 +55,7 @@ public class MysqlConfigDaoService extends DaoServiceBase implements ConfigDaoSe
 
 	@Autowired
 	private QueryModelMapper queryModelMapper;
-	
+
 	@Autowired
 	private ConnInfoMapper connInfoMapper;
 
@@ -59,6 +64,21 @@ public class MysqlConfigDaoService extends DaoServiceBase implements ConfigDaoSe
 
 	@Autowired
 	private ModelService modelService;
+
+	@Autowired
+	private EngineFactory engineFactory;
+
+	@PostConstruct
+	public void init() throws SQLException, ParseException {
+		List<ConnInfo> conns = this.connInfoMapper.loadConn();
+		for (ConnInfo conn : conns) {
+			List<ConnParam> params = this.connInfoMapper.getParams(conn.getConnID());
+			if (!params.isEmpty()) {
+				this.engineFactory.putConnection(params, conn);
+			}
+
+		}
+	}
 
 	@Override
 	public List<QueryModel> getModelDscriptions(String key) {
@@ -96,7 +116,9 @@ public class MysqlConfigDaoService extends DaoServiceBase implements ConfigDaoSe
 		BeanUtils.copyProperties(table, ct);
 		this.preHandle(ct);
 		this.configTableMapper.insertTable(ct);
-		this.configColumnMapper.batchInsert(table.getColumns());
+		if (columns != null && !columns.isEmpty()) {
+			this.configColumnMapper.batchInsert(table.getColumns());
+		}
 
 	}
 
@@ -109,7 +131,7 @@ public class MysqlConfigDaoService extends DaoServiceBase implements ConfigDaoSe
 	}
 
 	@Override
-	public List<ConfigTable> queryConfigTables() throws AdminException {
+	public List<ConfigTable> queryConfigTables(boolean source) throws AdminException {
 		// TODO Auto-generated method stub
 		this.developConfigCheck();
 		return this.configTableMapper.loadTables();
@@ -346,9 +368,8 @@ public class MysqlConfigDaoService extends DaoServiceBase implements ConfigDaoSe
 	public void saveConnect(ConnInfo conn) throws AdminException {
 		// TODO Auto-generated method stub
 		this.developConfigCheck();
-		if(StringUtils.isBlank(conn.getConnID()))
-		{
-			String connID=java.util.UUID.randomUUID().toString();
+		if (StringUtils.isBlank(conn.getConnID())) {
+			String connID = java.util.UUID.randomUUID().toString();
 			conn.setConnID(connID);
 		}
 		this.preHandle(conn);
@@ -356,13 +377,14 @@ public class MysqlConfigDaoService extends DaoServiceBase implements ConfigDaoSe
 	}
 
 	@Override
-	public void inserParam(List<ConnParam> list) throws AdminException {
+	public void inserParam(List<ConnParam> list) throws AdminException, SQLException, ParseException {
 		// TODO Auto-generated method stub
 		this.developConfigCheck();
+		ConnInfo connInfo = this.connInfoMapper.loadConnInfo(list.get(0).getConnID());
 		this.connInfoMapper.deleteParam(list.get(0).getConnID());
 		this.connInfoMapper.inserParam(list);
+		this.engineFactory.putConnection(list, connInfo);
 	}
-
 
 	@Override
 	public List<ConnInfo> loadConn() {
@@ -375,6 +397,5 @@ public class MysqlConfigDaoService extends DaoServiceBase implements ConfigDaoSe
 		// TODO Auto-generated method stub
 		return this.connInfoMapper.getParams(connID);
 	}
-
 
 }

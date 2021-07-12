@@ -4,9 +4,9 @@ import java.sql.Connection;
 
 import org.zbi.server.model.service.DefaultSqlEncoder;
 
-public class CalciteEngine extends AbstractSqlEngine {
+public class DefaultSqlEngine extends AbstractSqlEngine {
 	
-	public CalciteEngine(Connection connection) {
+	public DefaultSqlEngine(Connection connection) {
 		super(connection,new DefaultSqlEncoder());
 		// TODO Auto-generated constructor stub
 	}

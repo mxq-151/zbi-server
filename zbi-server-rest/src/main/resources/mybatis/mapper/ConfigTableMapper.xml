@@ -10,7 +10,6 @@
 		<id column="conn_id" jdbcType="VARCHAR" property="connID" />
 		<id column="project" jdbcType="VARCHAR" property="project" />
 		<id column="table_name" jdbcType="VARCHAR" property="tableName" />
-		<id column="engine_type" jdbcType="VARCHAR" property="engineType" />
 		<id column="table_type" jdbcType="VARCHAR" property="tableType" />
 		<id column="source" jdbcType="BIT" property="source" />
 		<result column="last_update" property="lastUpdate" />
@@ -18,7 +17,7 @@
 	</resultMap>
 	<sql id="Base_Column_List">
 		<!--@mbg.generated -->
-		`tbl_alias`, `project`, `table_name`, `engine_type`,
+		`tbl_alias`, `project`, `table_name`,
 		`table_type`,`table_id`,`source`,`conn_id`,`last_updater`,`last_update`
 	</sql>
 	<select id="selectByPrimaryKey" parameterType="java.lang.String"
@@ -45,14 +44,12 @@
 	</delete>
 	<insert id="insertTable">
 		<!--@mbg.generated -->
-		insert into config_table (`tbl_alias`,`conn_id`, `project`, `table_name`,
-		`engine_type`,`table_type`,`table_id`,`source`,`last_updater`)
+		insert into config_table (`tbl_alias`,`conn_id`, `project`, `table_name`,`table_type`,`table_id`,`source`,`last_updater`)
 		values
 		(#{tblAlias,jdbcType=VARCHAR},
 		#{connID,jdbcType=VARCHAR},
 		#{project,jdbcType=VARCHAR},
 		#{tableName,jdbcType=VARCHAR},
-		#{engineType,jdbcType=VARCHAR},
 		#{tableType,jdbcType=VARCHAR},
 		#{tableID,jdbcType=VARCHAR},
 		#{source,jdbcType=BIT},#{lastUpdater,jdbcType=VARCHAR})

@@ -1,5 +1,6 @@
 package org.zbi.server.rest.controller;
 
+import java.sql.SQLException;
 import java.util.List;
 
 import javax.validation.Valid;
@@ -18,11 +19,17 @@ import org.zbi.server.entity.mysql.ConnParam;
 import org.zbi.server.entity.mysql.GroupBoard;
 import org.zbi.server.entity.mysql.GroupUser;
 import org.zbi.server.entity.mysql.QueryModel;
+import org.zbi.server.model.config.ConfigColumn;
+import org.zbi.server.model.config.ConfigTable;
+import org.zbi.server.model.core.AggType;
+import org.zbi.server.model.core.ColumnType;
 import org.zbi.server.model.core.EngineType;
 import org.zbi.server.model.exception.AdminException;
+import org.zbi.server.model.exception.ParseException;
 import org.zbi.server.model.facade.FacadeBoard;
 import org.zbi.server.model.facade.FacadeFolder;
 import org.zbi.server.model.facade.FacadeGroup;
+import org.zbi.server.model.facade.FacadeTable;
 import org.zbi.server.model.facade.FacadeUser;
 import org.zbi.server.model.response.ModelDescResp;
 
@@ -132,7 +139,7 @@ public class GroupController extends BaseController {
 	@RequestMapping(value = "/save/param", method = RequestMethod.POST)
 	@ApiOperation(value = "保存连接", code = 200, httpMethod = "POST")
 	@ApiResponses({ @ApiResponse(code = 400, message = "请求错误"), @ApiResponse(code = 500, message = "响应失败") })
-	public boolean saveParam(@RequestBody List<ConnParam> params) throws AdminException {
+	public boolean saveParam(@RequestBody List<ConnParam> params) throws AdminException, SQLException, ParseException {
 		this.daoService.inserParam(params);
 		return true;
 	}
@@ -158,6 +165,44 @@ public class GroupController extends BaseController {
 	@ApiResponses({ @ApiResponse(code = 400, message = "请求错误"), @ApiResponse(code = 500, message = "响应失败") })
 	public EngineType[] loadEngine() throws AdminException {
 		return EngineType.values();
+	}
+
+	@RequestMapping(value = "/column/type", method = RequestMethod.GET)
+	@ApiOperation(value = "加载引擎类型", code = 200, httpMethod = "GET")
+	@ApiResponses({ @ApiResponse(code = 400, message = "请求错误"), @ApiResponse(code = 500, message = "响应失败") })
+	public ColumnType[] columnType() throws AdminException {
+		return ColumnType.values();
+	}
+
+	@RequestMapping(value = "/agg/type", method = RequestMethod.GET)
+	@ApiOperation(value = "加载引擎类型", code = 200, httpMethod = "GET")
+	@ApiResponses({ @ApiResponse(code = 400, message = "请求错误"), @ApiResponse(code = 500, message = "响应失败") })
+	public AggType[] aggType() throws AdminException {
+		return AggType.values();
+	}
+
+	@RequestMapping(value = "/load/source/table", method = RequestMethod.GET)
+	@ApiOperation(value = "加载源表", code = 200, httpMethod = "GET")
+	@ApiResponses({ @ApiResponse(code = 400, message = "请求错误"), @ApiResponse(code = 500, message = "响应失败") })
+	public List<ConfigTable> loadSourceTable() throws AdminException {
+		return this.daoService.queryConfigTables(true);
+	}
+
+	@RequestMapping(value = "/load/columns", method = RequestMethod.GET)
+	@ApiOperation(value = "加载字段", code = 200, httpMethod = "GET")
+	@ApiResponses({ @ApiResponse(code = 400, message = "请求错误"), @ApiResponse(code = 500, message = "响应失败") })
+	public List<ConfigColumn> loadColumns(
+			@Valid @RequestParam(required = true) @ApiParam(value = "表ID", required = true) String tableID)
+			throws AdminException {
+		return this.daoService.getConfigColumns(tableID);
+	}
+
+	@RequestMapping(value = "/save/table", method = RequestMethod.POST)
+	@ApiOperation(value = "保存表", code = 200, httpMethod = "POST")
+	@ApiResponses({ @ApiResponse(code = 400, message = "请求错误"), @ApiResponse(code = 500, message = "响应失败") })
+	public boolean saveTable(@RequestBody FacadeTable table) throws AdminException {
+		this.daoService.saveConfigTable(table);
+		return true;
 	}
 
 }

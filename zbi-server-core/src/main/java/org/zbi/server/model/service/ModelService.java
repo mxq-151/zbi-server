@@ -134,7 +134,6 @@ public class ModelService {
 			}
 
 			conns.add(configTable.getConnID());
-			engine.add(configTable.getEngineType());
 			tables.add(configTable.getTableID());
 		}
 
@@ -152,10 +151,6 @@ public class ModelService {
 
 				}
 			}
-		}
-
-		if (engine.size() != 1) {
-			throw new ParseException("所选字段不在同一种引擎内:", ExceptionType.CONFIGERROR);
 		}
 
 		if (conns.size() != 1) {
