@@ -54,4 +54,5 @@ public class ConfigJoin extends EntityBase{
 		this.joinID = joinID;
 	}
 
+
 }

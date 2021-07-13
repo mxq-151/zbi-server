@@ -55,8 +55,8 @@ class ConfigDaoServiceTests extends ServiceTestBase {
 		List<ConfigColumn> columns = new ArrayList<>();
 		columns.add(this.createColumn("日期", "sd", "statedate", ColumnType.DATE, true, false, "sd1", tableID, null));
 		columns.add(this.createColumn("销售员", "sm", "saller", ColumnType.STRING, false, false, "sm1", tableID, null));
-		columns.add(this.createColumn("销售量", "sn", "salenum", ColumnType.NUMBER, false, true, "sn1", tableID,
-				AggType.SUM));
+		columns.add(
+				this.createColumn("销售量", "sn", "salenum", ColumnType.NUMBER, false, true, "sn1", tableID, AggType.SUM));
 		table.setColumns(columns);
 
 		return table;
@@ -90,7 +90,7 @@ class ConfigDaoServiceTests extends ServiceTestBase {
 		this.developerLogin();
 		QueryModel model = this.formatQueryModel();
 		List<QueryColumn> queryColumn = this.formatQueryColumns();
-		this.configDaoService.saveModel(model.getModelID(), model.getModelName(), queryColumn);
+		this.configDaoService.saveModel(model.getModelName());
 	}
 
 	public QueryModel formatQueryModel() {

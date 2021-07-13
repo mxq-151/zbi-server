@@ -11,5 +11,7 @@ public interface ConfigJoinMapper {
 	public List<ConfigJoin> loadAllJoins();
 
 	public void deleteByPrimaryKey(String joinID);
+	
+	
 
 }

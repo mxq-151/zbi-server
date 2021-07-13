@@ -22,15 +22,19 @@ import org.zbi.server.entity.mysql.UserDataLimit;
 import org.zbi.server.entity.mysql.UserInfo;
 import org.zbi.server.mapper.mysql.ColumnLimitMapper;
 import org.zbi.server.mapper.mysql.ConfigColumnMapper;
+import org.zbi.server.mapper.mysql.ConfigJoinMapper;
 import org.zbi.server.mapper.mysql.ConfigTableMapper;
 import org.zbi.server.mapper.mysql.ConnInfoMapper;
 import org.zbi.server.mapper.mysql.DataLimitMapper;
 import org.zbi.server.mapper.mysql.QueryModelMapper;
 import org.zbi.server.model.config.ConfigColumn;
+import org.zbi.server.model.config.ConfigJoin;
 import org.zbi.server.model.config.ConfigTable;
 import org.zbi.server.model.engine.EngineFactory;
 import org.zbi.server.model.exception.AdminException;
 import org.zbi.server.model.exception.ParseException;
+import org.zbi.server.model.facade.FacadeColumn;
+import org.zbi.server.model.facade.FacadeJoin;
 import org.zbi.server.model.facade.FacadeTable;
 import org.zbi.server.model.facade.FacadeUser;
 import org.zbi.server.model.response.ColumnInfoResp;
@@ -67,6 +71,9 @@ public class MysqlConfigDaoService extends DaoServiceBase implements ConfigDaoSe
 
 	@Autowired
 	private EngineFactory engineFactory;
+
+	@Autowired
+	private ConfigJoinMapper configJoinMapper;
 
 	@PostConstruct
 	public void init() throws SQLException, ParseException {
@@ -268,46 +275,34 @@ public class MysqlConfigDaoService extends DaoServiceBase implements ConfigDaoSe
 	}
 
 	@Override
-	public void saveModel(String modelID, String modelName, List<QueryColumn> queryColumn) throws AdminException {
+	public void saveModel(String modelName) throws AdminException {
 		// TODO Auto-generated method stub
 
 		this.developConfigCheck();
-		if (modelID == null) {
-			modelID = java.util.UUID.randomUUID().toString();
-			QueryModel model = new QueryModel();
-			model.setModelID(modelID);
-			model.setModelName(modelName);
-			for (QueryColumn qc : queryColumn) {
-				qc.setModelID(modelID);
-			}
-			this.preHandle(model);
-			this.preHandle(queryColumn);
-			this.queryModelMapper.batchInsert(queryColumn);
-			this.queryModelMapper.createModel(model);
-		} else {
-			this.queryModelMapper.deleteModel(modelID);
-			this.queryModelMapper.deleteQueryColumn(modelID);
-
-			QueryModel model = new QueryModel();
-			model.setModelID(modelID);
-			model.setModelName(modelName);
-
-			for (QueryColumn qc : queryColumn) {
-				qc.setModelID(modelID);
-			}
-
-			this.preHandle(model);
-			this.preHandle(queryColumn);
-			this.queryModelMapper.batchInsert(queryColumn);
-			this.queryModelMapper.createModel(model);
-		}
-
+		String modelID = java.util.UUID.randomUUID().toString();
+		QueryModel model = new QueryModel();
+		model.setModelID(modelID);
+		model.setModelName(modelName);
+		this.preHandle(model);
+		this.queryModelMapper.createModel(model);
 	}
 
 	@Override
 	public List<QueryColumn> listQueryColumn(String modelID) {
 		// TODO Auto-generated method stub
-		return this.queryModelMapper.listQueryColumn(modelID);
+		List<QueryColumn> columns= this.queryModelMapper.listQueryColumn(modelID);
+		List<QueryColumn> fcs=new ArrayList<>();
+		
+		for(QueryColumn column:columns)
+		{
+			FacadeColumn fc=new FacadeColumn();
+			BeanUtils.copyProperties(column, fc);
+			ConfigColumn cc=this.modelService.getColumn(column.getColID());
+			fc.setChinese(cc.getChinese());
+			fc.setColName(cc.getColName());
+			fcs.add(fc);
+		}
+		return fcs;
 	}
 
 	@Override
@@ -396,6 +391,68 @@ public class MysqlConfigDaoService extends DaoServiceBase implements ConfigDaoSe
 	public List<ConnParam> getParams(String connID) {
 		// TODO Auto-generated method stub
 		return this.connInfoMapper.getParams(connID);
+	}
+
+	@Override
+	public void saveJoins(List<ConfigJoin> joins) {
+		// TODO Auto-generated method stub
+		for (ConfigJoin join : joins) {
+			if(StringUtils.isBlank(join.getJoinID()))
+			{
+				join.setJoinID(java.util.UUID.randomUUID().toString());
+			}
+			this.configJoinMapper.insertJoin(join);
+		}
+
+	}
+
+	@Override
+	public boolean deleteJoin(String joinID) {
+		// TODO Auto-generated method stub
+		this.configJoinMapper.deleteByPrimaryKey(joinID);
+		return true;
+	}
+
+	@Override
+	public List<FacadeJoin> loadJoins() {
+		// TODO Auto-generated method stub
+		List<ConfigJoin> joins=this.configJoinMapper.loadAllJoins();
+		List<FacadeJoin> list=new ArrayList<>();
+		for(ConfigJoin join:joins)
+		{
+			FacadeJoin fj=new FacadeJoin();
+			BeanUtils.copyProperties(join, fj);
+			
+			ConfigColumn cc=this.modelService.getColumn(join.getColID1());
+			fj.setColName1(cc.getColName());
+			cc=this.modelService.getColumn(join.getColID2());
+			fj.setColName2(cc.getColName());
+			
+			ConfigTable table=this.modelService.getTable(join.getTblID1());
+			fj.setTableName1(table.getTableName());
+			table=this.modelService.getTable(join.getTblID1());
+			fj.setTableName2(table.getTableName());
+			list.add(fj);
+		}
+		return list;
+	}
+
+	@Override
+	public void saveQueryColumn(String modelID, List<QueryColumn> queryColumns) throws AdminException {
+		// TODO Auto-generated method stub
+		this.developConfigCheck();
+		this.preHandle(queryColumns);
+		this.queryModelMapper.deleteQueryColumn(modelID);
+		this.queryModelMapper.batchInsert(queryColumns);
+		
+	}
+
+	@Override
+	public void deleteModel(String modelID) throws AdminException {
+		// TODO Auto-generated method stub
+		this.developConfigCheck();
+		this.queryModelMapper.deleteModel(modelID);
+		
 	}
 
 }

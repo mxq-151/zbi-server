@@ -37,7 +37,7 @@ public class ConnectionFactory {
 
 	public static final String MAXSIZE = "datasource.max.active";
 
-	public static final String[] array = {URL,CLASS,USER,PASSWORD,INITSIZE,IDLSIZE,MAXSIZE};
+	public static final String[] array = {CLASS,USER,PASSWORD,INITSIZE,IDLSIZE,MAXSIZE};
 
 	private final static Logger logger = LoggerFactory.getLogger(ConnectionFactory.class);
 	private Map<String, PooledConnection> pools = new HashMap<>();
@@ -49,6 +49,7 @@ public class ConnectionFactory {
 		for (ConnParam param : params) {
 			maps.put(param.getParamKey(), param.getParamVal());
 		}
+		maps.put(URL, url);
 		DruidDataSource dataSource = createDataSource(maps);
 		PooledConnection pooledConnection = dataSource.getPooledConnection();
 		dataSourceMap.put(connID, dataSource);

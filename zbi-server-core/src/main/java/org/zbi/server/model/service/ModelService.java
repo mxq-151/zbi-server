@@ -20,7 +20,6 @@ import org.zbi.server.mapper.mysql.ConfigTableMapper;
 import org.zbi.server.model.config.ConfigColumn;
 import org.zbi.server.model.config.ConfigJoin;
 import org.zbi.server.model.config.ConfigTable;
-import org.zbi.server.model.core.EngineType;
 import org.zbi.server.model.exception.ParseException;
 import org.zbi.server.model.exception.ParseException.ExceptionType;
 import org.zbi.server.model.parse.ParseColumn;
@@ -89,12 +88,16 @@ public class ModelService {
 	public ConfigColumn getColumn(String uuid) {
 		return this.columns.get(uuid);
 	}
+	
+	public ConfigTable getTable(String tableID)
+	{
+		return this.tables.get(tableID);
+	}
 
 	public ParseModel getModel(RequestParam param) throws ParseException {
 
 		HashSet<String> tables = new HashSet<>();
 		HashSet<String> conns = new HashSet<>();
-		HashSet<EngineType> engine = new HashSet<>();
 		ParseModel configModel = new ParseModel();
 
 		List<ParseColumn> dimensions = new ArrayList<>();
@@ -160,7 +163,6 @@ public class ModelService {
 		configModel.setDimensions(dimensions);
 		configModel.setMeasures(measures);
 		configModel.setJoins(joins);
-		configModel.setEngineType(engine.iterator().next());
 		configModel.setConnID(conns.iterator().next());
 		configModel.setOffSet(param.getOffSet());
 		configModel.setFilters(filters);

@@ -10,9 +10,11 @@ import org.zbi.server.entity.mysql.QueryColumn;
 import org.zbi.server.entity.mysql.QueryModel;
 import org.zbi.server.entity.mysql.UserColLimit;
 import org.zbi.server.model.config.ConfigColumn;
+import org.zbi.server.model.config.ConfigJoin;
 import org.zbi.server.model.config.ConfigTable;
 import org.zbi.server.model.exception.AdminException;
 import org.zbi.server.model.exception.ParseException;
+import org.zbi.server.model.facade.FacadeJoin;
 import org.zbi.server.model.facade.FacadeTable;
 import org.zbi.server.model.response.ModelInfoResp;
 
@@ -50,7 +52,11 @@ public interface ConfigDaoService {
 
 	public List<String> queryUserTotalDataLimit(String userID, String colID);
 
-	public void saveModel(String modelID, String modelName, List<QueryColumn> queryColumn) throws AdminException;
+	public void saveModel(String modelName) throws AdminException;
+	
+	public void deleteModel(String modelID)throws AdminException;
+
+	public void saveQueryColumn(String modelID,List<QueryColumn> queryColumns) throws AdminException;
 
 	public List<QueryColumn> listQueryColumn(String modelID);
 
@@ -62,10 +68,16 @@ public interface ConfigDaoService {
 
 	public void saveConnect(ConnInfo conn) throws AdminException;
 
-	public void inserParam(List<ConnParam> list)throws AdminException, SQLException, ParseException;
+	public void inserParam(List<ConnParam> list) throws AdminException, SQLException, ParseException;
 
 	public List<ConnInfo> loadConn();
-	
+
 	public List<ConnParam> getParams(String connID);
+
+	public void saveJoins(List<ConfigJoin> joins);
+
+	public boolean deleteJoin(String joinID);
+
+	public List<FacadeJoin> loadJoins();
 
 }

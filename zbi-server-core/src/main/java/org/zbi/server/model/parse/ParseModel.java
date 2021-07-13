@@ -4,7 +4,6 @@ import java.util.List;
 
 import org.zbi.server.model.config.ConfigJoin;
 import org.zbi.server.model.config.ConfigTable;
-import org.zbi.server.model.core.EngineType;
 
 public class ParseModel {
 
@@ -17,8 +16,6 @@ public class ParseModel {
 	private ConfigTable mainTable;
 
 	private List<ParseFilter> filters;
-
-	private EngineType engineType;
 
 	private String connID;
 
@@ -86,14 +83,6 @@ public class ParseModel {
 
 	public void setPageSize(int pageSize) {
 		this.pageSize = pageSize;
-	}
-
-	public EngineType getEngineType() {
-		return engineType;
-	}
-
-	public void setEngineType(EngineType engineType) {
-		this.engineType = engineType;
 	}
 
 	public String getConnID() {
