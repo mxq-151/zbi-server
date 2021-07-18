@@ -3,13 +3,10 @@ package org.zbi.server.rest.controller;
 import java.sql.SQLException;
 import java.util.List;
 
-import javax.validation.Valid;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.zbi.server.dao.service.ConfigDaoService;
 import org.zbi.server.dao.service.FolderDaoService;
@@ -34,12 +31,9 @@ import org.zbi.server.model.facade.FacadeGroup;
 import org.zbi.server.model.facade.FacadeJoin;
 import org.zbi.server.model.facade.FacadeTable;
 import org.zbi.server.model.facade.FacadeUser;
-import org.zbi.server.model.response.ModelDescResp;
 
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
-import io.swagger.annotations.ApiResponse;
-import io.swagger.annotations.ApiResponses;
 
 @RestController
 @RequestMapping("/admin/v1")
@@ -56,84 +50,65 @@ public class GroupController extends BaseController {
 
 	@RequestMapping(value = "/create/group", method = RequestMethod.GET)
 	@ApiOperation(value = "获取看板列表接口", code = 200, httpMethod = "GET", response = FacadeBoard.class)
-	@ApiResponses({ @ApiResponse(code = 400, message = "请求错误"), @ApiResponse(code = 500, message = "响应失败") })
-	public FacadeGroup createGroup(
-			@Valid @RequestParam(required = true) @ApiParam(value = "用户组名", required = true) String groupName)
-			throws AdminException {
+	public FacadeGroup createGroup(@ApiParam(value = "用户组名", required = true) String groupName) throws AdminException {
 		return this.groupDaoService.createGroup(groupName, null);
 
 	}
 
 	@RequestMapping(value = "/get/group", method = RequestMethod.GET)
 	@ApiOperation(value = "获取用户组详细", code = 200, httpMethod = "GET", response = FacadeBoard.class)
-	@ApiResponses({ @ApiResponse(code = 400, message = "请求错误"), @ApiResponse(code = 500, message = "响应失败") })
-	public FacadeGroup getGroup(
-			@Valid @RequestParam(required = true) @ApiParam(value = "用户组ID", required = true) String groupID) {
+	public FacadeGroup getGroup(@ApiParam(value = "用户组ID", required = true) String groupID) {
 		return this.groupDaoService.getGroupByGroupID(groupID);
 	}
 
 	@RequestMapping(value = "/list/group/model", method = RequestMethod.GET)
-	@ApiOperation(value = "获取模型信息接口", code = 200, httpMethod = "GET", response = ModelDescResp.class)
-	@ApiResponses({ @ApiResponse(code = 400, message = "请求错误"), @ApiResponse(code = 500, message = "响应失败") })
-	public List<QueryModel> getModelInfo(
-			@Valid @RequestParam(required = false) @ApiParam(value = "用户组ID", required = false) String groupID) {
+	@ApiOperation(value = "获取模型信息接口", code = 200, httpMethod = "GET")
+	public List<QueryModel> getModelInfo(@ApiParam(value = "用户组ID", required = false) String groupID) {
 		return this.daoService.listQueryModelByGroup(groupID);
 	}
 
 	@RequestMapping(value = "/list/folders", method = RequestMethod.GET)
-	@ApiOperation(value = "获取模型信息接口", code = 200, httpMethod = "GET", response = ModelDescResp.class)
-	@ApiResponses({ @ApiResponse(code = 400, message = "请求错误"), @ApiResponse(code = 500, message = "响应失败") })
-	public List<FacadeFolder> listFolders(
-			@Valid @RequestParam(required = false) @ApiParam(value = "用户组ID", required = false) String groupID) {
+	@ApiOperation(value = "获取模型信息接口", code = 200, httpMethod = "GET")
+	public List<FacadeFolder> listFolders(@ApiParam(value = "用户组ID", required = false) String groupID) {
 		return this.folderDaoService.listAdminFolders();
 	}
 
 	@RequestMapping(value = "/list/user/group", method = RequestMethod.GET)
 	@ApiOperation(value = "列出当前登录用户管理的用户组", code = 200, httpMethod = "GET", response = FacadeBoard.class, responseContainer = "List")
-	@ApiResponses({ @ApiResponse(code = 400, message = "请求错误"), @ApiResponse(code = 500, message = "响应失败") })
 	public List<FacadeGroup> listGroups() throws AdminException {
 		return this.groupDaoService.getAdminGroup();
 	}
 
 	@RequestMapping(value = "/list/group/user", method = RequestMethod.GET)
-	@ApiOperation(value = "列出当前登录用户组下的用户", code = 200, httpMethod = "GET", response = FacadeBoard.class, responseContainer = "List")
-	@ApiResponses({ @ApiResponse(code = 400, message = "请求错误"), @ApiResponse(code = 500, message = "响应失败") })
-	public List<FacadeUser> listGroupUsers(
-			@Valid @RequestParam(required = true) @ApiParam(value = "用户组ID", required = true) String groupID)
+	@ApiOperation(value = "列出当前登录用户组下的用户", code = 200, httpMethod = "GET", response = FacadeUser.class, responseContainer = "List")
+	public List<FacadeUser> listGroupUsers(@ApiParam(value = "用户组ID", required = true) String groupID)
 			throws AdminException {
 		return this.groupDaoService.getGroupUsers(groupID);
 	}
 
 	@RequestMapping(value = "/add/user", method = RequestMethod.POST)
 	@ApiOperation(value = "添加用户到用户组", code = 200, httpMethod = "POST")
-	@ApiResponses({ @ApiResponse(code = 400, message = "请求错误"), @ApiResponse(code = 500, message = "响应失败") })
 	public int addUserToGroup(@RequestBody List<GroupUser> users,
-			@Valid @RequestParam(required = true) @ApiParam(value = "用户组ID", required = true) String groupID)
-			throws AdminException {
+			@ApiParam(value = "用户组ID", required = true) String groupID) throws AdminException {
 		this.groupDaoService.addUserToGroup(users, groupID);
 		return users.size();
 	}
 
 	@RequestMapping(value = "/add/board", method = RequestMethod.POST)
 	@ApiOperation(value = "添加用户到用户组", code = 200, httpMethod = "POST")
-	@ApiResponses({ @ApiResponse(code = 400, message = "请求错误"), @ApiResponse(code = 500, message = "响应失败") })
 	public int addBoardToGroup(@RequestBody List<GroupBoard> boards) throws AdminException {
 		return this.groupDaoService.addBoardToGroup(boards);
 	}
 
 	@RequestMapping(value = "/delete/group", method = RequestMethod.GET)
-	@ApiOperation(value = "删除用户组", code = 200, httpMethod = "GET", response = FacadeBoard.class)
-	@ApiResponses({ @ApiResponse(code = 400, message = "请求错误"), @ApiResponse(code = 500, message = "响应失败") })
-	public boolean updateBoard(
-			@Valid @RequestParam(required = true) @ApiParam(value = "用户组ID", required = true) String groupID)
-			throws AdminException {
+	@ApiOperation(value = "删除用户组", code = 200, httpMethod = "GET")
+	public boolean updateBoard(@ApiParam(value = "用户组ID", required = true) String groupID) throws AdminException {
 		this.groupDaoService.deleteGroup(groupID);
 		return true;
 	}
 
 	@RequestMapping(value = "/save/conn", method = RequestMethod.POST)
 	@ApiOperation(value = "保存连接", code = 200, httpMethod = "POST")
-	@ApiResponses({ @ApiResponse(code = 400, message = "请求错误"), @ApiResponse(code = 500, message = "响应失败") })
 	public boolean saveConnect(@RequestBody ConnInfo connInfo) throws AdminException {
 		this.daoService.saveConnect(connInfo);
 		return true;
@@ -141,7 +116,6 @@ public class GroupController extends BaseController {
 
 	@RequestMapping(value = "/save/param", method = RequestMethod.POST)
 	@ApiOperation(value = "保存连接", code = 200, httpMethod = "POST")
-	@ApiResponses({ @ApiResponse(code = 400, message = "请求错误"), @ApiResponse(code = 500, message = "响应失败") })
 	public boolean saveParam(@RequestBody List<ConnParam> params) throws AdminException, SQLException, ParseException {
 		this.daoService.inserParam(params);
 		return true;
@@ -149,60 +123,49 @@ public class GroupController extends BaseController {
 
 	@RequestMapping(value = "/load/conn", method = RequestMethod.GET)
 	@ApiOperation(value = "加载连接", code = 200, httpMethod = "GET")
-	@ApiResponses({ @ApiResponse(code = 400, message = "请求错误"), @ApiResponse(code = 500, message = "响应失败") })
 	public List<ConnInfo> loadConnect() throws AdminException {
 		return this.daoService.loadConn();
 	}
 
 	@RequestMapping(value = "/load/param", method = RequestMethod.GET)
 	@ApiOperation(value = "加载连接参数", code = 200, httpMethod = "GET")
-	@ApiResponses({ @ApiResponse(code = 400, message = "请求错误"), @ApiResponse(code = 500, message = "响应失败") })
-	public List<ConnParam> loadParam(
-			@Valid @RequestParam(required = true) @ApiParam(value = "连接ID", required = true) String connID)
-			throws AdminException {
+	public List<ConnParam> loadParam(@ApiParam(value = "连接ID", required = true) String connID) throws AdminException {
 		return this.daoService.getParams(connID);
 	}
 
 	@RequestMapping(value = "/load/engine", method = RequestMethod.GET)
 	@ApiOperation(value = "加载引擎类型", code = 200, httpMethod = "GET")
-	@ApiResponses({ @ApiResponse(code = 400, message = "请求错误"), @ApiResponse(code = 500, message = "响应失败") })
 	public EngineType[] loadEngine() throws AdminException {
 		return EngineType.values();
 	}
 
 	@RequestMapping(value = "/column/type", method = RequestMethod.GET)
 	@ApiOperation(value = "加载引擎类型", code = 200, httpMethod = "GET")
-	@ApiResponses({ @ApiResponse(code = 400, message = "请求错误"), @ApiResponse(code = 500, message = "响应失败") })
 	public ColumnType[] columnType() throws AdminException {
 		return ColumnType.values();
 	}
 
 	@RequestMapping(value = "/agg/type", method = RequestMethod.GET)
 	@ApiOperation(value = "加载引擎类型", code = 200, httpMethod = "GET")
-	@ApiResponses({ @ApiResponse(code = 400, message = "请求错误"), @ApiResponse(code = 500, message = "响应失败") })
 	public AggType[] aggType() throws AdminException {
 		return AggType.values();
 	}
 
 	@RequestMapping(value = "/load/source/table", method = RequestMethod.GET)
 	@ApiOperation(value = "加载源表", code = 200, httpMethod = "GET")
-	@ApiResponses({ @ApiResponse(code = 400, message = "请求错误"), @ApiResponse(code = 500, message = "响应失败") })
 	public List<ConfigTable> loadSourceTable() throws AdminException {
 		return this.daoService.queryConfigTables(true);
 	}
 
 	@RequestMapping(value = "/load/columns", method = RequestMethod.GET)
 	@ApiOperation(value = "加载字段", code = 200, httpMethod = "GET")
-	@ApiResponses({ @ApiResponse(code = 400, message = "请求错误"), @ApiResponse(code = 500, message = "响应失败") })
-	public List<ConfigColumn> loadColumns(
-			@Valid @RequestParam(required = true) @ApiParam(value = "表ID", required = true) String tableID)
+	public List<ConfigColumn> loadColumns(@ApiParam(value = "表ID", required = true) String tableID)
 			throws AdminException {
 		return this.daoService.getConfigColumns(tableID);
 	}
 
 	@RequestMapping(value = "/save/table", method = RequestMethod.POST)
 	@ApiOperation(value = "保存表", code = 200, httpMethod = "POST")
-	@ApiResponses({ @ApiResponse(code = 400, message = "请求错误"), @ApiResponse(code = 500, message = "响应失败") })
 	public boolean saveTable(@RequestBody FacadeTable table) throws AdminException {
 		this.daoService.saveConfigTable(table);
 		return true;
@@ -210,7 +173,6 @@ public class GroupController extends BaseController {
 
 	@RequestMapping(value = "/save/join", method = RequestMethod.POST)
 	@ApiOperation(value = "保存连表", code = 200, httpMethod = "POST")
-	@ApiResponses({ @ApiResponse(code = 400, message = "请求错误"), @ApiResponse(code = 500, message = "响应失败") })
 	public boolean saveJoin(@RequestBody List<ConfigJoin> joins) throws AdminException {
 		this.daoService.saveJoins(joins);
 		return true;
@@ -218,62 +180,47 @@ public class GroupController extends BaseController {
 
 	@RequestMapping(value = "/load/join", method = RequestMethod.GET)
 	@ApiOperation(value = "加载连表", code = 200, httpMethod = "GET")
-	@ApiResponses({ @ApiResponse(code = 400, message = "请求错误"), @ApiResponse(code = 500, message = "响应失败") })
 	public List<FacadeJoin> loadJoins() throws AdminException {
 		return this.daoService.loadJoins();
 	}
 
 	@RequestMapping(value = "/del/join", method = RequestMethod.GET)
 	@ApiOperation(value = "删除连表", code = 200, httpMethod = "GET")
-	@ApiResponses({ @ApiResponse(code = 400, message = "请求错误"), @ApiResponse(code = 500, message = "响应失败") })
-	public boolean delJoin(
-			@Valid @RequestParam(required = true) @ApiParam(value = "表ID", required = true) String tableID)
-			throws AdminException {
+	public boolean delJoin(@ApiParam(value = "表ID", required = true) String tableID) throws AdminException {
 		return this.daoService.deleteJoin(tableID);
 	}
 
 	@RequestMapping(value = "/create/model", method = RequestMethod.GET)
 	@ApiOperation(value = "创建模型", code = 200, httpMethod = "GET")
-	@ApiResponses({ @ApiResponse(code = 400, message = "请求错误"), @ApiResponse(code = 500, message = "响应失败") })
-	public boolean createModel(
-			@Valid @RequestParam(required = true) @ApiParam(value = "模型名称", required = true) String modelName)
-			throws AdminException {
+	public boolean createModel(@ApiParam(value = "模型名称", required = true) String modelName) throws AdminException {
 		this.daoService.saveModel(modelName);
 		return true;
 	}
-	
+
 	@RequestMapping(value = "/del/model", method = RequestMethod.GET)
 	@ApiOperation(value = "删除模型", code = 200, httpMethod = "GET")
-	@ApiResponses({ @ApiResponse(code = 400, message = "请求错误"), @ApiResponse(code = 500, message = "响应失败") })
-	public boolean deleteModel(
-			@Valid @RequestParam(required = true) @ApiParam(value = "模型ID", required = true) String modelID)
-			throws AdminException {
+	public boolean deleteModel(@ApiParam(value = "模型ID", required = true) String modelID) throws AdminException {
 		this.daoService.deleteModel(modelID);
 		return true;
 	}
 
 	@RequestMapping(value = "/save/query/column", method = RequestMethod.POST)
 	@ApiOperation(value = "保存模型", code = 200, httpMethod = "POST")
-	@ApiResponses({ @ApiResponse(code = 400, message = "请求错误"), @ApiResponse(code = 500, message = "响应失败") })
 	public boolean saveModel(@RequestBody List<QueryColumn> queryColumns,
-			@Valid @RequestParam(required = true) @ApiParam(value = "模型ID", required = true) String modelID)
-			throws AdminException {
+			@ApiParam(value = "模型ID", required = true) String modelID) throws AdminException {
 		this.daoService.saveQueryColumn(modelID, queryColumns);
 		return true;
 	}
 
 	@RequestMapping(value = "/load/model", method = RequestMethod.GET)
 	@ApiOperation(value = "加载模型", code = 200, httpMethod = "GET")
-	@ApiResponses({ @ApiResponse(code = 400, message = "请求错误"), @ApiResponse(code = 500, message = "响应失败") })
 	public List<QueryModel> loadModel() throws AdminException {
 		return this.daoService.listQueryModel();
 	}
 
 	@RequestMapping(value = "/load/query/column", method = RequestMethod.GET)
 	@ApiOperation(value = "加载模型", code = 200, httpMethod = "GET")
-	@ApiResponses({ @ApiResponse(code = 400, message = "请求错误"), @ApiResponse(code = 500, message = "响应失败") })
-	public List<QueryColumn> loadQueryColumn(
-			@Valid @RequestParam(required = true) @ApiParam(value = "模型ID", required = true) String modelID)
+	public List<QueryColumn> loadQueryColumn(@ApiParam(value = "模型ID", required = true) String modelID)
 			throws AdminException {
 		return this.daoService.listQueryColumn(modelID);
 	}

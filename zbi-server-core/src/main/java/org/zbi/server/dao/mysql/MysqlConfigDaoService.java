@@ -39,7 +39,6 @@ import org.zbi.server.model.facade.FacadeColumn;
 import org.zbi.server.model.facade.FacadeJoin;
 import org.zbi.server.model.facade.FacadeTable;
 import org.zbi.server.model.facade.FacadeUser;
-import org.zbi.server.model.response.ColumnInfoResp;
 import org.zbi.server.model.response.ModelInfoResp;
 import org.zbi.server.model.service.LoginUserService;
 import org.zbi.server.model.service.ModelService;
@@ -355,16 +354,14 @@ public class MysqlConfigDaoService extends DaoServiceBase implements ConfigDaoSe
 	public ModelInfoResp getModelInfo(String modelID) {
 		// TODO Auto-generated method stub
 		List<QueryColumn> columns = this.queryModelMapper.listQueryColumn(modelID);
-		List<ColumnInfoResp> dims = new ArrayList<>();
-		List<ColumnInfoResp> meas = new ArrayList<>();
+		List<ConfigColumn> dims = new ArrayList<>();
+		List<ConfigColumn> meas = new ArrayList<>();
 		for (QueryColumn col : columns) {
 			ConfigColumn cc = this.modelService.getColumn(col.getColID());
-			ColumnInfoResp ci = new ColumnInfoResp();
-			BeanUtils.copyProperties(cc, ci);
 			if (cc.isMeasure()) {
-				meas.add(ci);
+				meas.add(cc);
 			} else {
-				dims.add(ci);
+				dims.add(cc);
 			}
 		}
 

@@ -15,7 +15,6 @@ import org.zbi.server.mapper.mysql.BoardInfoMapper;
 import org.zbi.server.mapper.mysql.FolderInfoMapper;
 import org.zbi.server.model.exception.AdminException;
 import org.zbi.server.model.facade.FacadeFolder;
-import org.zbi.server.model.response.BoardInfoResp;
 import org.zbi.server.model.service.LoginUserService;
 
 @Component
@@ -50,10 +49,10 @@ public class MysqlFolderDaoService implements FolderDaoService {
 		for (FolderInfo folder : folders) {
 			FacadeFolder ff = new FacadeFolder();
 			BeanUtils.copyProperties(folder, ff);
-			List<BoardInfoResp> list = new ArrayList<>();
+			List<BoardInfo> list = new ArrayList<>();
 			for (BoardInfo board : boards) {
 				if (board.getFolderID().equals(folder.getFolderID())) {
-					BoardInfoResp br = new BoardInfoResp();
+					BoardInfo br = new BoardInfo();
 					BeanUtils.copyProperties(board, br);
 					list.add(br);
 				}

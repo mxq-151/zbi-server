@@ -31,16 +31,14 @@ public class UserController extends BaseController {
 
 	@Autowired
 	UserDaoService userDaoService;
-	
+
 	@Autowired
 	LoginUserService loginUserService;
-	
+
 	@Autowired
 	private DefaultTokenServices defaultTokenServices;
-	
+
 	private final Logger logger = LoggerFactory.getLogger(UserController.class);
-
-
 
 	@RequestMapping(value = "/search", method = RequestMethod.GET)
 	@ApiOperation(value = "加载用户", code = 200, httpMethod = "GET", response = FacadeUser.class)
@@ -57,26 +55,23 @@ public class UserController extends BaseController {
 
 		return this.userDaoService.loadAllUser();
 	}
-	
-	
+
 	@RequestMapping(value = "/logout", method = RequestMethod.GET)
 	@ApiOperation(value = "加载用户组权限", code = 200, httpMethod = "GET")
 	public boolean logOut(HttpServletRequest request) throws LoginException {
 		String authorization = request.getHeader("Authorization");
-	    if (authorization != null && authorization.contains("Bearer")){
-	    	String email=this.loginUserService.getLoginUser().getEmail();
-	    	this.logger.info("user {} logout",email);
-	        String tokenId = authorization.substring("Bearer".length()+1);
-	        defaultTokenServices.revokeToken(tokenId);
-	        return true;
-	    }
-	    return false;
+		if (authorization != null && authorization.contains("Bearer")) {
+			String email = this.loginUserService.getLoginUser().getEmail();
+			this.logger.info("user {} logout", email);
+			String tokenId = authorization.substring("Bearer".length() + 1);
+			defaultTokenServices.revokeToken(tokenId);
+			return true;
+		}
+		return false;
 	}
 
-	
-
 	@RequestMapping(value = "/rights", method = RequestMethod.GET)
-	@ApiOperation(value = "加载用户组权限", code = 200, httpMethod = "GET", response = FacadeUser.class)
+	@ApiOperation(value = "加载用户组权限", code = 200, httpMethod = "GET")
 	public List<JSONObject> rights() throws LoginException {
 
 		List<JSONObject> array = new ArrayList<>();
@@ -90,7 +85,7 @@ public class UserController extends BaseController {
 	}
 
 	@RequestMapping(value = "/roles", method = RequestMethod.GET)
-	@ApiOperation(value = "加载角色", code = 200, httpMethod = "GET", response = FacadeUser.class)
+	@ApiOperation(value = "加载角色", code = 200, httpMethod = "GET")
 	public List<JSONObject> roles() throws LoginException {
 
 		List<JSONObject> array = new ArrayList<>();

@@ -20,8 +20,6 @@ import org.zbi.server.model.facade.FacadeBoard;
 
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
-import io.swagger.annotations.ApiResponse;
-import io.swagger.annotations.ApiResponses;
 
 @RestController
 @RequestMapping("/board/v1")
@@ -35,7 +33,6 @@ public class BoardController extends BaseController {
 
 	@RequestMapping(value = "/get/board", method = RequestMethod.GET)
 	@ApiOperation(value = "获取看板列表接口", code = 200, httpMethod = "GET", response = FacadeBoard.class)
-	@ApiResponses({ @ApiResponse(code = 400, message = "请求错误"), @ApiResponse(code = 500, message = "响应失败") })
 	public BoardInfo getBoard(
 			@Valid @RequestParam(required = true) @ApiParam(value = "看板ID", required = true) String boardID)
 			throws QueryException {
@@ -46,7 +43,6 @@ public class BoardController extends BaseController {
 
 	@RequestMapping(value = "/get/boards", method = RequestMethod.GET)
 	@ApiOperation(value = "获取看板列表接口", code = 200, httpMethod = "GET", response = FacadeBoard.class)
-	@ApiResponses({ @ApiResponse(code = 400, message = "请求错误"), @ApiResponse(code = 500, message = "响应失败") })
 	public List<FacadeBoard> getBoards(
 			@Valid @RequestParam(required = true) @ApiParam(value = "文件夹ID", required = true) String folderID)
 			throws QueryException {
@@ -55,8 +51,7 @@ public class BoardController extends BaseController {
 	}
 
 	@RequestMapping(value = "/delete/board", method = RequestMethod.GET)
-	@ApiOperation(value = "删除看板列表接口", code = 200, httpMethod = "GET", response = FacadeBoard.class, responseContainer = "List")
-	@ApiResponses({ @ApiResponse(code = 400, message = "请求错误"), @ApiResponse(code = 500, message = "响应失败") })
+	@ApiOperation(value = "删除看板列表接口", code = 200, httpMethod = "GET")
 	public boolean deleteBoard(
 			@Valid @RequestParam(required = true) @ApiParam(value = "看板ID", required = true) String boardID)
 			throws AdminException, QueryException {
@@ -64,8 +59,7 @@ public class BoardController extends BaseController {
 	}
 
 	@RequestMapping(value = "/create/board", method = RequestMethod.GET)
-	@ApiOperation(value = "保存看板", code = 200, httpMethod = "GET", response = FacadeBoard.class)
-	@ApiResponses({ @ApiResponse(code = 400, message = "请求错误"), @ApiResponse(code = 500, message = "响应失败") })
+	@ApiOperation(value = "保存看板", code = 200, httpMethod = "GET", response = BoardInfo.class)
 	public BoardInfo createNewBoard(
 			@Valid @RequestParam(required = true) @ApiParam(value = "看板名称", required = true) String boardName,
 			@Valid @RequestParam(required = true) @ApiParam(value = "看板描述", required = true) String boardDesc,
@@ -76,8 +70,7 @@ public class BoardController extends BaseController {
 	}
 
 	@RequestMapping(value = "/update/board", method = RequestMethod.POST)
-	@ApiOperation(value = "保存看板", code = 200, httpMethod = "POST", response = FacadeBoard.class)
-	@ApiResponses({ @ApiResponse(code = 400, message = "请求错误"), @ApiResponse(code = 500, message = "响应失败") })
+	@ApiOperation(value = "保存看板", code = 200, httpMethod = "POST", response = BoardInfo.class)
 	public BoardInfo updateBoard(
 			@Valid @RequestParam(required = true) @ApiParam(value = "看板ID", required = true) String boardID,
 			@Valid @RequestBody @ApiParam(value = "看板样式", required = true) Map<String, Object> otherParam)
@@ -87,8 +80,7 @@ public class BoardController extends BaseController {
 	}
 
 	@RequestMapping(value = "/update/name", method = RequestMethod.GET)
-	@ApiOperation(value = "看板名称", code = 200, httpMethod = "GET", response = FacadeBoard.class)
-	@ApiResponses({ @ApiResponse(code = 400, message = "请求错误"), @ApiResponse(code = 500, message = "响应失败") })
+	@ApiOperation(value = "看板名称", code = 200, httpMethod = "GET", response = BoardInfo.class)
 	public BoardInfo updateBoard(
 			@Valid @RequestParam(required = true) @ApiParam(value = "看板ID", required = true) String boardID,
 			@Valid @RequestParam(required = true) @ApiParam(value = "看板名称", required = true) String boardName,

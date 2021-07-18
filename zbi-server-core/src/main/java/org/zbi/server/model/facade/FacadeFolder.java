@@ -2,8 +2,8 @@ package org.zbi.server.model.facade;
 
 import java.util.List;
 
+import org.zbi.server.entity.mysql.BoardInfo;
 import org.zbi.server.entity.mysql.FolderInfo;
-import org.zbi.server.model.response.BoardInfoResp;
 
 import io.swagger.annotations.ApiModelProperty;
 
@@ -18,13 +18,13 @@ public class FacadeFolder extends FolderInfo {
 	 * 看板
 	 */
 	@ApiModelProperty(required = false, value = "文件夹下看板ID")
-	private List<BoardInfoResp> boards;
+	private List<BoardInfo> boards;
 
-	public List<BoardInfoResp> getBoards() {
+	public List<BoardInfo> getBoards() {
 		return boards;
 	}
 
-	public void setBoards(List<BoardInfoResp> boards) {
+	public void setBoards(List<BoardInfo> boards) {
 		this.boards = boards;
 	}
 
