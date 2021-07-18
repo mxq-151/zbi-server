@@ -3,6 +3,10 @@ package org.zbi.server.rest.controller;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.servlet.http.HttpServletRequest;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -14,6 +18,8 @@ import org.zbi.server.entity.mysql.UserInfo;
 import org.zbi.server.model.exception.AdminException;
 import org.zbi.server.model.exception.LoginException;
 import org.zbi.server.model.facade.FacadeUser;
+import org.zbi.server.model.service.LoginUserService;
+import org.zbi.server.rest.config.AuthorizationServerConfig.DefaultTokenServices;
 
 import com.alibaba.fastjson.JSONObject;
 
@@ -25,6 +31,14 @@ public class UserController extends BaseController {
 
 	@Autowired
 	UserDaoService userDaoService;
+	
+	@Autowired
+	LoginUserService loginUserService;
+	
+	@Autowired
+	private DefaultTokenServices defaultTokenServices;
+	
+	private final Logger logger = LoggerFactory.getLogger(UserController.class);
 
 
 
@@ -42,6 +56,21 @@ public class UserController extends BaseController {
 		}
 
 		return this.userDaoService.loadAllUser();
+	}
+	
+	
+	@RequestMapping(value = "/logout", method = RequestMethod.GET)
+	@ApiOperation(value = "加载用户组权限", code = 200, httpMethod = "GET")
+	public boolean logOut(HttpServletRequest request) throws LoginException {
+		String authorization = request.getHeader("Authorization");
+	    if (authorization != null && authorization.contains("Bearer")){
+	    	String email=this.loginUserService.getLoginUser().getEmail();
+	    	this.logger.info("user {} logout",email);
+	        String tokenId = authorization.substring("Bearer".length()+1);
+	        defaultTokenServices.revokeToken(tokenId);
+	        return true;
+	    }
+	    return false;
 	}
 
 	

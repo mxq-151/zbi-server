@@ -17,7 +17,7 @@ import org.zbi.server.model.facade.FacadeBoard;
 import org.zbi.server.model.service.LoginUserService;
 
 @Component
-public class MysqlBoardDaoService implements BoardDaoService {
+public class MysqlBoardDaoService extends DaoServiceBase implements BoardDaoService {
 
 	@Autowired
 	FolderInfoMapper folderInfoMapper;
@@ -51,6 +51,8 @@ public class MysqlBoardDaoService implements BoardDaoService {
 		board.setBoardVersion(BoardVersion.V1);
 		board.setOtherParams(Collections.emptyMap());
 		board.setFolderID(folderID);
+		this.preHandle(board);
+		board.setAdminID(this.loginUserService.getLoginUser().getUserID());
 		boardInfoMapper.createBoard(board);
 		return board;
 

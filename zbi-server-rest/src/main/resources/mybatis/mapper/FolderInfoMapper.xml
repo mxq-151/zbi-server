@@ -29,6 +29,12 @@
 		from group_board where group_id in (select group_id from group_user
 		where user_id=#{userID})))
 	</select>
+	
+	
+	<select id="getFolder" resultMap="folderInfoResultMap">
+		select * from
+		zbi_db.folder_info where folder_id=#{folderID}
+	</select>
 
 	<select id="getAdminFolders" resultMap="folderInfoResultMap">
 		select * from

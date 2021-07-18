@@ -32,7 +32,6 @@ import org.zbi.server.model.facade.FacadeBoard;
 import org.zbi.server.model.facade.FacadeFolder;
 import org.zbi.server.model.facade.FacadeGroup;
 import org.zbi.server.model.facade.FacadeJoin;
-import org.zbi.server.model.facade.FacadeModel;
 import org.zbi.server.model.facade.FacadeTable;
 import org.zbi.server.model.facade.FacadeUser;
 import org.zbi.server.model.response.ModelDescResp;

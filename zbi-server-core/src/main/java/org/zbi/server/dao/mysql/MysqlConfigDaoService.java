@@ -1,5 +1,6 @@
 package org.zbi.server.dao.mysql;
 
+import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
@@ -10,6 +11,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 import org.zbi.server.dao.service.ConfigDaoService;
 import org.zbi.server.entity.mysql.ConnInfo;
 import org.zbi.server.entity.mysql.ConnParam;
@@ -43,6 +45,7 @@ import org.zbi.server.model.service.LoginUserService;
 import org.zbi.server.model.service.ModelService;
 
 @Component
+@Transactional(rollbackFor = { SQLException.class, IOException.class })
 public class MysqlConfigDaoService extends DaoServiceBase implements ConfigDaoService {
 
 	@Autowired
@@ -117,6 +120,7 @@ public class MysqlConfigDaoService extends DaoServiceBase implements ConfigDaoSe
 			if (col.getUuid() == null) {
 				col.setUuid(java.util.UUID.randomUUID().toString());
 			}
+			col.setTableID(table.getTableID());
 			this.preHandle(col);
 		}
 		ConfigTable ct = new ConfigTable();
@@ -148,7 +152,19 @@ public class MysqlConfigDaoService extends DaoServiceBase implements ConfigDaoSe
 	public List<ConfigColumn> getConfigColumns(String tableID) throws AdminException {
 		// TODO Auto-generated method stub
 		this.developConfigCheck();
-		return this.configColumnMapper.listColumnsByTableID(tableID);
+		List<ConfigColumn> columns = this.configColumnMapper.listColumnsByTableID(tableID);
+		if (columns.isEmpty()) {
+			ConfigTable table = this.configTableMapper.selectByPrimaryKey(tableID);
+			try {
+				return this.engineFactory.getQueryEngine(table.getConnID()).fetchMeta(table.getTableName(),
+						table.getProject());
+			} catch (IOException | ParseException | SQLException e) {
+				// TODO Auto-generated catch block
+				throw new AdminException(e.getMessage());
+			}
+		} else {
+			return columns;
+		}
 	}
 
 	@Override
@@ -290,14 +306,13 @@ public class MysqlConfigDaoService extends DaoServiceBase implements ConfigDaoSe
 	@Override
 	public List<QueryColumn> listQueryColumn(String modelID) {
 		// TODO Auto-generated method stub
-		List<QueryColumn> columns= this.queryModelMapper.listQueryColumn(modelID);
-		List<QueryColumn> fcs=new ArrayList<>();
-		
-		for(QueryColumn column:columns)
-		{
-			FacadeColumn fc=new FacadeColumn();
+		List<QueryColumn> columns = this.queryModelMapper.listQueryColumn(modelID);
+		List<QueryColumn> fcs = new ArrayList<>();
+
+		for (QueryColumn column : columns) {
+			FacadeColumn fc = new FacadeColumn();
 			BeanUtils.copyProperties(column, fc);
-			ConfigColumn cc=this.modelService.getColumn(column.getColID());
+			ConfigColumn cc = this.modelService.getColumn(column.getColID());
 			fc.setChinese(cc.getChinese());
 			fc.setColName(cc.getColName());
 			fcs.add(fc);
@@ -372,7 +387,7 @@ public class MysqlConfigDaoService extends DaoServiceBase implements ConfigDaoSe
 	}
 
 	@Override
-	public void inserParam(List<ConnParam> list) throws AdminException, SQLException, ParseException {
+	public void inserParam(List<ConnParam> list) throws AdminException, ParseException, SQLException {
 		// TODO Auto-generated method stub
 		this.developConfigCheck();
 		ConnInfo connInfo = this.connInfoMapper.loadConnInfo(list.get(0).getConnID());
@@ -397,8 +412,7 @@ public class MysqlConfigDaoService extends DaoServiceBase implements ConfigDaoSe
 	public void saveJoins(List<ConfigJoin> joins) {
 		// TODO Auto-generated method stub
 		for (ConfigJoin join : joins) {
-			if(StringUtils.isBlank(join.getJoinID()))
-			{
+			if (StringUtils.isBlank(join.getJoinID())) {
 				join.setJoinID(java.util.UUID.randomUUID().toString());
 			}
 			this.configJoinMapper.insertJoin(join);
@@ -416,21 +430,20 @@ public class MysqlConfigDaoService extends DaoServiceBase implements ConfigDaoSe
 	@Override
 	public List<FacadeJoin> loadJoins() {
 		// TODO Auto-generated method stub
-		List<ConfigJoin> joins=this.configJoinMapper.loadAllJoins();
-		List<FacadeJoin> list=new ArrayList<>();
-		for(ConfigJoin join:joins)
-		{
-			FacadeJoin fj=new FacadeJoin();
+		List<ConfigJoin> joins = this.configJoinMapper.loadAllJoins();
+		List<FacadeJoin> list = new ArrayList<>();
+		for (ConfigJoin join : joins) {
+			FacadeJoin fj = new FacadeJoin();
 			BeanUtils.copyProperties(join, fj);
-			
-			ConfigColumn cc=this.modelService.getColumn(join.getColID1());
+
+			ConfigColumn cc = this.modelService.getColumn(join.getColID1());
 			fj.setColName1(cc.getColName());
-			cc=this.modelService.getColumn(join.getColID2());
+			cc = this.modelService.getColumn(join.getColID2());
 			fj.setColName2(cc.getColName());
-			
-			ConfigTable table=this.modelService.getTable(join.getTblID1());
+
+			ConfigTable table = this.modelService.getTable(join.getTblID1());
 			fj.setTableName1(table.getTableName());
-			table=this.modelService.getTable(join.getTblID1());
+			table = this.modelService.getTable(join.getTblID1());
 			fj.setTableName2(table.getTableName());
 			list.add(fj);
 		}
@@ -444,7 +457,7 @@ public class MysqlConfigDaoService extends DaoServiceBase implements ConfigDaoSe
 		this.preHandle(queryColumns);
 		this.queryModelMapper.deleteQueryColumn(modelID);
 		this.queryModelMapper.batchInsert(queryColumns);
-		
+
 	}
 
 	@Override
@@ -452,7 +465,7 @@ public class MysqlConfigDaoService extends DaoServiceBase implements ConfigDaoSe
 		// TODO Auto-generated method stub
 		this.developConfigCheck();
 		this.queryModelMapper.deleteModel(modelID);
-		
+
 	}
 
 }

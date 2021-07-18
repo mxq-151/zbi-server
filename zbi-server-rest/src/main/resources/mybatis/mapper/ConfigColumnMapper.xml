@@ -80,7 +80,7 @@
 		select
 		<include refid="Base_Column_List" />
 		from config_column
-		where table_id = #{tableID,jdbcType=VARCHAR}
+		where table_id = #{tableID,jdbcType=VARCHAR} order by agg_type
 	</select>
 
 </mapper>

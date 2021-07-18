@@ -66,6 +66,9 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
 	
 	@Autowired
 	private UserInfoMapper userInfoMapper;
+	
+	@Autowired
+	private DefaultTokenServices defaultTokenServices;
 
 	// 指定密码的加密方式
 	@Bean
@@ -82,7 +85,7 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
 	@Override
 	public void configure(AuthorizationServerEndpointsConfigurer endpoints) {
 
-		endpoints.tokenServices(getAuthorizationServerTokenServices());
+		endpoints.tokenServices(defaultTokenServices);
 		endpoints.tokenStore(tokenStore) // 配置令牌的存储（这里存放在内存中）
 				.authenticationManager(authenticationManager).userDetailsService(userDetailsService);
 	}
@@ -93,7 +96,8 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
 		security.allowFormAuthenticationForClients();
 	}
 
-	private DefaultTokenServices getAuthorizationServerTokenServices() {
+	@Bean
+	public DefaultTokenServices getAuthorizationServerTokenServices() {
 		DefaultTokenServices tokenService= new DefaultTokenServices();
 		tokenService.setAuthenticationManager(authenticationManager);
 		tokenService.setTokenStore(tokenStore);

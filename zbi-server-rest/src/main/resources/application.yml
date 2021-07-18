@@ -23,6 +23,11 @@ spring:
         max_wait_millis: 10000 #最大连接等待时长 单位:ms
   session:
     store-type: none
+    
+    
+  jackson:
+    date-format: yyyy-MM-dd HH:mm:ss
+    time-zone: GMT+8
 
 mybatis:
    mapper-locations: classpath:mybatis/mapper/*Mapper.xml
