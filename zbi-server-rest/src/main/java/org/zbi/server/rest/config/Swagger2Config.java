@@ -1,13 +1,17 @@
 package org.zbi.server.rest.config;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.web.bind.annotation.RestController;
 
-import io.swagger.annotations.Api;
+import springfox.documentation.builders.ApiInfoBuilder;
+import springfox.documentation.builders.ParameterBuilder;
 import springfox.documentation.builders.PathSelectors;
 import springfox.documentation.builders.RequestHandlerSelectors;
+import springfox.documentation.schema.ModelRef;
 import springfox.documentation.service.ApiInfo;
 import springfox.documentation.service.Parameter;
 import springfox.documentation.spi.DocumentationType;
@@ -19,30 +23,29 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
  */
 @Configuration
 @EnableSwagger2
-public abstract class Swagger2Config {
+public class Swagger2Config {
+	
 
-    /**
-     * swagger2的配置对象
-     * 把一个配置好的docket,(swagger2的配置对象) 交给springboot来管理
-     *
-     * @return
-     */
-    @Bean
-    public Docket apiConnfig() {
-        Docket build = new Docket(DocumentationType.SWAGGER_2)
-                .apiInfo(apiInfo())
-                .select()
-                .apis(RequestHandlerSelectors.withClassAnnotation(Api.class))
-                .paths(PathSelectors.any())
-                .build();
-        List<Parameter> parameters = setHeader();
-        if (parameters != null && parameters.size() > 0) {
-            build.globalOperationParameters(parameters);
-        }
-        return build;
-    }
+	@Bean
+	public Docket apiConnfig() {
+		
+		ParameterBuilder tokenPar = new ParameterBuilder();
+        List<Parameter> pars = new ArrayList<>();
+        tokenPar.name("Authorization").description("令牌").modelRef(new ModelRef("string")).parameterType("header").required(true).build();
+        pars.add(tokenPar.build());
+		
+		Docket build = new Docket(DocumentationType.SWAGGER_2)
+				.apiInfo(apiInfo())
+				.select()
+				.apis(RequestHandlerSelectors.withClassAnnotation(RestController.class))
+				.paths(PathSelectors.any())
+				.build();
+		build.globalOperationParameters(pars);
+		return build;
+	}
 
-    protected abstract ApiInfo apiInfo();
+	private ApiInfo apiInfo() {
+		return new ApiInfoBuilder().build();
+	}
 
-    protected abstract List<Parameter> setHeader();
 }

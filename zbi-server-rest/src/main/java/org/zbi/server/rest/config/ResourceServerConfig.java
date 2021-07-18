@@ -18,6 +18,9 @@ public class ResourceServerConfig extends ResourceServerConfigurerAdapter {
 	// 配置 URL 访问权限
 	@Override
 	public void configure(HttpSecurity http) throws Exception {
-		http.authorizeRequests().anyRequest().authenticated();
+		http.authorizeRequests()
+		.antMatchers("/v2/**", "/webjars/**", "/swagger-resources/**", "/swagger-ui.html", "/oauth/**", "/nacos-data-transfer/security/**",
+				"/security/**")
+		.permitAll().anyRequest().authenticated();
 	}
 }
