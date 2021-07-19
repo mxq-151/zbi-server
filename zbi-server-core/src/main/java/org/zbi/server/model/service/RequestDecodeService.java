@@ -37,32 +37,40 @@ public class RequestDecodeService {
 					newDims.add(dim);
 					continue;
 				}
-				boolean find = false;
-				for (String col : queryCols) {
-					if (dim.getUuid().equals(col)) {
-						find = true;
-						newDims.add(dim);
-						List<String> limits = this.configDaoService.loadDataLimit(col);
 
-						if (limits.isEmpty()) {
-							continue;
-						}
+				if(!queryCols.isEmpty())
+				{
+					boolean find = false;
+					for (String col : queryCols) {
+						if (dim.getUuid().equals(col)) {
+							find = true;
+							newDims.add(dim);
+							List<String> limits = this.configDaoService.loadDataLimit(col);
 
-						List<RequestCondition> conditions = param.getConditions();
-						if (conditions == null) {
-							continue;
-						}
+							if (limits.isEmpty()) {
+								continue;
+							}
 
-						for (RequestCondition condition : conditions) {
-							if (condition.getUuid().equals(col)) {
-								condition.getRequestValue().addAll(limits);
+							List<RequestCondition> conditions = param.getConditions();
+							if (conditions == null) {
+								continue;
+							}
+
+							for (RequestCondition condition : conditions) {
+								if (condition.getUuid().equals(col)) {
+									condition.getRequestValue().addAll(limits);
+								}
 							}
 						}
 					}
+					if (!find) {
+						logger.info("cant not  find col for {} in model {}", dim.getUuid(), param.getModelID());
+					}
+				}else
+				{
+					newDims.add(dim);
 				}
-				if (!find) {
-					logger.info("cant not  find col for {} in model {}", dim.getUuid(), param.getModelID());
-				}
+				
 			}
 		}
 
@@ -73,16 +81,24 @@ public class RequestDecodeService {
 					newMeasures.add(measure);
 					continue;
 				}
-				boolean find = false;
-				for (String col : queryCols) {
-					if (measure.getUuid().equals(col)) {
-						newMeasures.add(measure);
-						find = true;
+				
+				if(!queryCols.isEmpty())
+				{
+					boolean find = false;
+					for (String col : queryCols) {
+						if (measure.getUuid().equals(col)) {
+							newMeasures.add(measure);
+							find = true;
+						}
 					}
+					if (!find) {
+						logger.info("cant not  find col for {} in model {}", measure.getUuid(), param.getModelID());
+					}
+				}else
+				{
+					newMeasures.add(measure);
 				}
-				if (!find) {
-					logger.info("cant not  find col for {} in model {}", measure.getUuid(), param.getModelID());
-				}
+				
 			}
 
 		}

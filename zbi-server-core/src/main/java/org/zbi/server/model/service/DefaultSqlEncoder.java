@@ -27,8 +27,8 @@ public class DefaultSqlEncoder implements ISqlEncoder {
 		ConfigTable mainTable = model.getMainTable();
 		sb.append(" from ");
 		if (mainTable.isSource()) {
-			sb.append(mainTable.getProject()).append(".").append(mainTable.getTableName()).append(" as ")
-					.append(mainTable.getTblAlias());
+			sb.append("`").append(mainTable.getProject()).append("`").append(".").append("`").append(mainTable.getTableName()).append("`").append(" as ").append("`")
+					.append(mainTable.getTblAlias()).append("`");
 		} else {
 			String sql = this.encodeSql(null);
 			sb.append("(").append(sql).append(") as ").append(mainTable.getTblAlias());
