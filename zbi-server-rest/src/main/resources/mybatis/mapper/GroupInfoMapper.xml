@@ -23,13 +23,13 @@
 		<result column="role_type" property="roleType" />
 	</resultMap>
 
-	<insert id="createGroup">
+	<insert id="saveGroup">
 		insert into
 		zbi_db.group_info(group_id,group_name,group_desc,admin_id,last_updater)
 		values(#{groupID},#{groupName},#{groupDesc},#{adminID},#{lastUpdater})
 	</insert>
 
-	<insert id="addUserToGroup" parameterType="map">
+	<insert id="saveUserToGroup" parameterType="map">
 		<!--@mbg.generated -->
 		insert into group_user
 		(`group_id`,`user_id`,
@@ -43,12 +43,12 @@
 		</foreach>
 	</insert>
 
-	<select id="getGroupInfoById" resultMap="groupInfoResultMap">
+	<select id="loadGroupInfoById" resultMap="groupInfoResultMap">
 		select * from
 		zbi_db.group_info where group_id=#{groupID}
 	</select>
 
-	<select id="getAdminGroup" resultMap="groupInfoResultMap">
+	<select id="loadAdminGroup" resultMap="groupInfoResultMap">
 		select * from
 		zbi_db.group_info where admin_id=#{adminID}
 	</select>
@@ -59,7 +59,7 @@
 		group_name=#{groupName}
 	</select>
 
-	<select id="getGroupUsers" resultMap="userResultMap">
+	<select id="loadGroupUsers" resultMap="userResultMap">
 		select b.* from
 		zbi_db.group_user as a left join zbi_db.user_info as b on
 		a.user_id=b.user_id where group_id=#{groupID}

@@ -7,9 +7,9 @@ import org.zbi.server.entity.mysql.GroupBoard;
 
 public interface GroupAndBoardMapper {
 
-	public List<BoardInfo> getBoardInGroup(String groupID);
+	public List<BoardInfo> loadBoardInGroup(String groupID);
 
-	public boolean addBoardToGroup(List<GroupBoard> list);
+	public boolean saveBoardToGroup(List<GroupBoard> list);
 
 	public boolean deleteBoardInGroup(String groupID);
 

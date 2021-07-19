@@ -32,7 +32,7 @@ public class ConfigController extends BaseController {
 
 	@RequestMapping(value = "/create/group", method = RequestMethod.GET)
 	@ApiOperation(value = "获取看板列表接口", code = 200, httpMethod = "GET", response = FacadeBoard.class)
-	public FacadeGroup createGroup(@ApiParam(value = "用户组名", required = true) String groupName) throws AdminException {
+	public FacadeGroup createGroup( @ApiParam(value = "用户组名", required = true) String groupName) throws AdminException {
 		return this.groupDaoService.createGroup(groupName, null);
 
 	}

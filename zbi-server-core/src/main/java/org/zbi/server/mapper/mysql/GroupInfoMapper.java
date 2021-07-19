@@ -8,17 +8,17 @@ import org.zbi.server.model.facade.FacadeUser;
 
 public interface GroupInfoMapper {
 
-	public boolean createGroup(GroupInfo groupInfo);
+	public boolean saveGroup(GroupInfo groupInfo);
 
-	public GroupInfo getGroupInfoById(String groupID);
+	public GroupInfo loadGroupInfoById(String groupID);
 
-	public List<FacadeUser> getGroupUsers(String groupID);
+	public List<FacadeUser> loadGroupUsers(String groupID);
 
 	public boolean checkGroupByName(String groupName, String adminID);
 
 	public List<GroupInfo> getAdminGroup(String adminID);
 
-	public int addUserToGroup(List<GroupUser> users);
+	public int saveUserToGroup(List<GroupUser> users);
 
 	public int deleteUserInGroup(String groupID);
 

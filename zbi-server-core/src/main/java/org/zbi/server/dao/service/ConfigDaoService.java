@@ -1,83 +1,61 @@
 package org.zbi.server.dao.service;
 
-import java.sql.SQLException;
 import java.util.List;
 
-import org.zbi.server.entity.mysql.ConnInfo;
-import org.zbi.server.entity.mysql.ConnParam;
 import org.zbi.server.entity.mysql.GroupColLimit;
-import org.zbi.server.entity.mysql.QueryColumn;
 import org.zbi.server.entity.mysql.QueryModel;
-import org.zbi.server.entity.mysql.UserColLimit;
-import org.zbi.server.model.config.ConfigColumn;
-import org.zbi.server.model.config.ConfigJoin;
-import org.zbi.server.model.config.ConfigTable;
-import org.zbi.server.model.exception.AdminException;
-import org.zbi.server.model.exception.ParseException;
-import org.zbi.server.model.facade.FacadeJoin;
-import org.zbi.server.model.facade.FacadeTable;
 import org.zbi.server.model.response.ModelInfoResp;
 
 public interface ConfigDaoService {
 
-	public List<QueryModel> getModelDscriptions(String key);
-
-	public void saveConfigTable(FacadeTable table) throws AdminException;
-
-	public void deleteConfigTable(String tableID) throws AdminException;
-
-	public List<ConfigTable> queryConfigTables(boolean source) throws AdminException;
-
-	public List<ConfigColumn> getConfigColumns(String tableID) throws AdminException;
-
-	public List<String> queryUserTotalColLimit(String modelID);
-
-	public List<GroupColLimit> queryGroupColLimit(String groupID, String modelID);
-
-	public List<UserColLimit> queryUserColLimit(String userID, String modelID);
-
-	public List<String> getDataLimit(String colID);
-
-	public void insertUserColLimit(List<String> cols, String userID, String modelID);
-
-	public void insertGroupColLimit(List<String> cols, String groupID, String modelID);
-
-	public void insertUserDataLimit(List<String> words, String userID, String colID);
-
-	public List<String> queryUserDataLimit(String userID, String colID);
-
-	public void insertGroupDataLimit(List<String> words, String groupID, String colID);
-
-	public List<String> queryGroupDataLimit(String groupID, String colID);
-
-	public List<String> queryUserTotalDataLimit(String userID, String colID);
-
-	public void saveModel(String modelName) throws AdminException;
+	/**
+	 * 保存用户组字段权限
+	 * */
+	public List<GroupColLimit> loadGroupColLimit(String groupID, String modelID);
 	
-	public void deleteModel(String modelID)throws AdminException;
+	/**
+	 * 获取用户字段权限
+	 * */
+	public List<String> loadColLimit(String colID);
 
-	public void saveQueryColumn(String modelID,List<QueryColumn> queryColumns) throws AdminException;
+	/**
+	 * 保存用户组字段权限
+	 * */
+	public void saveGroupColLimit(List<String> cols, String groupID, String modelID);
 
-	public List<QueryColumn> listQueryColumn(String modelID);
+	/**
+	 * 保存用户组数据权限
+	 * */
+	public void saveGroupDataLimit(List<String> words, String groupID, String colID);
 
-	public List<QueryModel> listQueryModel();
+	/**
+	 * 获取用户组数据权限
+	 * */
+	public List<String> loadGroupDataLimit(String groupID, String colID);
 
-	public ModelInfoResp getModelInfo(String modelID);
+	/**
+	 * 获取用户数据权限
+	 * */
+	public List<String> loadDataLimit(String colID);
+	
+	/**
+	 * 获取用户模型列表
+	 * */
+	public List<QueryModel> loadModel(String key);
+	
+	/**
+	 * 获取用户用户模型列表
+	 * */
+	public List<QueryModel> loadGroupModel(String groupID);
+	
+	/**
+	 * 保存用户组的模型权限
+	 * */
+	public void saveGroupModel(String groupID,String modelID);
 
-	List<QueryModel> listQueryModelByGroup(String groupID);
-
-	public void saveConnect(ConnInfo conn) throws AdminException;
-
-	public void inserParam(List<ConnParam> list) throws AdminException, SQLException, ParseException;
-
-	public List<ConnInfo> loadConn();
-
-	public List<ConnParam> getParams(String connID);
-
-	public void saveJoins(List<ConfigJoin> joins);
-
-	public boolean deleteJoin(String joinID);
-
-	public List<FacadeJoin> loadJoins();
+	/**
+	 * 获取模型详情
+	 * */
+	public ModelInfoResp loadModelInfo(String modelID);
 
 }

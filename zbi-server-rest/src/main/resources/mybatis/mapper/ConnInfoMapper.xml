@@ -20,13 +20,13 @@
 		<result column="param_val" property="paramVal" />
 	</resultMap>
 
-	<insert id="createConnect">
+	<insert id="saveConnect">
 		insert into
 		zbi_db.conn_info(conn_id,conn_name,engine_type,url,last_updater)
 		values(#{connID},#{connName},#{engineType},#{url},#{lastUpdater})
 	</insert>
 
-	<insert id="inserParam" parameterType="map">
+	<insert id="saveParam" parameterType="map">
 		<!--@mbg.generated -->
 		insert into zbi_db.conn_param
 		(`conn_id`,`param_key`,`param_val`)
@@ -43,7 +43,7 @@
 		zbi_db.conn_param where conn_id=#{connID}
 	</delete>
 
-	<select id="getParams" resultMap="connParamResultMap">
+	<select id="loadParam" resultMap="connParamResultMap">
 		select * from zbi_db.conn_param
 		where conn_id=#{connID}
 	</select>

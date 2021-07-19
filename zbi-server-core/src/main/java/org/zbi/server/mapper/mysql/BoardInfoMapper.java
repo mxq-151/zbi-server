@@ -10,13 +10,13 @@ import org.zbi.server.model.facade.FacadeBoard;
 @Mapper
 public interface BoardInfoMapper {
 
-	public boolean createBoard(BoardInfo board);
+	public boolean saveBoard(BoardInfo board);
 
-	public BoardInfo getBoardByID(String boardID);
+	public BoardInfo loadBoardByID(String boardID);
 
-	public List<FacadeBoard> getBoardByFolder(String folderID);
+	public List<FacadeBoard> loadBoardByFolder(String folderID);
 
-	public List<BoardInfo> getBoardByFolders(List<String> list);
+	public List<BoardInfo> loadBoardByFolders(List<String> list);
 
 	public boolean checkBoardName(String boardName);
 

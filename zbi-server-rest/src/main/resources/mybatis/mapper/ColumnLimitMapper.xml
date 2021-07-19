@@ -21,15 +21,7 @@
 		<result column="last_updater" property="lastUpdater" />
 	</resultMap>
 
-	<insert id="insertUserColLimit" parameterType="map">
-		insert into zbi_db.user_col_limit (user_id,col_id,model_id)
-		values
-		<foreach collection="list" item="item" separator=",">
-			(#{item.userID},#{item.colID},#{item.modelID})
-		</foreach>
-	</insert>
-
-	<insert id="insertGroupColLimit" parameterType="map">
+	<insert id="saveGroupColLimit" parameterType="map">
 		insert into zbi_db.group_col_limit (group_id,col_id,model_id,last_updater)
 		values
 		<foreach collection="list" item="item" separator=",">
@@ -37,7 +29,7 @@
 		</foreach>
 	</insert>
 
-	<select id="queryUserTotalColLimit" resultType="string">
+	<select id="loadColLimit" resultType="string">
 		select distinct
 		col_id from
 		zbi_db.group_col_limit where group_id in(select distinct
@@ -47,22 +39,12 @@
 		zbi_db.user_col_limit where user_id=#{userID}
 	</select>
 
-	<select id="queryGroupColLimit" resultMap="groupResultMap">
+	<select id="loadGroupColLimit" resultMap="groupResultMap">
 		select * from
 		zbi_db.group_col_limit where group_id=#{groupID} AND
 		model_id=#{modelID}
 	</select>
 
-	<select id="queryUserColLimit" resultMap="userResultMap">
-		select * from
-		zbi_db.user_col_limit where user_id=#{userID} AND
-		model_id=#{modelID}
-	</select>
-
-	<delete id="deleteUserColLimit">
-		delete from zbi_db.user_col_limit where
-		user_id=#{userID} AND model_id=#{modelID}
-	</delete>
 
 	<delete id="deleteGroupColLimit">
 		delete from zbi_db.group_col_limit where

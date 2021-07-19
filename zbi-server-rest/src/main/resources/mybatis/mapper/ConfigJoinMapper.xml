@@ -18,20 +18,8 @@
 		`join_id`, `tbl_id1`, `tbl_id2`,
 		`col_id1`,`col_id2`,`last_update`,`last_updater`
 	</sql>
-	<select id="selectByPrimaryKey" parameterType="java.lang.String"
-		resultMap="BaseResultMap">
-		<!--@mbg.generated -->
-		select
-		<include refid="Base_Column_List" />
-		from config_join
-		where `join_id`= #{joinID,jdbcType=VARCHAR}
-	</select>
-	<delete id="deleteByPrimaryKey" parameterType="java.lang.String">
-		<!--@mbg.generated -->
-		delete from config_table
-		where `join_id`= #{joinID,jdbcType=VARCHAR}
-	</delete>
-	<insert id="insertJoin">
+
+	<insert id="saveJoin">
 		<!--@mbg.generated -->
 		insert into config_table (`join_id`, `tbl_id1`, `tbl_id2`,
 		`col_id1`,`col_id2`,`last_updater`)
@@ -44,13 +32,17 @@
 		#{lastUpdater,jdbcType=VARCHAR})
 	</insert>
 
-	<select id="loadAllJoins" parameterType="java.lang.String"
+	<select id="loadAllJoin" parameterType="java.lang.String"
 		resultMap="BaseResultMap">
 		<!--@mbg.generated -->
 		select
 		<include refid="Base_Column_List" />
 		from config_join
 	</select>
+
+	<delete id="deleteByJoinID">
+		delete from zbi_db.config_join where join_id=#{joinID}
+	</delete>
 
 
 </mapper>

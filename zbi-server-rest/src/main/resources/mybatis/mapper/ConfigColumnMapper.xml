@@ -31,21 +31,8 @@
 		`uuid`,`is_measure`, `chinese`, `alias`, `col_name`, `column_type`,
 		`agg_type`, `force_dim`, `is_advanced`,`table_id`,`col_properties`,`last_updater`,`last_update`
 	</sql>
-	<select id="selectByPrimaryKey" parameterType="java.lang.String"
-		resultMap="BaseResultMap">
-		<!--@mbg.generated -->
-		select
-		<include refid="Base_Column_List" />
-		from config_column
-		where `uuid`= #{uuid,jdbcType=VARCHAR}
-	</select>
-	<delete id="deleteByPrimaryKey" parameterType="java.lang.String">
-		<!--@mbg.generated -->
-		delete from config_column
-		where `uuid`= #{uuid,jdbcType=VARCHAR}
-	</delete>
 
-	<insert id="batchInsert" parameterType="map">
+	<insert id="saveColumn" parameterType="map">
 		<!--@mbg.generated -->
 		insert into config_column
 		(`uuid`,`is_measure`, `chinese`, `alias`,
@@ -76,7 +63,7 @@
 		where table_id = #{tableID,jdbcType=VARCHAR}
 	</delete>
 
-	<select id="listColumnsByTableID" resultMap="BaseResultMap">
+	<select id="loadColumnsByTableID" resultMap="BaseResultMap">
 		select
 		<include refid="Base_Column_List" />
 		from config_column

@@ -6,11 +6,9 @@ import org.zbi.server.model.config.ConfigColumn;
 
 public interface ConfigColumnMapper {
 
-	public List<ConfigColumn> listColumnsByTableID(String tableID);
+	public List<ConfigColumn> loadColumnsByTableID(String tableID);
 	
 	public void deleteByTablelId(String tableID);
-
-	public void insertColumn(ConfigColumn column);
 	
-	public void batchInsert(List<ConfigColumn> list);
+	public void saveColumn(List<ConfigColumn> list);
 }

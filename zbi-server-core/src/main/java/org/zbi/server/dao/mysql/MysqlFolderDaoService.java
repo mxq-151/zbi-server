@@ -33,7 +33,7 @@ public class MysqlFolderDaoService implements FolderDaoService {
 	public List<FacadeFolder> getQueryFolders() {
 		// TODO Auto-generated method stub
 		String userID = this.loginUserService.getLoginUser().getUserID();
-		List<FolderInfo> folders = folderInfoMapper.getQueryFolders(userID);
+		List<FolderInfo> folders = folderInfoMapper.loadFolders(userID);
 		return this.merge(folders);
 
 	}
@@ -43,7 +43,7 @@ public class MysqlFolderDaoService implements FolderDaoService {
 		for (FolderInfo folder : folders) {
 			fs.add(folder.getFolderID());
 		}
-		List<BoardInfo> boards = this.boardInfoMapper.getBoardByFolders(fs);
+		List<BoardInfo> boards = this.boardInfoMapper.loadBoardByFolders(fs);
 
 		List<FacadeFolder> array = new ArrayList<FacadeFolder>();
 		for (FolderInfo folder : folders) {
@@ -86,7 +86,7 @@ public class MysqlFolderDaoService implements FolderDaoService {
 		folder.setFolderName(folderName);
 		folder.setFolderType(folderType);
 		folder.setFolderID(folderID);
-		this.folderInfoMapper.createFolder(folder);
+		this.folderInfoMapper.saveFolder(folder);
 
 		FacadeFolder ff = new FacadeFolder();
 		BeanUtils.copyProperties(folder, ff);
@@ -112,7 +112,7 @@ public class MysqlFolderDaoService implements FolderDaoService {
 	}
 
 	private void checkPermission(String folderID) throws AdminException {
-		FolderInfo folder = this.folderInfoMapper.getFolder(folderID);
+		FolderInfo folder = this.folderInfoMapper.loadFolder(folderID);
 		// 谁创建谁管理
 		if (!folder.getAdminID().equals(this.loginUserService.getLoginUser().getUserID())) {
 			throw new AdminException("无权操作此文件夹");
@@ -126,7 +126,7 @@ public class MysqlFolderDaoService implements FolderDaoService {
 	public List<FacadeFolder> listAdminFolders() {
 		// TODO Auto-generated method stub
 		List<FolderInfo> folders = this.folderInfoMapper
-				.getAdminFolders(this.loginUserService.getLoginUser().getUserID());
+				.loadAdminFolder(this.loginUserService.getLoginUser().getUserID());
 		return this.merge(folders);
 	}
 

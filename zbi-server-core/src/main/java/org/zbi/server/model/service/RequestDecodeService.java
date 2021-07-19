@@ -25,7 +25,7 @@ public class RequestDecodeService {
 	public RequestParam parseRquest(RequestParam param) throws ParseException {
 		// TODO Auto-generated method stub
 
-		List<String> queryCols = this.configDaoService.queryUserTotalColLimit(param.getModelID());
+		List<String> queryCols = this.configDaoService.loadColLimit(param.getModelID());
 
 		List<RequestColumn> dims = param.getDimensions();
 		List<RequestColumn> measures = param.getMeasures();
@@ -42,7 +42,7 @@ public class RequestDecodeService {
 					if (dim.getUuid().equals(col)) {
 						find = true;
 						newDims.add(dim);
-						List<String> limits = this.configDaoService.getDataLimit(col);
+						List<String> limits = this.configDaoService.loadDataLimit(col);
 
 						if (limits.isEmpty()) {
 							continue;

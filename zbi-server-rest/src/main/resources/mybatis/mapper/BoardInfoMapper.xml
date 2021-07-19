@@ -34,19 +34,19 @@
 		<result column="folder_id" property="folderID" />
 	</resultMap>
 
-	<insert id="createBoard">
+	<insert id="saveBoard">
 		insert into zbi_db.board_info
 		(board_name,board_desc,other_params,board_id,board_version,last_updater,admin_id,folder_id)
 		values(#{boardName},#{boardDesc},#{otherParams,typeHandler=org.zbi.server.mapper.handler.MapHandler},#{boardID},#{boardVersion},#{lastUpdater},#{adminID},#{folderID})
 	</insert>
 
-	<select id="getBoardByID" resultMap="boardInfoResultMap">
+	<select id="loadBoardByID" resultMap="boardInfoResultMap">
 		select * from
 		zbi_db.board_info where
 		board_id=#{boardID}
 	</select>
 
-	<select id="getBoardByFolder"
+	<select id="loadBoardByFolder"
 		resultMap="facadeBoardInfoResultMap">
 		select * from
 		zbi_db.board_info as a left join
@@ -55,7 +55,7 @@
 	</select>
 
 
-	<select id="getBoardByFolders"
+	<select id="loadBoardByFolders"
 		resultMap="boardInfoResultMap">
 		select * from
 		zbi_db.board_info where

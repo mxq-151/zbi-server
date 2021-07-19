@@ -20,7 +20,7 @@
 		`tbl_alias`, `project`, `table_name`,
 		`table_type`,`table_id`,`source`,`conn_id`,`last_updater`,`last_update`
 	</sql>
-	<select id="selectByPrimaryKey" parameterType="java.lang.String"
+	<select id="selectByID" parameterType="java.lang.String"
 		resultMap="BaseResultMap">
 		<!--@mbg.generated -->
 		select
@@ -30,19 +30,19 @@
 	</select>
 
 
-	<select id="loadTables" resultMap="BaseResultMap">
+	<select id="loadTable" resultMap="BaseResultMap">
 		<!--@mbg.generated -->
 		select
 		<include refid="Base_Column_List" />
 		from config_table
 	</select>
 
-	<delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+	<delete id="deleteByID" parameterType="java.lang.String">
 		<!--@mbg.generated -->
 		delete from config_table
 		where `table_id`= #{tableID,jdbcType=VARCHAR}
 	</delete>
-	<insert id="insertTable">
+	<insert id="saveTable">
 		<!--@mbg.generated -->
 		insert into config_table (`tbl_alias`,`conn_id`, `project`, `table_name`,`table_type`,`table_id`,`source`,`last_updater`)
 		values

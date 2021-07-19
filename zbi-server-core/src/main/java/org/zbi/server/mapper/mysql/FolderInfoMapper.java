@@ -6,13 +6,13 @@ import org.zbi.server.entity.mysql.FolderInfo;
 
 public interface FolderInfoMapper {
 
-	public boolean createFolder(FolderInfo folder);
+	public boolean saveFolder(FolderInfo folder);
 
-	public FolderInfo getFolder(String folderID);
+	public FolderInfo loadFolder(String folderID);
 
-	public List<FolderInfo> getQueryFolders(String userID);
+	public List<FolderInfo> loadFolders(String userID);
 
-	public List<FolderInfo> getAdminFolders(String userID);
+	public List<FolderInfo> loadAdminFolder(String userID);
 
 	public boolean checkFolderByName(String folderName, int folderType, String adminID);
 

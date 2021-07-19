@@ -6,12 +6,10 @@ import org.zbi.server.model.config.ConfigJoin;
 
 public interface ConfigJoinMapper {
 
-	public void insertJoin(ConfigJoin join);
+	public void saveJoin(ConfigJoin join);
 
-	public List<ConfigJoin> loadAllJoins();
+	public List<ConfigJoin> loadAllJoin();
 
-	public void deleteByPrimaryKey(String joinID);
+	public void deleteByJoinID(String joinID);
 	
-	
-
 }

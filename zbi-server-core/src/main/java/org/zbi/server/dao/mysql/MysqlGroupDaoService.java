@@ -38,7 +38,7 @@ public class MysqlGroupDaoService extends DaoServiceBase implements GroupDaoServ
 	@Override
 	public FacadeGroup getGroupByGroupID(String groupID) {
 		// TODO Auto-generated method stub
-		GroupInfo group = this.groupInfoMapper.getGroupInfoById(groupID);
+		GroupInfo group = this.groupInfoMapper.loadGroupInfoById(groupID);
 		return this.toFacadeGroup(group, Collections.emptyList());
 	}
 
@@ -67,7 +67,7 @@ public class MysqlGroupDaoService extends DaoServiceBase implements GroupDaoServ
 		groupInfo.setAdminID(userID);
 		groupInfo.setGroupDesc(groupDesc);
 		this.preHandle(groupInfo);
-		this.groupInfoMapper.createGroup(groupInfo);
+		this.groupInfoMapper.saveGroup(groupInfo);
 
 		FacadeGroup group = new FacadeGroup();
 		group.setGroupDesc(groupDesc);
@@ -104,7 +104,7 @@ public class MysqlGroupDaoService extends DaoServiceBase implements GroupDaoServ
 		this.checkPermission(groupID);
 		this.preHandle(users);
 		this.groupInfoMapper.deleteUserInGroup(groupID);
-		return this.groupInfoMapper.addUserToGroup(users);
+		return this.groupInfoMapper.saveUserToGroup(users);
 	}
 
 	@Override
@@ -134,7 +134,7 @@ public class MysqlGroupDaoService extends DaoServiceBase implements GroupDaoServ
 	}
 
 	private void checkPermission(String groupID) throws AdminException {
-		GroupInfo group = this.groupInfoMapper.getGroupInfoById(groupID);
+		GroupInfo group = this.groupInfoMapper.loadGroupInfoById(groupID);
 		FacadeUser user = this.loginUserService.getLoginUser();
 		if (group.getAdminID().equals(user.getUserID()) || (user.getRoleType() == UserInfo.SUPERADMIN)
 				|| (user.getRoleType() == UserInfo.DEVELOPER)) {
@@ -147,7 +147,7 @@ public class MysqlGroupDaoService extends DaoServiceBase implements GroupDaoServ
 	@Override
 	public List<FacadeUser> getGroupUsers(String groupID) {
 		// TODO Auto-generated method stub
-		return this.groupInfoMapper.getGroupUsers(groupID);
+		return this.groupInfoMapper.loadGroupUsers(groupID);
 	}
 
 	@Override
@@ -159,7 +159,7 @@ public class MysqlGroupDaoService extends DaoServiceBase implements GroupDaoServ
 		}
 
 		this.preHandle(boards);
-		this.groupAndBoardMapper.addBoardToGroup(boards);
+		this.groupAndBoardMapper.saveBoardToGroup(boards);
 		return boards.size();
 	}
 

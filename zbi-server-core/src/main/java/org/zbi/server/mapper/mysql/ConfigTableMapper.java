@@ -6,12 +6,12 @@ import org.zbi.server.model.config.ConfigTable;
 
 public interface ConfigTableMapper {
 
-	public void insertTable(ConfigTable table);
+	public void saveTable(ConfigTable table);
 
-	public void deleteByPrimaryKey(String tableID);
+	public void deleteByID(String tableID);
 
-	public ConfigTable selectByPrimaryKey(String tableID);
+	public ConfigTable selectByID(String tableID);
 	
-	List<ConfigTable> loadTables();
+	public List<ConfigTable> loadTable();
 
 }

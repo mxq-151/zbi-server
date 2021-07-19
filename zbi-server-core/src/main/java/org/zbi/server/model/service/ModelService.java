@@ -55,11 +55,11 @@ public class ModelService {
 
 	@PostConstruct
 	public void init() {
-		List<ConfigTable> configTables = this.configTableMapper.loadTables();
+		List<ConfigTable> configTables = this.configTableMapper.loadTable();
 		int num = 0;
 		logger.info("loading table info.....");
 		for (ConfigTable table : configTables) {
-			List<ConfigColumn> cols = this.configColumnMapper.listColumnsByTableID(table.getTableID());
+			List<ConfigColumn> cols = this.configColumnMapper.loadColumnsByTableID(table.getTableID());
 
 			for (ConfigColumn col : cols) {
 				this.columns.put(col.getUuid(), col);
@@ -69,7 +69,7 @@ public class ModelService {
 		}
 
 		logger.info("loading {}  table info", num);
-		List<ConfigJoin> joins = this.configJoinMapper.loadAllJoins();
+		List<ConfigJoin> joins = this.configJoinMapper.loadAllJoin();
 		logger.info("loading join info.....");
 		for (ConfigJoin join : joins) {
 			StringBuilder sb = new StringBuilder();

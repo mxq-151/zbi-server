@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
-import org.zbi.server.dao.service.ConfigDaoService;
+import org.zbi.server.dao.service.DevelopDaoService;
 import org.zbi.server.entity.mysql.ConnInfo;
 import org.zbi.server.entity.mysql.ConnParam;
 import org.zbi.server.entity.mysql.QueryColumn;
@@ -29,12 +29,11 @@ import io.swagger.annotations.ApiParam;
 
 @RestController
 @RequestMapping("/admin/v1")
-public class DevelopController extends BaseController{
-	
+public class DevelopController extends BaseController {
+
 	@Autowired
-	private ConfigDaoService daoService;
-	
-	
+	private DevelopDaoService daoService;
+
 	@RequestMapping(value = "/save/conn", method = RequestMethod.POST)
 	@ApiOperation(value = "保存连接", code = 200, httpMethod = "POST")
 	public boolean saveConnect(@RequestBody ConnInfo connInfo) throws AdminException {
@@ -45,7 +44,7 @@ public class DevelopController extends BaseController{
 	@RequestMapping(value = "/save/param", method = RequestMethod.POST)
 	@ApiOperation(value = "保存连接参数", code = 200, httpMethod = "POST")
 	public boolean saveParam(@RequestBody List<ConnParam> params) throws AdminException, SQLException, ParseException {
-		this.daoService.inserParam(params);
+		this.daoService.saveParam(params);
 		return true;
 	}
 
@@ -58,7 +57,7 @@ public class DevelopController extends BaseController{
 	@RequestMapping(value = "/load/param", method = RequestMethod.GET)
 	@ApiOperation(value = "加载连接参数", code = 200, httpMethod = "GET")
 	public List<ConnParam> loadParam(@ApiParam(value = "连接ID", required = true) String connID) throws AdminException {
-		return this.daoService.getParams(connID);
+		return this.daoService.loadParam(connID);
 	}
 
 	@RequestMapping(value = "/load/engine", method = RequestMethod.GET)
@@ -82,14 +81,14 @@ public class DevelopController extends BaseController{
 	@RequestMapping(value = "/load/source/table", method = RequestMethod.GET)
 	@ApiOperation(value = "加载源表", code = 200, httpMethod = "GET")
 	public List<ConfigTable> loadSourceTable() throws AdminException {
-		return this.daoService.queryConfigTables(true);
+		return this.daoService.loadConfigTable(true);
 	}
 
 	@RequestMapping(value = "/load/columns", method = RequestMethod.GET)
 	@ApiOperation(value = "加载字段", code = 200, httpMethod = "GET")
 	public List<ConfigColumn> loadColumns(@ApiParam(value = "表ID", required = true) String tableID)
 			throws AdminException {
-		return this.daoService.getConfigColumns(tableID);
+		return this.daoService.loadConfigColumn(tableID);
 	}
 
 	@RequestMapping(value = "/save/table", method = RequestMethod.POST)
@@ -102,14 +101,14 @@ public class DevelopController extends BaseController{
 	@RequestMapping(value = "/save/join", method = RequestMethod.POST)
 	@ApiOperation(value = "保存连表", code = 200, httpMethod = "POST")
 	public boolean saveJoin(@RequestBody List<ConfigJoin> joins) throws AdminException {
-		this.daoService.saveJoins(joins);
+		this.daoService.saveJoin(joins);
 		return true;
 	}
 
 	@RequestMapping(value = "/load/join", method = RequestMethod.GET)
 	@ApiOperation(value = "加载连表", code = 200, httpMethod = "GET")
 	public List<FacadeJoin> loadJoins() throws AdminException {
-		return this.daoService.loadJoins();
+		return this.daoService.loadJoin();
 	}
 
 	@RequestMapping(value = "/del/join", method = RequestMethod.GET)
@@ -121,7 +120,7 @@ public class DevelopController extends BaseController{
 	@RequestMapping(value = "/create/model", method = RequestMethod.GET)
 	@ApiOperation(value = "创建模型", code = 200, httpMethod = "GET")
 	public boolean createModel(@ApiParam(value = "模型名称", required = true) String modelName) throws AdminException {
-		this.daoService.saveModel(modelName);
+		this.daoService.saveQueryModel(modelName);
 		return true;
 	}
 
@@ -143,14 +142,14 @@ public class DevelopController extends BaseController{
 	@RequestMapping(value = "/load/model", method = RequestMethod.GET)
 	@ApiOperation(value = "加载模型", code = 200, httpMethod = "GET")
 	public List<QueryModel> loadModel() throws AdminException {
-		return this.daoService.listQueryModel();
+		return this.daoService.loadQueryModel();
 	}
 
 	@RequestMapping(value = "/load/query/column", method = RequestMethod.GET)
 	@ApiOperation(value = "加载字段", code = 200, httpMethod = "GET")
 	public List<QueryColumn> loadQueryColumn(@ApiParam(value = "模型ID", required = true) String modelID)
 			throws AdminException {
-		return this.daoService.listQueryColumn(modelID);
+		return this.daoService.loadQueryColumn(modelID);
 	}
 
 }

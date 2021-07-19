@@ -35,7 +35,7 @@ public class MysqlBoardDaoService extends DaoServiceBase implements BoardDaoServ
 	public BoardInfo createNewBoard(String boardName, String boardDesc, String folderID) throws QueryException {
 		// TODO Auto-generated method stub
 
-		if (this.folderInfoMapper.getFolder(folderID) == null) {
+		if (this.folderInfoMapper.loadFolder(folderID) == null) {
 			throw new QueryException("无法根据文件夹ID找到相对应的文件夹");
 		}
 
@@ -53,7 +53,7 @@ public class MysqlBoardDaoService extends DaoServiceBase implements BoardDaoServ
 		board.setFolderID(folderID);
 		this.preHandle(board);
 		board.setAdminID(this.loginUserService.getLoginUser().getUserID());
-		boardInfoMapper.createBoard(board);
+		boardInfoMapper.saveBoard(board);
 		return board;
 
 	}
@@ -67,14 +67,14 @@ public class MysqlBoardDaoService extends DaoServiceBase implements BoardDaoServ
 	@Override
 	public BoardInfo getBoardByID(String boardID) {
 		// TODO Auto-generated method stub
-		return this.boardInfoMapper.getBoardByID(boardID);
+		return this.boardInfoMapper.loadBoardByID(boardID);
 	}
 
 	@Override
 	public BoardInfo updateBoardStype(Map<String, Object> otherParams, String boardID) throws QueryException {
 		// TODO Auto-generated method stub
 		this.boardInfoMapper.updateBoardParam(boardID, otherParams, this.loginUserService.getLoginUser().getUserID());
-		return this.boardInfoMapper.getBoardByID(boardID);
+		return this.boardInfoMapper.loadBoardByID(boardID);
 	}
 
 	@Override
@@ -82,13 +82,13 @@ public class MysqlBoardDaoService extends DaoServiceBase implements BoardDaoServ
 		// TODO Auto-generated method stub
 		this.boardInfoMapper.updateBoardName(boardID, boardName, boardDesc,
 				this.loginUserService.getLoginUser().getUserID());
-		return boardInfoMapper.getBoardByID(boardID);
+		return boardInfoMapper.loadBoardByID(boardID);
 	}
 
 	@Override
 	public List<FacadeBoard> getBoardByFolderID(String folderID) throws QueryException {
 		// TODO Auto-generated method stub
-		List<FacadeBoard> boards = this.boardInfoMapper.getBoardByFolder(folderID);
+		List<FacadeBoard> boards = this.boardInfoMapper.loadBoardByFolder(folderID);
 		return boards;
 	}
 

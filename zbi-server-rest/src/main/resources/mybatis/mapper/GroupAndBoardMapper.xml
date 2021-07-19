@@ -5,7 +5,7 @@
 <mapper
 	namespace="org.zbi.server.mapper.mysql.GroupAndBoardMapper">
 
-	<insert id="addBoardToGroup">
+	<insert id="saveBoardToGroup">
 		insert into zbi_db.group_board
 		(board_id,group_id,last_updater)
 		values
@@ -14,7 +14,7 @@
 		</foreach>
 	</insert>
 
-	<select id="getBoardInGroup">
+	<select id="loadBoardInGroup">
 		select a.*
 		from
 		zbi_db.group_board as a left join
