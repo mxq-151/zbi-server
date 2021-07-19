@@ -13,7 +13,7 @@ public interface QueryModelMapper {
 	
 	public List<QueryModel> loadQueryModelByGroup(String groupID);
 
-	public List<QueryModel> listAllModel();
+	public List<QueryModel> loadAllModel();
 
 	public void deleteModel(String modelTag);
 

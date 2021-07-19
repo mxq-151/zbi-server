@@ -40,6 +40,13 @@ public class DevelopController extends BaseController {
 		this.daoService.saveConnect(connInfo);
 		return true;
 	}
+	
+	@RequestMapping(value = "/del/conn", method = RequestMethod.GET)
+	@ApiOperation(value = "保存连接", code = 200, httpMethod = "GET")
+	public boolean delConnect(@ApiParam(value = "连接ID", required = true) String connID) throws AdminException {
+		this.daoService.deleteConnect(connID);
+		return true;
+	}
 
 	@RequestMapping(value = "/save/param", method = RequestMethod.POST)
 	@ApiOperation(value = "保存连接参数", code = 200, httpMethod = "POST")
@@ -97,6 +104,14 @@ public class DevelopController extends BaseController {
 		this.daoService.saveConfigTable(table);
 		return true;
 	}
+	
+	@RequestMapping(value = "/del/table", method = RequestMethod.GET)
+	@ApiOperation(value = "删除配置表", code = 200, httpMethod = "GET")
+	public boolean deleteTable(@ApiParam(value = "模型ID", required = true) String tableID) throws AdminException {
+		this.daoService.deleteConfigTable(tableID);
+		return true;
+	}
+
 
 	@RequestMapping(value = "/save/join", method = RequestMethod.POST)
 	@ApiOperation(value = "保存连表", code = 200, httpMethod = "POST")
@@ -130,6 +145,7 @@ public class DevelopController extends BaseController {
 		this.daoService.deleteModel(modelID);
 		return true;
 	}
+
 
 	@RequestMapping(value = "/save/query/column", method = RequestMethod.POST)
 	@ApiOperation(value = "保存模型", code = 200, httpMethod = "POST")

@@ -274,7 +274,7 @@ public class MysqlDevelopDaoService extends DaoServiceBase implements DevelopDao
 		if (user.getRoleType() != UserInfo.SUPERADMIN && user.getRoleType() != UserInfo.DEVELOPER) {
 			return this.queryModelMapper.loadQueryModel(user.getUserID());
 		} else {
-			return this.queryModelMapper.listAllModel();
+			return this.queryModelMapper.loadAllModel();
 		}
 
 	}
@@ -291,6 +291,7 @@ public class MysqlDevelopDaoService extends DaoServiceBase implements DevelopDao
 	@Override
 	public void deleteConnect(String connID) throws AdminException {
 		// TODO Auto-generated method stub
+		this.connInfoMapper.deleteConn(connID);
 		
 	}
 

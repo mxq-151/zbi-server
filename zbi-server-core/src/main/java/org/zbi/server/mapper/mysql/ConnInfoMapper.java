@@ -17,6 +17,8 @@ public interface ConnInfoMapper {
 	
 	public List<ConnInfo> loadConn();
 	
+	public void deleteConn(String connID);
+	
 	public ConnInfo loadConnInfo(String connID);
 
 }

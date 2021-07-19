@@ -42,6 +42,12 @@
 		delete from
 		zbi_db.conn_param where conn_id=#{connID}
 	</delete>
+	
+	<delete id="deleteConn" parameterType="string">
+		delete from
+		zbi_db.conn_info where conn_id=#{connID}
+	</delete>
+	
 
 	<select id="loadParam" resultMap="connParamResultMap">
 		select * from zbi_db.conn_param
@@ -60,12 +66,6 @@
 		select * from
 		zbi_db.conn_info where conn_id=#{connID}
 	</select>
-
-
-	<delete id="deleteConn">
-		delete from zbi_db.group_info where
-		group_id=#{groupID}
-	</delete>
 
 
 </mapper>

@@ -43,7 +43,7 @@ public class MysqlConfigDaoService extends DaoServiceBase implements ConfigDaoSe
 		// TODO Auto-generated method stub
 		FacadeUser user = this.loginUserService.getLoginUser();
 		if (user.getRoleType() == UserInfo.SUPERADMIN || user.getRoleType() == UserInfo.DEVELOPER) {
-			return this.queryModelMapper.listAllModel();
+			return this.queryModelMapper.loadAllModel();
 		}
 		String userID = this.loginUserService.getLoginUser().getUserID();
 		return this.queryModelMapper.loadQueryModel(userID);
