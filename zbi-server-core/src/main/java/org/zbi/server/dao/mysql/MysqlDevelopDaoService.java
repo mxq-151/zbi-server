@@ -49,20 +49,19 @@ public class MysqlDevelopDaoService extends DaoServiceBase implements DevelopDao
 
 	@Autowired
 	private ModelService modelService;
-	
+
 	@Autowired
 	private ConfigTableMapper configTableMapper;
 
 	@Autowired
 	private ConfigColumnMapper configColumnMapper;
-	
 
 	@Autowired
 	private EngineFactory engineFactory;
 
 	@Autowired
 	private ConfigJoinMapper configJoinMapper;
-	
+
 	@PostConstruct
 	public void init() throws SQLException, ParseException {
 		List<ConnInfo> conns = this.connInfoMapper.loadConn();
@@ -74,8 +73,7 @@ public class MysqlDevelopDaoService extends DaoServiceBase implements DevelopDao
 
 		}
 	}
-	
-	
+
 	@Override
 	public void saveConfigTable(FacadeTable table) throws AdminException {
 		// TODO Auto-generated method stub
@@ -235,7 +233,7 @@ public class MysqlDevelopDaoService extends DaoServiceBase implements DevelopDao
 		this.queryModelMapper.deleteModel(modelID);
 
 	}
-	
+
 	@Override
 	public void saveQueryModel(String modelName) throws AdminException {
 		// TODO Auto-generated method stub
@@ -279,7 +277,6 @@ public class MysqlDevelopDaoService extends DaoServiceBase implements DevelopDao
 
 	}
 
-	
 	private void developConfigCheck() throws AdminException {
 		FacadeUser user = this.loginUserService.getLoginUser();
 		if (user.getRoleType() != UserInfo.SUPERADMIN && user.getRoleType() != UserInfo.DEVELOPER) {
@@ -287,12 +284,17 @@ public class MysqlDevelopDaoService extends DaoServiceBase implements DevelopDao
 		}
 	}
 
-
 	@Override
 	public void deleteConnect(String connID) throws AdminException {
 		// TODO Auto-generated method stub
 		this.connInfoMapper.deleteConn(connID);
-		
+	}
+
+	@Override
+	public List<ConfigColumn> loadConfigColumn(List<String> tables) throws AdminException {
+		// TODO Auto-generated method stub
+		List<ConfigColumn> columns = this.configColumnMapper.loadColumnsByTables(tables);
+		return columns;
 	}
 
 }

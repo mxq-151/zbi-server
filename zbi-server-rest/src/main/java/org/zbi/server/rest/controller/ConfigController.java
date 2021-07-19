@@ -7,10 +7,12 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
+import org.zbi.server.dao.service.ConfigDaoService;
 import org.zbi.server.dao.service.FolderDaoService;
 import org.zbi.server.dao.service.GroupDaoService;
 import org.zbi.server.entity.mysql.GroupBoard;
 import org.zbi.server.entity.mysql.GroupUser;
+import org.zbi.server.entity.mysql.QueryModel;
 import org.zbi.server.model.exception.AdminException;
 import org.zbi.server.model.facade.FacadeBoard;
 import org.zbi.server.model.facade.FacadeFolder;
@@ -30,9 +32,12 @@ public class ConfigController extends BaseController {
 	@Autowired
 	FolderDaoService folderDaoService;
 
+	@Autowired
+	private ConfigDaoService daoService;
+
 	@RequestMapping(value = "/create/group", method = RequestMethod.GET)
 	@ApiOperation(value = "获取看板列表接口", code = 200, httpMethod = "GET", response = FacadeBoard.class)
-	public FacadeGroup createGroup( @ApiParam(value = "用户组名", required = true) String groupName) throws AdminException {
+	public FacadeGroup createGroup(@ApiParam(value = "用户组名", required = true) String groupName) throws AdminException {
 		return this.groupDaoService.createGroup(groupName, null);
 
 	}
@@ -43,11 +48,16 @@ public class ConfigController extends BaseController {
 		return this.groupDaoService.getGroupByGroupID(groupID);
 	}
 
-
 	@RequestMapping(value = "/list/folders", method = RequestMethod.GET)
 	@ApiOperation(value = "获取模型信息接口", code = 200, httpMethod = "GET")
 	public List<FacadeFolder> listFolders(@ApiParam(value = "用户组ID", required = false) String groupID) {
 		return this.folderDaoService.listAdminFolders();
+	}
+
+	@RequestMapping(value = "/list/model", method = RequestMethod.GET)
+	@ApiOperation(value = "获用户可见模型", code = 200, httpMethod = "GET", response = FacadeUser.class, responseContainer = "List")
+	public List<QueryModel> listModel() throws AdminException {
+		return this.daoService.loadModel("");
 	}
 
 	@RequestMapping(value = "/list/group/user", method = RequestMethod.GET)
@@ -55,6 +65,12 @@ public class ConfigController extends BaseController {
 	public List<FacadeUser> listGroupUsers(@ApiParam(value = "用户组ID", required = true) String groupID)
 			throws AdminException {
 		return this.groupDaoService.getGroupUsers(groupID);
+	}
+
+	@RequestMapping(value = "/list/user/group", method = RequestMethod.GET)
+	@ApiOperation(value = "列出当前登录用户管理的用户组", code = 200, httpMethod = "GET", response = FacadeBoard.class, responseContainer = "List")
+	public List<FacadeGroup> listGroups() throws AdminException {
+		return this.groupDaoService.getAdminGroup();
 	}
 
 	@RequestMapping(value = "/add/user", method = RequestMethod.POST)

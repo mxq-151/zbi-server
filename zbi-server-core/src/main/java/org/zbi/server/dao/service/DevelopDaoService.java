@@ -87,6 +87,13 @@ public interface DevelopDaoService {
 	 */
 	public List<ConfigColumn> loadConfigColumn(String tableID) throws AdminException;
 
+	
+	/**
+	 * 保存多配置表字段
+	 */
+	public List<ConfigColumn> loadConfigColumn(List<String> tables) throws AdminException;
+
+	
 	/**
 	 * 加载配置表
 	 */

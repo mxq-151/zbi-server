@@ -34,9 +34,6 @@
 		col_id from
 		zbi_db.group_col_limit where group_id in(select distinct
 		group_id from zbi_db.group_user where user_id=#{userID})
-		union all
-		select distinct col_id from
-		zbi_db.user_col_limit where user_id=#{userID}
 	</select>
 
 	<select id="loadGroupColLimit" resultMap="groupResultMap">

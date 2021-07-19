@@ -16,7 +16,6 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 @MapperScan("org.zbi.server.mapper.mysql")
 public class ZBiApp {
     public static void main(String[] args) {
-    	
         SpringApplication.run(ZBiApp.class, args);
     }
 

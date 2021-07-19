@@ -92,10 +92,17 @@ public class DevelopController extends BaseController {
 	}
 
 	@RequestMapping(value = "/load/columns", method = RequestMethod.GET)
-	@ApiOperation(value = "加载字段", code = 200, httpMethod = "GET")
+	@ApiOperation(value = "加载字段,用于配置表配置", code = 200, httpMethod = "GET")
 	public List<ConfigColumn> loadColumns(@ApiParam(value = "表ID", required = true) String tableID)
 			throws AdminException {
 		return this.daoService.loadConfigColumn(tableID);
+	}
+	
+	@RequestMapping(value = "/load/config/columns", method = RequestMethod.POST)
+	@ApiOperation(value = "加载多配置表字段，用于模型配置", code = 200, httpMethod = "POST")
+	public List<ConfigColumn> loadTablesColumns(@RequestBody List<String> tables)
+			throws AdminException {
+		return this.daoService.loadConfigColumn(tables);
 	}
 
 	@RequestMapping(value = "/save/table", method = RequestMethod.POST)

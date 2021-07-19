@@ -16,7 +16,7 @@ public interface GroupInfoMapper {
 
 	public boolean checkGroupByName(String groupName, String adminID);
 
-	public List<GroupInfo> getAdminGroup(String adminID);
+	public List<GroupInfo> loadAdminGroup(String adminID);
 
 	public int saveUserToGroup(List<GroupUser> users);
 

@@ -8,6 +8,8 @@ public interface ConfigColumnMapper {
 
 	public List<ConfigColumn> loadColumnsByTableID(String tableID);
 	
+	public List<ConfigColumn> loadColumnsByTables(List<String> list);
+	
 	public void deleteByTablelId(String tableID);
 	
 	public void saveColumn(List<ConfigColumn> list);

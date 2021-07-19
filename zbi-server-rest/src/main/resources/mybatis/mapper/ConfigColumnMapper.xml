@@ -69,5 +69,13 @@
 		from config_column
 		where table_id = #{tableID,jdbcType=VARCHAR} order by agg_type
 	</select>
+	<select id="loadColumnsByTables" resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from config_column
+		where table_id in <foreach collection="list" item="item" separator=",">
+			(#{item,jdbcType=VARCHAR})
+		</foreach>
+	</select>
 
 </mapper>

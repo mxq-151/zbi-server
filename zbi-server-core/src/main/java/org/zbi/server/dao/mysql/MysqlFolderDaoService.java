@@ -62,6 +62,15 @@ public class MysqlFolderDaoService implements FolderDaoService {
 				ff.setBoards(list);
 				ff.setBoardNum(list.size());
 				array.add(ff);
+			}else
+			{
+				int roleType=this.loginUserService.getLoginUser().getRoleType();
+				if(roleType==UserInfo.SUPERADMIN || roleType==UserInfo.DEVELOPER)
+				{
+					ff.setBoards(Collections.EMPTY_LIST);
+					ff.setBoardNum(0);
+					array.add(ff);
+				}
 			}
 		}
 		return array;

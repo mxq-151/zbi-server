@@ -88,7 +88,7 @@ public class MysqlGroupDaoService extends DaoServiceBase implements GroupDaoServ
 	public List<FacadeGroup> getAdminGroup() {
 		// TODO Auto-generated method stub
 
-		List<GroupInfo> groups = this.groupInfoMapper.getAdminGroup(this.loginUserService.getLoginUser().getUserID());
+		List<GroupInfo> groups = this.groupInfoMapper.loadAdminGroup(this.loginUserService.getLoginUser().getUserID());
 
 		List<FacadeGroup> array = new ArrayList<>();
 		for (GroupInfo group : groups) {
